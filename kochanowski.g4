@@ -99,6 +99,6 @@ CALCULATE: 'policz';
 
 INTEGER: [0-9]+;
 DECIMAL: [0-9]*'.'[0-9]+;
-ID: [a-zA-Z]+;
+ID: [a-zA-Z0-9_ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+;
 
 WS: [ \t\r\n]+ -> skip;
