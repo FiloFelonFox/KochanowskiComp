@@ -37,8 +37,8 @@ func kochanowskiParserInit() {
 		"'o warto\\u015Bci'", "'.'", "'Przypisz'", "'Wypisz'", "'Wczytaj'",
 		"'z'", "'wi\\u0119ksze ni\\u017C'", "'wi\\u0119ksze lub r\\u00F3wne'",
 		"'r\\u00F3wne'", "'mniejsze lub r\\u00F3wne'", "'mniejsze ni\\u017C'",
-		"'r\\u00F3\\u017Cne od'", "'modulo'", "'and'", "'or'", "'xor'", "'plus'",
-		"'minus'", "'razy'", "'podzieli\\u0107 przez'", "'do pot\\u0119gi'",
+		"'r\\u00F3\\u017Cne od'", "'modulo'", "'i'", "'lub'", "'wykluczaj\\u0105c'",
+		"'plus'", "'minus'", "'razy'", "'podzieli\\u0107 przez'", "'do pot\\u0119gi'",
 		"'nie'", "'wpierw'", "'policz'",
 	}
 	staticData.SymbolicNames = []string{

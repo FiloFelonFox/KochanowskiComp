@@ -25,7 +25,7 @@ expr_compare
 	| expr_mod EQUAL expr_compare
 	| expr_mod LESSEQUAL expr_compare
 	| expr_mod LESS expr_compare
-	| expr_mod NOTEQUAL;
+	| expr_mod NOTEQUAL expr_compare; 
 
 expr_mod
 	: expr_bit 
@@ -85,9 +85,9 @@ LESSEQUAL: 'mniejsze lub równe';
 LESS: 'mniejsze niż';
 NOTEQUAL: 'różne od';
 MODULO: 'modulo';
-AND: 'and';
-OR: 'or';
-XOR: 'xor';
+AND: 'i';
+OR: 'lub';
+XOR: 'wykluczając';
 PLUS: 'plus';
 MINUS: 'minus';
 TIMES: 'razy';
