@@ -121,6 +121,7 @@ func (l *kochanowskiListener) EnterPrint(ctx *parser.PrintContext) {
 func (l *kochanowskiListener) ExitPrint(ctx *parser.PrintContext) {
 	varCount++;
 	prog += "%" + fmt.Sprint(varCount) + " = call i32 (ptr, ...) @printf(ptr noundef @.str." + stack.peek()._type + ", " + stack.peek()._type + " noundef " + stack.peek()._value + ")\n"
+	stack.pop()
 }
 
 // VAR_ASSIGN
@@ -128,6 +129,14 @@ func (l *kochanowskiListener) EnterVar_assign(ctx *parser.Var_assignContext) {
 }
 
 func (l *kochanowskiListener) ExitVar_assign(ctx *parser.Var_assignContext) {
+	variable := variables[ctx.ID().GetText()]
+	if variable._type != stack.peek()._type { //TODO: better type checking
+		fmt.Println("Błąd typów" + variable._type + " " + stack.peek()._type)
+		panic(1)
+	}
+	variables[ctx.ID().GetText()] = variable
+	prog += "store " + stack.peek()._type + " " + stack.peek()._value + ", " + variable._type + "* " + variable._value + "\n"
+	stack.pop()
 }
 
 // VAR_CREATE
@@ -141,8 +150,9 @@ func (l *kochanowskiListener) EnterVar_create(ctx *parser.Var_createContext) {
 func (l *kochanowskiListener) ExitVar_create(ctx *parser.Var_createContext) {
 	if ctx.Expr() != nil {
 		variable := variables[ctx.ID().GetText()]
-		if variable._type != stack.peek()._type { //TODO: better type checking
-			fmt.Println("Błąd typów")
+		variable._type = stack.peekSecond()._type 
+		if stack.peek()._type != stack.peekSecond()._type { //TODO: better type checking
+			fmt.Println("Błąd typów" + variable._value + ":" +  variable._type + " " + stack.peek()._value + ":" + stack.peek()._type)
 			panic(1)
 		}
 		variables[ctx.ID().GetText()] = variable
