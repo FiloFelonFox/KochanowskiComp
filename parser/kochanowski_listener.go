@@ -32,6 +32,12 @@ type kochanowskiListener interface {
 	// EnterExpr is called when entering the expr production.
 	EnterExpr(c *ExprContext)
 
+	// EnterExpr_logic is called when entering the expr_logic production.
+	EnterExpr_logic(c *Expr_logicContext)
+
+	// EnterLogic_operator is called when entering the logic_operator production.
+	EnterLogic_operator(c *Logic_operatorContext)
+
 	// EnterExpr_compare is called when entering the expr_compare production.
 	EnterExpr_compare(c *Expr_compareContext)
 
@@ -82,6 +88,12 @@ type kochanowskiListener interface {
 
 	// ExitExpr is called when exiting the expr production.
 	ExitExpr(c *ExprContext)
+
+	// ExitExpr_logic is called when exiting the expr_logic production.
+	ExitExpr_logic(c *Expr_logicContext)
+
+	// ExitLogic_operator is called when exiting the logic_operator production.
+	ExitLogic_operator(c *Logic_operatorContext)
 
 	// ExitExpr_compare is called when exiting the expr_compare production.
 	ExitExpr_compare(c *Expr_compareContext)

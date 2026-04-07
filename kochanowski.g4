@@ -16,7 +16,15 @@ read: READ_WORD ID DOT;
 
 print: PRINT_WORD expr DOT;
 
-expr: expr_compare;
+expr: expr_logic;
+
+expr_logic
+	: expr_compare
+	| expr_compare logic_operator expr_logic;
+
+logic_operator
+	: LOGIC_AND
+	| LOGIC_OR;
 
 expr_compare
 	: expr_mod 
@@ -77,6 +85,8 @@ ASSIGN: 'Przypisz';
 PRINT_WORD: 'Wypisz';
 READ_WORD: 'Wczytaj';
 
+LOGIC_AND: 'i jednocześnie';
+LOGIC_OR: 'lub';
 FROM: 'z';
 GREATER: 'większe niż';
 GREATEREQUAL: 'większe lub równe';
@@ -85,9 +95,9 @@ LESSEQUAL: 'mniejsze lub równe';
 LESS: 'mniejsze niż';
 NOTEQUAL: 'różne od';
 MODULO: 'modulo';
-AND: 'i';
-OR: 'lub';
-XOR: 'wykluczając';
+AND: 'koniunkcja';
+OR: 'alternatywa';
+XOR: 'alternatywa wykluczająca';
 PLUS: 'plus';
 MINUS: 'minus';
 TIMES: 'razy';

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"KochanowskiComp/parser"
+	"fmt"
 )
 
 var typeAlignMap = map[string]string{
@@ -22,6 +22,16 @@ var variables = make(map[string]t_var)
 var varCount int = 0
 
 var stack VariableStack
+
+type logicFrame struct {
+	operator string
+	shortLabel string
+	rhsLabel string
+	endLabel string
+}
+
+var logicStack []logicFrame
+var logicCount int = 0
 
 type kochanowskiListener struct {
 	*parser.BasekochanowskiListener
@@ -58,6 +68,19 @@ func matchLastTwoTypes() {
 	}
 }
 
+func convertLastToi1() {
+	if stack.peek()._type != "i1" {
+		varCount++;
+		if stack.peek()._type == "float" {
+			prog += "%" + fmt.Sprint(varCount) + " = fcmp one float " + stack.peek()._value + ", 0.0\n"
+			stack.updateLast("%" + fmt.Sprint(varCount), "i1")
+		} else if stack.peek()._type == "i32" {
+			prog += "%" + fmt.Sprint(varCount) + " = icmp ne i32 " + stack.peek()._value + ", 0\n"
+			stack.updateLast("%" + fmt.Sprint(varCount), "i1")
+		}
+	}
+}
+
 //BODY
 func (l *kochanowskiListener) EnterBody(ctx *parser.BodyContext) {
 	prog += "define dso_local i32 @main() {\n"
@@ -90,7 +113,7 @@ func (l *kochanowskiListener) EnterVar_create(ctx *parser.Var_createContext) {
 }
 
 func (l *kochanowskiListener) ExitVar_create(ctx *parser.Var_createContext) {
-	if ctx.Expr() != nil {
+	if ctx.Expr() != nil {	//TODO: check if type matches
 		variable := variables[ctx.ID().GetText()]
 		variable._type = stack.peek()._type
 		variables[ctx.ID().GetText()] = variable
@@ -117,6 +140,64 @@ func (l *kochanowskiListener) EnterExpr(ctx *parser.ExprContext) {
 }
 
 func (l *kochanowskiListener) ExitExpr(ctx *parser.ExprContext) {
+}
+
+//EXPR_LOGIC
+func (l *kochanowskiListener) EnterExpr_logic(ctx *parser.Expr_logicContext) {
+	if ctx.Expr_logic() != nil {
+		varCount++;
+		frame := logicFrame{
+			rhsLabel: fmt.Sprintf("logic_rhs_%d", varCount),
+			endLabel: fmt.Sprintf("logic_end_%d", varCount),
+			shortLabel: fmt.Sprintf("logic_short_%d", varCount),
+		}
+		logicStack = append(logicStack, frame)
+		logicCount++;
+	}
+}
+
+func (l *kochanowskiListener) ExitExpr_logic(ctx *parser.Expr_logicContext){
+	if ctx.Expr_logic() != nil {
+		convertLastToi1()
+		varCount++;
+		prog += "br label %" + logicStack[logicCount-1].endLabel + "\n"
+		prog += logicStack[logicCount-1].shortLabel + ":\n"
+		prog += "br label %" + logicStack[logicCount-1].endLabel + "\n"
+		prog += logicStack[logicCount-1].endLabel + ":\n"
+		if logicStack[logicCount-1].operator == "and" {
+			if logicCount < len(logicStack) && len(logicStack) > 1 {
+				prog += "%" + fmt.Sprint(varCount) + " = phi i1 [ 0, %" + logicStack[logicCount-1].shortLabel + " ], [ " + stack.peek()._value + ", %" + logicStack[logicCount].endLabel + " ]\n"
+			} else {
+				prog += "%" + fmt.Sprint(varCount) + " = phi i1 [ 0, %" + logicStack[logicCount-1].shortLabel + " ], [ " + stack.peek()._value + ", %" + logicStack[logicCount-1].rhsLabel + " ]\n"
+			}
+		} else if logicStack[logicCount-1].operator == "or" {
+			if logicCount < len(logicStack) && len(logicStack) > 1 {
+				prog += "%" + fmt.Sprint(varCount) + " = phi i1 [ 1, %" + logicStack[logicCount-1].shortLabel + " ], [ " + stack.peek()._value + ", %" + logicStack[logicCount].endLabel + " ]\n"
+			} else {
+				prog += "%" + fmt.Sprint(varCount) + " = phi i1 [ 1, %" + logicStack[logicCount-1].shortLabel + " ], [ " + stack.peek()._value + ", %" + logicStack[logicCount-1].rhsLabel + " ]\n"
+			}
+		}
+		logicCount--;
+		stack.pop()
+		stack.pop()
+		stack.push("%" + fmt.Sprint(varCount), "i1")
+	}
+}
+
+//LOGIC_OPERATOR
+func (l *kochanowskiListener) EnterLogic_operator(ctx *parser.Logic_operatorContext) {
+}
+
+func (l *kochanowskiListener) ExitLogic_operator(ctx *parser.Logic_operatorContext) {
+	convertLastToi1()
+	if ctx.LOGIC_AND() != nil {
+		logicStack[len(logicStack)-1].operator = "and"
+		prog += "br i1 " + stack.peek()._value + ", label %" + logicStack[len(logicStack)-1].rhsLabel + ", label %" + logicStack[len(logicStack)-1].shortLabel + "\n"
+	} else if ctx.LOGIC_OR() != nil {
+		logicStack[len(logicStack)-1].operator = "or"
+		prog += "br i1 " + stack.peek()._value + ", label %" + logicStack[len(logicStack)-1].shortLabel + ", label %" + logicStack[len(logicStack)-1].rhsLabel + "\n"
+	}
+	prog += logicStack[len(logicStack)-1].rhsLabel + ":\n"
 }
 
 //EXPR_COMPARE

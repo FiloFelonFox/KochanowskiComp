@@ -69,6 +69,18 @@ func (s *BasekochanowskiListener) EnterExpr(ctx *ExprContext) {}
 // ExitExpr is called when production expr is exited.
 func (s *BasekochanowskiListener) ExitExpr(ctx *ExprContext) {}
 
+// EnterExpr_logic is called when production expr_logic is entered.
+func (s *BasekochanowskiListener) EnterExpr_logic(ctx *Expr_logicContext) {}
+
+// ExitExpr_logic is called when production expr_logic is exited.
+func (s *BasekochanowskiListener) ExitExpr_logic(ctx *Expr_logicContext) {}
+
+// EnterLogic_operator is called when production logic_operator is entered.
+func (s *BasekochanowskiListener) EnterLogic_operator(ctx *Logic_operatorContext) {}
+
+// ExitLogic_operator is called when production logic_operator is exited.
+func (s *BasekochanowskiListener) ExitLogic_operator(ctx *Logic_operatorContext) {}
+
 // EnterExpr_compare is called when production expr_compare is entered.
 func (s *BasekochanowskiListener) EnterExpr_compare(ctx *Expr_compareContext) {}
 
