@@ -56,9 +56,6 @@ type kochanowskiListener interface {
 	// EnterUnary is called when entering the unary production.
 	EnterUnary(c *UnaryContext)
 
-	// EnterNum is called when entering the num production.
-	EnterNum(c *NumContext)
-
 	// EnterValue is called when entering the value production.
 	EnterValue(c *ValueContext)
 
@@ -109,9 +106,6 @@ type kochanowskiListener interface {
 
 	// ExitUnary is called when exiting the unary production.
 	ExitUnary(c *UnaryContext)
-
-	// ExitNum is called when exiting the num production.
-	ExitNum(c *NumContext)
 
 	// ExitValue is called when exiting the value production.
 	ExitValue(c *ValueContext)

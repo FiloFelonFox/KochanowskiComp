@@ -117,12 +117,6 @@ func (s *BasekochanowskiListener) EnterUnary(ctx *UnaryContext) {}
 // ExitUnary is called when production unary is exited.
 func (s *BasekochanowskiListener) ExitUnary(ctx *UnaryContext) {}
 
-// EnterNum is called when production num is entered.
-func (s *BasekochanowskiListener) EnterNum(ctx *NumContext) {}
-
-// ExitNum is called when production num is exited.
-func (s *BasekochanowskiListener) ExitNum(ctx *NumContext) {}
-
 // EnterValue is called when production value is entered.
 func (s *BasekochanowskiListener) EnterValue(ctx *ValueContext) {}
 

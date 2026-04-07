@@ -2,17 +2,42 @@ package main
 
 import (
 	"fmt"
-	"github.com/antlr4-go/antlr/v4"
+	"os"
 	"KochanowskiComp/parser"
+	"github.com/antlr4-go/antlr/v4"
 )
 
 func main() {
-	input := antlr.NewInputStream("7 minus 2")
+	progPath := os.Args[1]
+	outPath := os.Args[2]
+
+	data, err := os.ReadFile(progPath)
+	if err != nil {
+		fmt.Println("Error reading file:", err)
+		return
+	}
+
+	outFile, err := os.Create(outPath)
+	if err != nil {
+		fmt.Println("Error creating output file:", err)
+		return
+	}
+	defer outFile.Close()
+
+	input := antlr.NewInputStream(string(data))
 	
 	lexer := parser.NewkochanowskiLexer(input)
 	tokens := antlr.NewCommonTokenStream(lexer, 0)
 	
 	p := parser.NewkochanowskiParser(tokens)
-	tree := p.Expr()
-	fmt.Println(tree.ToStringTree(nil, p))
+	tree := p.Body()
+
+	listener := &kochanowskiListener{}
+	antlr.ParseTreeWalkerDefault.Walk(listener, tree)
+
+	_, err = outFile.WriteString(listener.progprint())
+	if err != nil {
+		fmt.Println("Error writing to output file:", err)
+		return
+	}
 }
