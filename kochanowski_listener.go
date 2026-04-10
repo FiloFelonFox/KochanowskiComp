@@ -104,9 +104,15 @@ func convertLastToi1() {
 
 // BODY
 func (l *kochanowskiListener) EnterBody(ctx *parser.BodyContext) {
-	prog += "declare i32 @printf(ptr noundef, ...) #1\n"
+	prog += "declare i32 @printf(ptr noundef, ...)\n"
+	prog += "declare i32 @__isoc99_scanf(ptr noundef, ...)\n"
+	prog += "declare i32 @atoi(ptr noundef)\n"
+	prog += "\n"
 	prog += "@.str.i32 = private unnamed_addr constant [4 x i8] c\"%d\\0A\\00\", align 1\n"
 	prog += "@.str.float = private unnamed_addr constant [4 x i8] c\"%g\\0A\\00\", align 1\n"
+	prog += "@.scan.str = private unnamed_addr constant [6 x i8] c\"%255s\\00\", align 1\n"
+	prog += "@.read.buf = internal global [256 x i8] zeroinitializer, align 1\n"
+	prog += "\n"
 	prog += "define dso_local i32 @main() {\n"
 }
 
@@ -122,6 +128,28 @@ func (l *kochanowskiListener) ExitPrint(ctx *parser.PrintContext) {
 	varCount++;
 	prog += "%" + fmt.Sprint(varCount) + " = call i32 (ptr, ...) @printf(ptr noundef @.str." + stack.peek()._type + ", " + stack.peek()._type + " noundef " + stack.peek()._value + ")\n"
 	stack.pop()
+}
+
+// READ
+func (l *kochanowskiListener) EnterRead(ctx *parser.ReadContext) {
+
+}
+
+func (l *kochanowskiListener) ExitRead(ctx *parser.ReadContext) {
+	variable := variables[ctx.ID().GetText()]
+	switch variable._type {
+	case "i32":
+		varCount++
+		prog += "%" + fmt.Sprint(varCount) + " = getelementptr inbounds [256 x i8], ptr @.read.buf, i32 0, i32 0\n"
+		varCount++
+		prog += "%" + fmt.Sprint(varCount) + " = call i32 (ptr, ...) @__isoc99_scanf(ptr noundef @.scan.str, ptr noundef %" + fmt.Sprint(varCount-1) + ")\n"
+		varCount++
+		prog += "%" + fmt.Sprint(varCount) + " = call i32 @atoi(ptr noundef %" + fmt.Sprint(varCount-2) + ")\n"
+		prog += "store i32 %" + fmt.Sprint(varCount) + ", ptr " + variable._value + ", align 4\n"
+	default:
+		fmt.Println("Nie można wczytać tego typu")
+		panic(1)
+	}
 }
 
 // VAR_ASSIGN
@@ -157,6 +185,12 @@ func (l *kochanowskiListener) ExitVar_create(ctx *parser.Var_createContext) {
 		}
 		variables[ctx.ID().GetText()] = variable
 		prog += "store " + stack.peek()._type + " " + stack.peek()._value + ", " + variable._type + "* " + variable._value + "\n"
+		stack.pop()
+		stack.pop()
+	} else {
+		variable := variables[ctx.ID().GetText()]
+		variable._type = stack.peek()._type 
+		variables[ctx.ID().GetText()] = variable
 		stack.pop()
 	}
 }
