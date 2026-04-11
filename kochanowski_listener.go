@@ -18,9 +18,15 @@ type t_var struct {
 	_type  string
 }
 
+type t_array struct {
+	_value string
+	_type  string
+}
+
 var prog string = ""
 
 var variables = make(map[string]t_var)
+var arrays = make(map[string]t_array)
 var varCount int = 0
 
 var stack VariableStack
@@ -146,6 +152,24 @@ func convertLastToi1() {
 	castLastTo("i1")
 }
 
+func castIntToI64(v t_var) t_var {
+	if v._type == "i64" {
+		return v
+	}
+	if isIntType(v._type) {
+		return castType(v, "i64")
+	}
+	fmt.Println("Nie można przekonwertować typu " + v._type + " na i32")
+	panic(1)
+}
+
+/*func emitArrayElemPtr(a t_array, indexVar t_var) string {
+	i := castIntToI32(indexVar)
+	ptr := nextVar()
+	prog += ptr + " = getelementptr inbounds [" + fmt.Sprint(a._size) + " x " + a._type + "], ptr " + a._value + ", i32 0, i32 " + i._value + "\n"
+	return ptr
+}*/
+
 // BODY
 func (l *kochanowskiListener) EnterBody(ctx *parser.BodyContext) {
 	prog += "declare i32 @printf(ptr noundef, ...)\n"
@@ -154,6 +178,8 @@ func (l *kochanowskiListener) EnterBody(ctx *parser.BodyContext) {
 	prog += "declare double @atof(ptr noundef)\n"
 	prog += "declare float @llvm.pow.f32(float, float)\n"
 	prog += "declare double @llvm.pow.f64(double, double)\n"
+	prog += "declare ptr @malloc(i64)\n"
+	prog += "declare void @free(ptr)\n"
 	prog += "\n"
 	prog += "@.str.i1 = private unnamed_addr constant [4 x i8] c\"%d\\0A\\00\", align 1\n"
 	prog += "@.str.i32 = private unnamed_addr constant [4 x i8] c\"%d\\0A\\00\", align 1\n"
@@ -167,6 +193,9 @@ func (l *kochanowskiListener) EnterBody(ctx *parser.BodyContext) {
 }
 
 func (l *kochanowskiListener) ExitBody(ctx *parser.BodyContext) {
+	for arr, _ := range arrays {
+		prog += "call void @free(ptr " + arrays[arr]._value + ")\n"
+	}
 	prog += "ret i32 0\n}\n"
 }
 
@@ -258,7 +287,7 @@ func (l *kochanowskiListener) ExitVar_assign(ctx *parser.Var_assignContext) {
 		}
 	}
 	v := stack.pop()
-	prog += "store " + v._type + " " + v._value + ", " + variable._type + "ptr " + variable._value + "\n"
+	prog += "store " + v._type + " " + v._value + ",ptr " + variable._value + "\n"
 }
 
 // VAR_CREATE
@@ -330,6 +359,100 @@ func (l *kochanowskiListener) EnterType(ctx *parser.TypeContext) {
 
 func (l *kochanowskiListener) ExitType(ctx *parser.TypeContext) {
 	//PASS
+}
+
+// ARRAY_CREATE
+func (l *kochanowskiListener) EnterArray_create(ctx *parser.Array_createContext) {
+}
+
+func (l *kochanowskiListener) ExitArray_create(ctx *parser.Array_createContext) {
+	name := ctx.ID().GetText()
+
+	elemType := ""
+	elemSizeBytes := 0
+	switch ctx.Array_type().GetText() {
+	case "tablicę liczb całkowitych":
+		elemType = "i32"
+		elemSizeBytes = 4
+	case "tablicę liczb zmiennoprzecinkowych":
+		elemType = "float"
+		elemSizeBytes = 4
+	}
+	
+	sizeVar := stack.pop()
+	if !isIntType(sizeVar._type) {
+		fmt.Println("Błąd typów: rozmiar tablicy musi być typu całkowitego, a otrzymał " + sizeVar._type)
+		panic(1)
+	}
+
+	size64 := castIntToI64(sizeVar)
+
+	bytes := nextVar()
+	prog += bytes + " = mul i64 " + size64._value + ", " + fmt.Sprint(elemSizeBytes) + "\n"
+
+	base := nextVar()
+	prog += base + " = call ptr @malloc(i64 " + bytes + ")\n"
+	arrays[name] = t_array{base, elemType}
+}
+
+// ARRAY_TYPE
+func (l *kochanowskiListener) EnterArray_type(ctx *parser.Array_typeContext) {
+}
+
+func (l *kochanowskiListener) ExitArray_type(ctx *parser.Array_typeContext) {
+}
+
+// ARRAY_ASSIGN
+func (l *kochanowskiListener) EnterArray_assign(ctx *parser.Array_assignContext) {
+}
+
+func (l *kochanowskiListener) ExitArray_assign(ctx *parser.Array_assignContext) {
+	arr := arrays[ctx.ID().GetText()]
+
+	value := stack.pop()
+	index := stack.pop()
+
+	if !isIntType(index._type) {
+		fmt.Println("Błąd typów: indeks tablicy musi być typu całkowitego, a otrzymał " + index._type)
+		panic(1)
+	}
+	if isIntType(arr._type) && isFloatType(value._type) {
+		fmt.Println("Błąd typów: nie można przypisać wartości typu " + value._type + " do tablicy typu " + arr._type)
+		panic(1)
+	}
+
+	if value._type != arr._type {
+		value = castType(value, arr._type)
+	}
+
+	index64 := castIntToI64(index)
+
+	elemPtr := nextVar()
+	prog += elemPtr + " = getelementptr inbounds " + arr._type + ", ptr " + arr._value + ", i64 " + index64._value + "\n"
+	prog += "store " + arr._type + " " + value._value + ", ptr " + elemPtr + ", " + typeAlignMap[arr._type] + "\n"
+}
+
+// ARRAY_VALUE
+func (l *kochanowskiListener) EnterArray_value(ctx *parser.Array_valueContext) {
+}
+
+func (l *kochanowskiListener) ExitArray_value(ctx *parser.Array_valueContext) {
+	arr := arrays[ctx.ID().GetText()]
+
+	index := stack.pop()
+	
+	if !isIntType(index._type) {
+		fmt.Println("Błąd typów: indeks tablicy musi być typu całkowitego, a otrzymał " + index._type)
+		panic(1)
+	}
+
+	index64 := castIntToI64(index)
+
+	elemPtr := nextVar()
+	prog += elemPtr + " = getelementptr inbounds " + arr._type + ", ptr " + arr._value + ", i64 " + index64._value + "\n"
+	value := nextVar()
+	prog += value + " = load " + arr._type + ", ptr " + elemPtr + ", " + typeAlignMap[arr._type] + "\n"
+	stack.push(value, arr._type)
 }
 
 // EXPR
@@ -458,7 +581,7 @@ func (l *kochanowskiListener) ExitExpr_mod(ctx *parser.Expr_modContext) {
 		} else {
 			prog += "srem"
 		}
-		prog += " " + first._type + " " + first._value + ", " + second._value + "\n"
+		prog += " " + first._type + " " + second._value + ", " + first._value + "\n"
 		stack.push("%"+fmt.Sprint(varCount), first._type)
 	}
 }
@@ -509,7 +632,7 @@ func (l *kochanowskiListener) ExitExpr_add(ctx *parser.Expr_addContext) {
 		} else if ctx.MINUS() != nil {
 			prog += "sub"
 		}
-		prog += " " + first._type + " " + first._value + ", " + second._value + "\n"
+		prog += " " + first._type + " " + second._value + ", " + first._value + "\n"
 		stack.push("%"+fmt.Sprint(varCount), first._type)
 	}
 }
@@ -534,7 +657,7 @@ func (l *kochanowskiListener) ExitExpr_mult(ctx *parser.Expr_multContext) {
 		} else if ctx.DIVIDE() != nil {
 			prog += "div"
 		}
-		prog += " " + first._type + " " + first._value + ", " + second._value + "\n"
+		prog += " " + first._type + " " + second._value + ", " + first._value + "\n"
 		stack.push("%"+fmt.Sprint(varCount), first._type)
 	}
 }

@@ -20,6 +20,15 @@ type kochanowskiListener interface {
 	// EnterType is called when entering the type production.
 	EnterType(c *TypeContext)
 
+	// EnterArray_create is called when entering the array_create production.
+	EnterArray_create(c *Array_createContext)
+
+	// EnterArray_type is called when entering the array_type production.
+	EnterArray_type(c *Array_typeContext)
+
+	// EnterArray_assign is called when entering the array_assign production.
+	EnterArray_assign(c *Array_assignContext)
+
 	// EnterVar_assign is called when entering the var_assign production.
 	EnterVar_assign(c *Var_assignContext)
 
@@ -62,6 +71,9 @@ type kochanowskiListener interface {
 	// EnterUnary is called when entering the unary production.
 	EnterUnary(c *UnaryContext)
 
+	// EnterArray_value is called when entering the array_value production.
+	EnterArray_value(c *Array_valueContext)
+
 	// EnterValue is called when entering the value production.
 	EnterValue(c *ValueContext)
 
@@ -76,6 +88,15 @@ type kochanowskiListener interface {
 
 	// ExitType is called when exiting the type production.
 	ExitType(c *TypeContext)
+
+	// ExitArray_create is called when exiting the array_create production.
+	ExitArray_create(c *Array_createContext)
+
+	// ExitArray_type is called when exiting the array_type production.
+	ExitArray_type(c *Array_typeContext)
+
+	// ExitArray_assign is called when exiting the array_assign production.
+	ExitArray_assign(c *Array_assignContext)
 
 	// ExitVar_assign is called when exiting the var_assign production.
 	ExitVar_assign(c *Var_assignContext)
@@ -118,6 +139,9 @@ type kochanowskiListener interface {
 
 	// ExitUnary is called when exiting the unary production.
 	ExitUnary(c *UnaryContext)
+
+	// ExitArray_value is called when exiting the array_value production.
+	ExitArray_value(c *Array_valueContext)
 
 	// ExitValue is called when exiting the value production.
 	ExitValue(c *ValueContext)

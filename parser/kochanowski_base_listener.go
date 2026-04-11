@@ -45,6 +45,24 @@ func (s *BasekochanowskiListener) EnterType(ctx *TypeContext) {}
 // ExitType is called when production type is exited.
 func (s *BasekochanowskiListener) ExitType(ctx *TypeContext) {}
 
+// EnterArray_create is called when production array_create is entered.
+func (s *BasekochanowskiListener) EnterArray_create(ctx *Array_createContext) {}
+
+// ExitArray_create is called when production array_create is exited.
+func (s *BasekochanowskiListener) ExitArray_create(ctx *Array_createContext) {}
+
+// EnterArray_type is called when production array_type is entered.
+func (s *BasekochanowskiListener) EnterArray_type(ctx *Array_typeContext) {}
+
+// ExitArray_type is called when production array_type is exited.
+func (s *BasekochanowskiListener) ExitArray_type(ctx *Array_typeContext) {}
+
+// EnterArray_assign is called when production array_assign is entered.
+func (s *BasekochanowskiListener) EnterArray_assign(ctx *Array_assignContext) {}
+
+// ExitArray_assign is called when production array_assign is exited.
+func (s *BasekochanowskiListener) ExitArray_assign(ctx *Array_assignContext) {}
+
 // EnterVar_assign is called when production var_assign is entered.
 func (s *BasekochanowskiListener) EnterVar_assign(ctx *Var_assignContext) {}
 
@@ -128,6 +146,12 @@ func (s *BasekochanowskiListener) EnterUnary(ctx *UnaryContext) {}
 
 // ExitUnary is called when production unary is exited.
 func (s *BasekochanowskiListener) ExitUnary(ctx *UnaryContext) {}
+
+// EnterArray_value is called when production array_value is entered.
+func (s *BasekochanowskiListener) EnterArray_value(ctx *Array_valueContext) {}
+
+// ExitArray_value is called when production array_value is exited.
+func (s *BasekochanowskiListener) ExitArray_value(ctx *Array_valueContext) {}
 
 // EnterValue is called when production value is entered.
 func (s *BasekochanowskiListener) EnterValue(ctx *ValueContext) {}

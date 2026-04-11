@@ -33,11 +33,12 @@ var KochanowskiParserStaticData struct {
 func kochanowskiParserInit() {
 	staticData := &KochanowskiParserStaticData
 	staticData.LiteralNames = []string{
-		"", "'Zdefiniuj'", "'zmienn\\u0105'", "'ca\\u0142kowit\\u0105'", "'ca\\u0142kowit\\u0105 olbrzymiej wagi'",
+		"", "'tablicy'", "'pod'", "'warto\\u015B\\u0107'", "'kom\\u00F3rk\\u0105'",
+		"'Zdefiniuj'", "'zmienn\\u0105'", "'ca\\u0142kowit\\u0105'", "'ca\\u0142kowit\\u0105 olbrzymiej wagi'",
 		"'zmiennoprzecinkow\\u0105'", "'zmiennoprzecinkow\\u0105 olbrzymiej precyzji'",
 		"'tablic\\u0119 liczb ca\\u0142kowitych'", "'tablic\\u0119 liczb zmiennoprzecinkowych'",
-		"'o nazwie'", "'o warto\\u015Bci'", "'.'", "'Przypisz'", "'Wypisz'",
-		"'Wczytaj'", "'i jednocze\\u015Bnie'", "'lub'", "'z'", "'wi\\u0119ksze ni\\u017C'",
+		"'o rozmiarze'", "'o nazwie'", "'o warto\\u015Bci'", "'.'", "'Przypisz'",
+		"'Wypisz'", "'Wczytaj'", "'i jednocze\\u015Bnie'", "'lub'", "'z'", "'wi\\u0119ksze ni\\u017C'",
 		"'wi\\u0119ksze lub r\\u00F3wne'", "'r\\u00F3wne'", "'mniejsze lub r\\u00F3wne'",
 		"'mniejsze ni\\u017C'", "'r\\u00F3\\u017Cne od'", "'modulo'", "'koniunkcja'",
 		"'alternatywa'", "'alternatywa wykluczaj\\u0105ca'", "'plus'", "'minus'",
@@ -45,100 +46,117 @@ func kochanowskiParserInit() {
 		"'policz'",
 	}
 	staticData.SymbolicNames = []string{
-		"", "DEFINE", "VARIABLE", "INT32", "INT64", "F32", "F64", "INT32ARRAY",
-		"F32ARRAY", "NAMED", "WITH_VALUE", "DOT", "ASSIGN", "PRINT_WORD", "READ_WORD",
-		"LOGIC_AND", "LOGIC_OR", "FROM", "GREATER", "GREATEREQUAL", "EQUAL",
-		"LESSEQUAL", "LESS", "NOTEQUAL", "MODULO", "AND", "OR", "XOR", "PLUS",
-		"MINUS", "TIMES", "DIVIDE", "POWER", "NOT", "FIRST", "CALCULATE", "INTEGER",
-		"DECIMAL", "ID", "WS",
+		"", "ARRAY", "UNDER", "VALUE", "CELL", "DEFINE", "VARIABLE", "INT32",
+		"INT64", "F32", "F64", "INT32ARRAY", "F32ARRAY", "WITH_SIZE", "NAMED",
+		"WITH_VALUE", "DOT", "ASSIGN", "PRINT_WORD", "READ_WORD", "LOGIC_AND",
+		"LOGIC_OR", "FROM", "GREATER", "GREATEREQUAL", "EQUAL", "LESSEQUAL",
+		"LESS", "NOTEQUAL", "MODULO", "AND", "OR", "XOR", "PLUS", "MINUS", "TIMES",
+		"DIVIDE", "POWER", "NOT", "FIRST", "CALCULATE", "INTEGER", "DECIMAL",
+		"ID", "WS",
 	}
 	staticData.RuleNames = []string{
-		"body", "statement", "var_create", "type", "var_assign", "read", "print",
-		"expr", "expr_logic", "logic_operator", "expr_compare", "expr_mod",
-		"expr_bit", "expr_add", "expr_mult", "expr_power", "expr_paren", "unary",
-		"value",
+		"body", "statement", "var_create", "type", "array_create", "array_type",
+		"array_assign", "var_assign", "read", "print", "expr", "expr_logic",
+		"logic_operator", "expr_compare", "expr_mod", "expr_bit", "expr_add",
+		"expr_mult", "expr_power", "expr_paren", "unary", "array_value", "value",
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 39, 189, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 1, 44, 226, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
 		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
 		10, 2, 11, 7, 11, 2, 12, 7, 12, 2, 13, 7, 13, 2, 14, 7, 14, 2, 15, 7, 15,
-		2, 16, 7, 16, 2, 17, 7, 17, 2, 18, 7, 18, 1, 0, 5, 0, 40, 8, 0, 10, 0,
-		12, 0, 43, 9, 0, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 49, 8, 1, 1, 2, 1, 2, 1,
+		2, 16, 7, 16, 2, 17, 7, 17, 2, 18, 7, 18, 2, 19, 7, 19, 2, 20, 7, 20, 2,
+		21, 7, 21, 2, 22, 7, 22, 1, 0, 5, 0, 48, 8, 0, 10, 0, 12, 0, 51, 9, 0,
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 59, 8, 1, 1, 2, 1, 2, 1, 2, 1,
 		2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1,
-		2, 1, 2, 3, 2, 67, 8, 2, 1, 3, 1, 3, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 5,
-		1, 5, 1, 5, 1, 5, 1, 6, 1, 6, 1, 6, 1, 6, 1, 7, 1, 7, 1, 8, 1, 8, 1, 8,
-		1, 8, 1, 8, 3, 8, 91, 8, 8, 1, 9, 1, 9, 1, 10, 1, 10, 1, 10, 1, 10, 1,
-		10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10,
-		1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 3,
-		10, 120, 8, 10, 1, 11, 1, 11, 1, 11, 1, 11, 1, 11, 3, 11, 127, 8, 11, 1,
-		12, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12, 1, 12,
-		1, 12, 1, 12, 3, 12, 142, 8, 12, 1, 13, 1, 13, 1, 13, 1, 13, 1, 13, 1,
-		13, 1, 13, 1, 13, 1, 13, 3, 13, 153, 8, 13, 1, 14, 1, 14, 1, 14, 1, 14,
-		1, 14, 1, 14, 1, 14, 1, 14, 1, 14, 3, 14, 164, 8, 14, 1, 15, 1, 15, 1,
-		15, 1, 15, 1, 15, 3, 15, 171, 8, 15, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16,
-		3, 16, 178, 8, 16, 1, 17, 1, 17, 1, 17, 1, 17, 1, 17, 3, 17, 185, 8, 17,
-		1, 18, 1, 18, 1, 18, 0, 0, 19, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22,
-		24, 26, 28, 30, 32, 34, 36, 0, 3, 1, 0, 3, 8, 1, 0, 15, 16, 1, 0, 36, 38,
-		193, 0, 41, 1, 0, 0, 0, 2, 48, 1, 0, 0, 0, 4, 66, 1, 0, 0, 0, 6, 68, 1,
-		0, 0, 0, 8, 70, 1, 0, 0, 0, 10, 75, 1, 0, 0, 0, 12, 79, 1, 0, 0, 0, 14,
-		83, 1, 0, 0, 0, 16, 90, 1, 0, 0, 0, 18, 92, 1, 0, 0, 0, 20, 119, 1, 0,
-		0, 0, 22, 126, 1, 0, 0, 0, 24, 141, 1, 0, 0, 0, 26, 152, 1, 0, 0, 0, 28,
-		163, 1, 0, 0, 0, 30, 170, 1, 0, 0, 0, 32, 177, 1, 0, 0, 0, 34, 184, 1,
-		0, 0, 0, 36, 186, 1, 0, 0, 0, 38, 40, 3, 2, 1, 0, 39, 38, 1, 0, 0, 0, 40,
-		43, 1, 0, 0, 0, 41, 39, 1, 0, 0, 0, 41, 42, 1, 0, 0, 0, 42, 1, 1, 0, 0,
-		0, 43, 41, 1, 0, 0, 0, 44, 49, 3, 4, 2, 0, 45, 49, 3, 8, 4, 0, 46, 49,
-		3, 12, 6, 0, 47, 49, 3, 10, 5, 0, 48, 44, 1, 0, 0, 0, 48, 45, 1, 0, 0,
-		0, 48, 46, 1, 0, 0, 0, 48, 47, 1, 0, 0, 0, 49, 3, 1, 0, 0, 0, 50, 51, 5,
-		1, 0, 0, 51, 52, 5, 2, 0, 0, 52, 53, 3, 6, 3, 0, 53, 54, 5, 9, 0, 0, 54,
-		55, 5, 38, 0, 0, 55, 56, 5, 11, 0, 0, 56, 67, 1, 0, 0, 0, 57, 58, 5, 1,
-		0, 0, 58, 59, 5, 2, 0, 0, 59, 60, 3, 6, 3, 0, 60, 61, 5, 9, 0, 0, 61, 62,
-		5, 38, 0, 0, 62, 63, 5, 10, 0, 0, 63, 64, 3, 14, 7, 0, 64, 65, 5, 11, 0,
-		0, 65, 67, 1, 0, 0, 0, 66, 50, 1, 0, 0, 0, 66, 57, 1, 0, 0, 0, 67, 5, 1,
-		0, 0, 0, 68, 69, 7, 0, 0, 0, 69, 7, 1, 0, 0, 0, 70, 71, 5, 12, 0, 0, 71,
-		72, 5, 38, 0, 0, 72, 73, 3, 14, 7, 0, 73, 74, 5, 11, 0, 0, 74, 9, 1, 0,
-		0, 0, 75, 76, 5, 14, 0, 0, 76, 77, 5, 38, 0, 0, 77, 78, 5, 11, 0, 0, 78,
-		11, 1, 0, 0, 0, 79, 80, 5, 13, 0, 0, 80, 81, 3, 14, 7, 0, 81, 82, 5, 11,
-		0, 0, 82, 13, 1, 0, 0, 0, 83, 84, 3, 16, 8, 0, 84, 15, 1, 0, 0, 0, 85,
-		91, 3, 20, 10, 0, 86, 87, 3, 20, 10, 0, 87, 88, 3, 18, 9, 0, 88, 89, 3,
-		16, 8, 0, 89, 91, 1, 0, 0, 0, 90, 85, 1, 0, 0, 0, 90, 86, 1, 0, 0, 0, 91,
-		17, 1, 0, 0, 0, 92, 93, 7, 1, 0, 0, 93, 19, 1, 0, 0, 0, 94, 120, 3, 22,
-		11, 0, 95, 96, 3, 22, 11, 0, 96, 97, 5, 18, 0, 0, 97, 98, 3, 20, 10, 0,
-		98, 120, 1, 0, 0, 0, 99, 100, 3, 22, 11, 0, 100, 101, 5, 19, 0, 0, 101,
-		102, 3, 20, 10, 0, 102, 120, 1, 0, 0, 0, 103, 104, 3, 22, 11, 0, 104, 105,
-		5, 20, 0, 0, 105, 106, 3, 20, 10, 0, 106, 120, 1, 0, 0, 0, 107, 108, 3,
-		22, 11, 0, 108, 109, 5, 21, 0, 0, 109, 110, 3, 20, 10, 0, 110, 120, 1,
-		0, 0, 0, 111, 112, 3, 22, 11, 0, 112, 113, 5, 22, 0, 0, 113, 114, 3, 20,
-		10, 0, 114, 120, 1, 0, 0, 0, 115, 116, 3, 22, 11, 0, 116, 117, 5, 23, 0,
-		0, 117, 118, 3, 20, 10, 0, 118, 120, 1, 0, 0, 0, 119, 94, 1, 0, 0, 0, 119,
-		95, 1, 0, 0, 0, 119, 99, 1, 0, 0, 0, 119, 103, 1, 0, 0, 0, 119, 107, 1,
-		0, 0, 0, 119, 111, 1, 0, 0, 0, 119, 115, 1, 0, 0, 0, 120, 21, 1, 0, 0,
-		0, 121, 127, 3, 24, 12, 0, 122, 123, 3, 24, 12, 0, 123, 124, 5, 24, 0,
-		0, 124, 125, 3, 22, 11, 0, 125, 127, 1, 0, 0, 0, 126, 121, 1, 0, 0, 0,
-		126, 122, 1, 0, 0, 0, 127, 23, 1, 0, 0, 0, 128, 142, 3, 26, 13, 0, 129,
-		130, 3, 26, 13, 0, 130, 131, 5, 25, 0, 0, 131, 132, 3, 24, 12, 0, 132,
-		142, 1, 0, 0, 0, 133, 134, 3, 26, 13, 0, 134, 135, 5, 26, 0, 0, 135, 136,
-		3, 24, 12, 0, 136, 142, 1, 0, 0, 0, 137, 138, 3, 26, 13, 0, 138, 139, 5,
-		27, 0, 0, 139, 140, 3, 24, 12, 0, 140, 142, 1, 0, 0, 0, 141, 128, 1, 0,
-		0, 0, 141, 129, 1, 0, 0, 0, 141, 133, 1, 0, 0, 0, 141, 137, 1, 0, 0, 0,
-		142, 25, 1, 0, 0, 0, 143, 153, 3, 28, 14, 0, 144, 145, 3, 28, 14, 0, 145,
-		146, 5, 28, 0, 0, 146, 147, 3, 26, 13, 0, 147, 153, 1, 0, 0, 0, 148, 149,
-		3, 28, 14, 0, 149, 150, 5, 29, 0, 0, 150, 151, 3, 26, 13, 0, 151, 153,
-		1, 0, 0, 0, 152, 143, 1, 0, 0, 0, 152, 144, 1, 0, 0, 0, 152, 148, 1, 0,
-		0, 0, 153, 27, 1, 0, 0, 0, 154, 164, 3, 30, 15, 0, 155, 156, 3, 30, 15,
-		0, 156, 157, 5, 30, 0, 0, 157, 158, 3, 28, 14, 0, 158, 164, 1, 0, 0, 0,
-		159, 160, 3, 30, 15, 0, 160, 161, 5, 31, 0, 0, 161, 162, 3, 28, 14, 0,
-		162, 164, 1, 0, 0, 0, 163, 154, 1, 0, 0, 0, 163, 155, 1, 0, 0, 0, 163,
-		159, 1, 0, 0, 0, 164, 29, 1, 0, 0, 0, 165, 171, 3, 32, 16, 0, 166, 167,
-		3, 32, 16, 0, 167, 168, 5, 32, 0, 0, 168, 169, 3, 30, 15, 0, 169, 171,
-		1, 0, 0, 0, 170, 165, 1, 0, 0, 0, 170, 166, 1, 0, 0, 0, 171, 31, 1, 0,
-		0, 0, 172, 178, 3, 34, 17, 0, 173, 174, 5, 34, 0, 0, 174, 175, 3, 14, 7,
-		0, 175, 176, 5, 35, 0, 0, 176, 178, 1, 0, 0, 0, 177, 172, 1, 0, 0, 0, 177,
-		173, 1, 0, 0, 0, 178, 33, 1, 0, 0, 0, 179, 185, 3, 36, 18, 0, 180, 181,
-		5, 29, 0, 0, 181, 185, 3, 14, 7, 0, 182, 183, 5, 33, 0, 0, 183, 185, 3,
-		14, 7, 0, 184, 179, 1, 0, 0, 0, 184, 180, 1, 0, 0, 0, 184, 182, 1, 0, 0,
-		0, 185, 35, 1, 0, 0, 0, 186, 187, 7, 2, 0, 0, 187, 37, 1, 0, 0, 0, 12,
-		41, 48, 66, 90, 119, 126, 141, 152, 163, 170, 177, 184,
+		2, 3, 2, 77, 8, 2, 1, 3, 1, 3, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4,
+		1, 4, 1, 5, 1, 5, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6,
+		1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 8, 1, 8, 1, 8, 1, 8, 1, 9, 1, 9, 1, 9,
+		1, 9, 1, 10, 1, 10, 1, 11, 1, 11, 1, 11, 1, 11, 1, 11, 3, 11, 120, 8, 11,
+		1, 12, 1, 12, 1, 13, 1, 13, 1, 13, 1, 13, 1, 13, 1, 13, 1, 13, 1, 13, 1,
+		13, 1, 13, 1, 13, 1, 13, 1, 13, 1, 13, 1, 13, 1, 13, 1, 13, 1, 13, 1, 13,
+		1, 13, 1, 13, 1, 13, 1, 13, 1, 13, 1, 13, 3, 13, 149, 8, 13, 1, 14, 1,
+		14, 1, 14, 1, 14, 1, 14, 3, 14, 156, 8, 14, 1, 15, 1, 15, 1, 15, 1, 15,
+		1, 15, 1, 15, 1, 15, 1, 15, 1, 15, 1, 15, 1, 15, 1, 15, 1, 15, 3, 15, 171,
+		8, 15, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 3,
+		16, 182, 8, 16, 1, 17, 1, 17, 1, 17, 1, 17, 1, 17, 1, 17, 1, 17, 1, 17,
+		1, 17, 3, 17, 193, 8, 17, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 3, 18, 200,
+		8, 18, 1, 19, 1, 19, 1, 19, 1, 19, 1, 19, 3, 19, 207, 8, 19, 1, 20, 1,
+		20, 1, 20, 1, 20, 1, 20, 1, 20, 3, 20, 215, 8, 20, 1, 21, 1, 21, 1, 21,
+		1, 21, 1, 21, 1, 21, 1, 21, 1, 22, 1, 22, 1, 22, 0, 0, 23, 0, 2, 4, 6,
+		8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42,
+		44, 0, 4, 1, 0, 7, 10, 1, 0, 11, 12, 1, 0, 20, 21, 1, 0, 41, 43, 229, 0,
+		49, 1, 0, 0, 0, 2, 58, 1, 0, 0, 0, 4, 76, 1, 0, 0, 0, 6, 78, 1, 0, 0, 0,
+		8, 80, 1, 0, 0, 0, 10, 88, 1, 0, 0, 0, 12, 90, 1, 0, 0, 0, 14, 99, 1, 0,
+		0, 0, 16, 104, 1, 0, 0, 0, 18, 108, 1, 0, 0, 0, 20, 112, 1, 0, 0, 0, 22,
+		119, 1, 0, 0, 0, 24, 121, 1, 0, 0, 0, 26, 148, 1, 0, 0, 0, 28, 155, 1,
+		0, 0, 0, 30, 170, 1, 0, 0, 0, 32, 181, 1, 0, 0, 0, 34, 192, 1, 0, 0, 0,
+		36, 199, 1, 0, 0, 0, 38, 206, 1, 0, 0, 0, 40, 214, 1, 0, 0, 0, 42, 216,
+		1, 0, 0, 0, 44, 223, 1, 0, 0, 0, 46, 48, 3, 2, 1, 0, 47, 46, 1, 0, 0, 0,
+		48, 51, 1, 0, 0, 0, 49, 47, 1, 0, 0, 0, 49, 50, 1, 0, 0, 0, 50, 1, 1, 0,
+		0, 0, 51, 49, 1, 0, 0, 0, 52, 59, 3, 4, 2, 0, 53, 59, 3, 14, 7, 0, 54,
+		59, 3, 8, 4, 0, 55, 59, 3, 12, 6, 0, 56, 59, 3, 18, 9, 0, 57, 59, 3, 16,
+		8, 0, 58, 52, 1, 0, 0, 0, 58, 53, 1, 0, 0, 0, 58, 54, 1, 0, 0, 0, 58, 55,
+		1, 0, 0, 0, 58, 56, 1, 0, 0, 0, 58, 57, 1, 0, 0, 0, 59, 3, 1, 0, 0, 0,
+		60, 61, 5, 5, 0, 0, 61, 62, 5, 6, 0, 0, 62, 63, 3, 6, 3, 0, 63, 64, 5,
+		14, 0, 0, 64, 65, 5, 43, 0, 0, 65, 66, 5, 16, 0, 0, 66, 77, 1, 0, 0, 0,
+		67, 68, 5, 5, 0, 0, 68, 69, 5, 6, 0, 0, 69, 70, 3, 6, 3, 0, 70, 71, 5,
+		14, 0, 0, 71, 72, 5, 43, 0, 0, 72, 73, 5, 15, 0, 0, 73, 74, 3, 20, 10,
+		0, 74, 75, 5, 16, 0, 0, 75, 77, 1, 0, 0, 0, 76, 60, 1, 0, 0, 0, 76, 67,
+		1, 0, 0, 0, 77, 5, 1, 0, 0, 0, 78, 79, 7, 0, 0, 0, 79, 7, 1, 0, 0, 0, 80,
+		81, 5, 5, 0, 0, 81, 82, 3, 10, 5, 0, 82, 83, 5, 14, 0, 0, 83, 84, 5, 43,
+		0, 0, 84, 85, 5, 13, 0, 0, 85, 86, 3, 20, 10, 0, 86, 87, 5, 16, 0, 0, 87,
+		9, 1, 0, 0, 0, 88, 89, 7, 1, 0, 0, 89, 11, 1, 0, 0, 0, 90, 91, 5, 17, 0,
+		0, 91, 92, 5, 1, 0, 0, 92, 93, 5, 43, 0, 0, 93, 94, 5, 2, 0, 0, 94, 95,
+		3, 20, 10, 0, 95, 96, 5, 3, 0, 0, 96, 97, 3, 20, 10, 0, 97, 98, 5, 16,
+		0, 0, 98, 13, 1, 0, 0, 0, 99, 100, 5, 17, 0, 0, 100, 101, 5, 43, 0, 0,
+		101, 102, 3, 20, 10, 0, 102, 103, 5, 16, 0, 0, 103, 15, 1, 0, 0, 0, 104,
+		105, 5, 19, 0, 0, 105, 106, 5, 43, 0, 0, 106, 107, 5, 16, 0, 0, 107, 17,
+		1, 0, 0, 0, 108, 109, 5, 18, 0, 0, 109, 110, 3, 20, 10, 0, 110, 111, 5,
+		16, 0, 0, 111, 19, 1, 0, 0, 0, 112, 113, 3, 22, 11, 0, 113, 21, 1, 0, 0,
+		0, 114, 120, 3, 26, 13, 0, 115, 116, 3, 26, 13, 0, 116, 117, 3, 24, 12,
+		0, 117, 118, 3, 22, 11, 0, 118, 120, 1, 0, 0, 0, 119, 114, 1, 0, 0, 0,
+		119, 115, 1, 0, 0, 0, 120, 23, 1, 0, 0, 0, 121, 122, 7, 2, 0, 0, 122, 25,
+		1, 0, 0, 0, 123, 149, 3, 28, 14, 0, 124, 125, 3, 28, 14, 0, 125, 126, 5,
+		23, 0, 0, 126, 127, 3, 26, 13, 0, 127, 149, 1, 0, 0, 0, 128, 129, 3, 28,
+		14, 0, 129, 130, 5, 24, 0, 0, 130, 131, 3, 26, 13, 0, 131, 149, 1, 0, 0,
+		0, 132, 133, 3, 28, 14, 0, 133, 134, 5, 25, 0, 0, 134, 135, 3, 26, 13,
+		0, 135, 149, 1, 0, 0, 0, 136, 137, 3, 28, 14, 0, 137, 138, 5, 26, 0, 0,
+		138, 139, 3, 26, 13, 0, 139, 149, 1, 0, 0, 0, 140, 141, 3, 28, 14, 0, 141,
+		142, 5, 27, 0, 0, 142, 143, 3, 26, 13, 0, 143, 149, 1, 0, 0, 0, 144, 145,
+		3, 28, 14, 0, 145, 146, 5, 28, 0, 0, 146, 147, 3, 26, 13, 0, 147, 149,
+		1, 0, 0, 0, 148, 123, 1, 0, 0, 0, 148, 124, 1, 0, 0, 0, 148, 128, 1, 0,
+		0, 0, 148, 132, 1, 0, 0, 0, 148, 136, 1, 0, 0, 0, 148, 140, 1, 0, 0, 0,
+		148, 144, 1, 0, 0, 0, 149, 27, 1, 0, 0, 0, 150, 156, 3, 30, 15, 0, 151,
+		152, 3, 30, 15, 0, 152, 153, 5, 29, 0, 0, 153, 154, 3, 28, 14, 0, 154,
+		156, 1, 0, 0, 0, 155, 150, 1, 0, 0, 0, 155, 151, 1, 0, 0, 0, 156, 29, 1,
+		0, 0, 0, 157, 171, 3, 32, 16, 0, 158, 159, 3, 32, 16, 0, 159, 160, 5, 30,
+		0, 0, 160, 161, 3, 30, 15, 0, 161, 171, 1, 0, 0, 0, 162, 163, 3, 32, 16,
+		0, 163, 164, 5, 31, 0, 0, 164, 165, 3, 30, 15, 0, 165, 171, 1, 0, 0, 0,
+		166, 167, 3, 32, 16, 0, 167, 168, 5, 32, 0, 0, 168, 169, 3, 30, 15, 0,
+		169, 171, 1, 0, 0, 0, 170, 157, 1, 0, 0, 0, 170, 158, 1, 0, 0, 0, 170,
+		162, 1, 0, 0, 0, 170, 166, 1, 0, 0, 0, 171, 31, 1, 0, 0, 0, 172, 182, 3,
+		34, 17, 0, 173, 174, 3, 34, 17, 0, 174, 175, 5, 33, 0, 0, 175, 176, 3,
+		32, 16, 0, 176, 182, 1, 0, 0, 0, 177, 178, 3, 34, 17, 0, 178, 179, 5, 34,
+		0, 0, 179, 180, 3, 32, 16, 0, 180, 182, 1, 0, 0, 0, 181, 172, 1, 0, 0,
+		0, 181, 173, 1, 0, 0, 0, 181, 177, 1, 0, 0, 0, 182, 33, 1, 0, 0, 0, 183,
+		193, 3, 36, 18, 0, 184, 185, 3, 36, 18, 0, 185, 186, 5, 35, 0, 0, 186,
+		187, 3, 34, 17, 0, 187, 193, 1, 0, 0, 0, 188, 189, 3, 36, 18, 0, 189, 190,
+		5, 36, 0, 0, 190, 191, 3, 34, 17, 0, 191, 193, 1, 0, 0, 0, 192, 183, 1,
+		0, 0, 0, 192, 184, 1, 0, 0, 0, 192, 188, 1, 0, 0, 0, 193, 35, 1, 0, 0,
+		0, 194, 200, 3, 38, 19, 0, 195, 196, 3, 38, 19, 0, 196, 197, 5, 37, 0,
+		0, 197, 198, 3, 36, 18, 0, 198, 200, 1, 0, 0, 0, 199, 194, 1, 0, 0, 0,
+		199, 195, 1, 0, 0, 0, 200, 37, 1, 0, 0, 0, 201, 207, 3, 40, 20, 0, 202,
+		203, 5, 39, 0, 0, 203, 204, 3, 20, 10, 0, 204, 205, 5, 40, 0, 0, 205, 207,
+		1, 0, 0, 0, 206, 201, 1, 0, 0, 0, 206, 202, 1, 0, 0, 0, 207, 39, 1, 0,
+		0, 0, 208, 215, 3, 44, 22, 0, 209, 215, 3, 42, 21, 0, 210, 211, 5, 34,
+		0, 0, 211, 215, 3, 20, 10, 0, 212, 213, 5, 38, 0, 0, 213, 215, 3, 20, 10,
+		0, 214, 208, 1, 0, 0, 0, 214, 209, 1, 0, 0, 0, 214, 210, 1, 0, 0, 0, 214,
+		212, 1, 0, 0, 0, 215, 41, 1, 0, 0, 0, 216, 217, 5, 3, 0, 0, 217, 218, 5,
+		2, 0, 0, 218, 219, 5, 4, 0, 0, 219, 220, 3, 20, 10, 0, 220, 221, 5, 1,
+		0, 0, 221, 222, 5, 43, 0, 0, 222, 43, 1, 0, 0, 0, 223, 224, 7, 3, 0, 0,
+		224, 45, 1, 0, 0, 0, 12, 49, 58, 76, 119, 148, 155, 170, 181, 192, 199,
+		206, 214,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -177,45 +195,50 @@ func NewkochanowskiParser(input antlr.TokenStream) *kochanowskiParser {
 // kochanowskiParser tokens.
 const (
 	kochanowskiParserEOF          = antlr.TokenEOF
-	kochanowskiParserDEFINE       = 1
-	kochanowskiParserVARIABLE     = 2
-	kochanowskiParserINT32        = 3
-	kochanowskiParserINT64        = 4
-	kochanowskiParserF32          = 5
-	kochanowskiParserF64          = 6
-	kochanowskiParserINT32ARRAY   = 7
-	kochanowskiParserF32ARRAY     = 8
-	kochanowskiParserNAMED        = 9
-	kochanowskiParserWITH_VALUE   = 10
-	kochanowskiParserDOT          = 11
-	kochanowskiParserASSIGN       = 12
-	kochanowskiParserPRINT_WORD   = 13
-	kochanowskiParserREAD_WORD    = 14
-	kochanowskiParserLOGIC_AND    = 15
-	kochanowskiParserLOGIC_OR     = 16
-	kochanowskiParserFROM         = 17
-	kochanowskiParserGREATER      = 18
-	kochanowskiParserGREATEREQUAL = 19
-	kochanowskiParserEQUAL        = 20
-	kochanowskiParserLESSEQUAL    = 21
-	kochanowskiParserLESS         = 22
-	kochanowskiParserNOTEQUAL     = 23
-	kochanowskiParserMODULO       = 24
-	kochanowskiParserAND          = 25
-	kochanowskiParserOR           = 26
-	kochanowskiParserXOR          = 27
-	kochanowskiParserPLUS         = 28
-	kochanowskiParserMINUS        = 29
-	kochanowskiParserTIMES        = 30
-	kochanowskiParserDIVIDE       = 31
-	kochanowskiParserPOWER        = 32
-	kochanowskiParserNOT          = 33
-	kochanowskiParserFIRST        = 34
-	kochanowskiParserCALCULATE    = 35
-	kochanowskiParserINTEGER      = 36
-	kochanowskiParserDECIMAL      = 37
-	kochanowskiParserID           = 38
-	kochanowskiParserWS           = 39
+	kochanowskiParserARRAY        = 1
+	kochanowskiParserUNDER        = 2
+	kochanowskiParserVALUE        = 3
+	kochanowskiParserCELL         = 4
+	kochanowskiParserDEFINE       = 5
+	kochanowskiParserVARIABLE     = 6
+	kochanowskiParserINT32        = 7
+	kochanowskiParserINT64        = 8
+	kochanowskiParserF32          = 9
+	kochanowskiParserF64          = 10
+	kochanowskiParserINT32ARRAY   = 11
+	kochanowskiParserF32ARRAY     = 12
+	kochanowskiParserWITH_SIZE    = 13
+	kochanowskiParserNAMED        = 14
+	kochanowskiParserWITH_VALUE   = 15
+	kochanowskiParserDOT          = 16
+	kochanowskiParserASSIGN       = 17
+	kochanowskiParserPRINT_WORD   = 18
+	kochanowskiParserREAD_WORD    = 19
+	kochanowskiParserLOGIC_AND    = 20
+	kochanowskiParserLOGIC_OR     = 21
+	kochanowskiParserFROM         = 22
+	kochanowskiParserGREATER      = 23
+	kochanowskiParserGREATEREQUAL = 24
+	kochanowskiParserEQUAL        = 25
+	kochanowskiParserLESSEQUAL    = 26
+	kochanowskiParserLESS         = 27
+	kochanowskiParserNOTEQUAL     = 28
+	kochanowskiParserMODULO       = 29
+	kochanowskiParserAND          = 30
+	kochanowskiParserOR           = 31
+	kochanowskiParserXOR          = 32
+	kochanowskiParserPLUS         = 33
+	kochanowskiParserMINUS        = 34
+	kochanowskiParserTIMES        = 35
+	kochanowskiParserDIVIDE       = 36
+	kochanowskiParserPOWER        = 37
+	kochanowskiParserNOT          = 38
+	kochanowskiParserFIRST        = 39
+	kochanowskiParserCALCULATE    = 40
+	kochanowskiParserINTEGER      = 41
+	kochanowskiParserDECIMAL      = 42
+	kochanowskiParserID           = 43
+	kochanowskiParserWS           = 44
 )
 
 // kochanowskiParser rules.
@@ -224,21 +247,25 @@ const (
 	kochanowskiParserRULE_statement      = 1
 	kochanowskiParserRULE_var_create     = 2
 	kochanowskiParserRULE_type           = 3
-	kochanowskiParserRULE_var_assign     = 4
-	kochanowskiParserRULE_read           = 5
-	kochanowskiParserRULE_print          = 6
-	kochanowskiParserRULE_expr           = 7
-	kochanowskiParserRULE_expr_logic     = 8
-	kochanowskiParserRULE_logic_operator = 9
-	kochanowskiParserRULE_expr_compare   = 10
-	kochanowskiParserRULE_expr_mod       = 11
-	kochanowskiParserRULE_expr_bit       = 12
-	kochanowskiParserRULE_expr_add       = 13
-	kochanowskiParserRULE_expr_mult      = 14
-	kochanowskiParserRULE_expr_power     = 15
-	kochanowskiParserRULE_expr_paren     = 16
-	kochanowskiParserRULE_unary          = 17
-	kochanowskiParserRULE_value          = 18
+	kochanowskiParserRULE_array_create   = 4
+	kochanowskiParserRULE_array_type     = 5
+	kochanowskiParserRULE_array_assign   = 6
+	kochanowskiParserRULE_var_assign     = 7
+	kochanowskiParserRULE_read           = 8
+	kochanowskiParserRULE_print          = 9
+	kochanowskiParserRULE_expr           = 10
+	kochanowskiParserRULE_expr_logic     = 11
+	kochanowskiParserRULE_logic_operator = 12
+	kochanowskiParserRULE_expr_compare   = 13
+	kochanowskiParserRULE_expr_mod       = 14
+	kochanowskiParserRULE_expr_bit       = 15
+	kochanowskiParserRULE_expr_add       = 16
+	kochanowskiParserRULE_expr_mult      = 17
+	kochanowskiParserRULE_expr_power     = 18
+	kochanowskiParserRULE_expr_paren     = 19
+	kochanowskiParserRULE_unary          = 20
+	kochanowskiParserRULE_array_value    = 21
+	kochanowskiParserRULE_value          = 22
 )
 
 // IBodyContext is an interface to support dynamic dispatch.
@@ -355,20 +382,20 @@ func (p *kochanowskiParser) Body() (localctx IBodyContext) {
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(41)
+	p.SetState(49)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&28674) != 0 {
+	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&917536) != 0 {
 		{
-			p.SetState(38)
+			p.SetState(46)
 			p.Statement()
 		}
 
-		p.SetState(43)
+		p.SetState(51)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -399,6 +426,8 @@ type IStatementContext interface {
 	// Getter signatures
 	Var_create() IVar_createContext
 	Var_assign() IVar_assignContext
+	Array_create() IArray_createContext
+	Array_assign() IArray_assignContext
 	Print_() IPrintContext
 	Read() IReadContext
 
@@ -470,6 +499,38 @@ func (s *StatementContext) Var_assign() IVar_assignContext {
 	return t.(IVar_assignContext)
 }
 
+func (s *StatementContext) Array_create() IArray_createContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IArray_createContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IArray_createContext)
+}
+
+func (s *StatementContext) Array_assign() IArray_assignContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IArray_assignContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IArray_assignContext)
+}
+
 func (s *StatementContext) Print_() IPrintContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
@@ -525,43 +586,56 @@ func (s *StatementContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *kochanowskiParser) Statement() (localctx IStatementContext) {
 	localctx = NewStatementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 2, kochanowskiParserRULE_statement)
-	p.SetState(48)
+	p.SetState(58)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetTokenStream().LA(1) {
-	case kochanowskiParserDEFINE:
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 1, p.GetParserRuleContext()) {
+	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(44)
+			p.SetState(52)
 			p.Var_create()
 		}
 
-	case kochanowskiParserASSIGN:
+	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(45)
+			p.SetState(53)
 			p.Var_assign()
 		}
 
-	case kochanowskiParserPRINT_WORD:
+	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(46)
+			p.SetState(54)
+			p.Array_create()
+		}
+
+	case 4:
+		p.EnterOuterAlt(localctx, 4)
+		{
+			p.SetState(55)
+			p.Array_assign()
+		}
+
+	case 5:
+		p.EnterOuterAlt(localctx, 5)
+		{
+			p.SetState(56)
 			p.Print_()
 		}
 
-	case kochanowskiParserREAD_WORD:
-		p.EnterOuterAlt(localctx, 4)
+	case 6:
+		p.EnterOuterAlt(localctx, 6)
 		{
-			p.SetState(47)
+			p.SetState(57)
 			p.Read()
 		}
 
-	default:
-		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
+	case antlr.ATNInvalidAltNumber:
 		goto errorExit
 	}
 
@@ -710,7 +784,7 @@ func (s *Var_createContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 	localctx = NewVar_createContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 4, kochanowskiParserRULE_var_create)
-	p.SetState(66)
+	p.SetState(76)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -720,7 +794,7 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(50)
+			p.SetState(60)
 			p.Match(kochanowskiParserDEFINE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -728,7 +802,7 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 			}
 		}
 		{
-			p.SetState(51)
+			p.SetState(61)
 			p.Match(kochanowskiParserVARIABLE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -736,11 +810,11 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 			}
 		}
 		{
-			p.SetState(52)
+			p.SetState(62)
 			p.Type_()
 		}
 		{
-			p.SetState(53)
+			p.SetState(63)
 			p.Match(kochanowskiParserNAMED)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -748,7 +822,7 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 			}
 		}
 		{
-			p.SetState(54)
+			p.SetState(64)
 			p.Match(kochanowskiParserID)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -756,7 +830,7 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 			}
 		}
 		{
-			p.SetState(55)
+			p.SetState(65)
 			p.Match(kochanowskiParserDOT)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -767,7 +841,7 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(57)
+			p.SetState(67)
 			p.Match(kochanowskiParserDEFINE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -775,7 +849,7 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 			}
 		}
 		{
-			p.SetState(58)
+			p.SetState(68)
 			p.Match(kochanowskiParserVARIABLE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -783,11 +857,11 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 			}
 		}
 		{
-			p.SetState(59)
+			p.SetState(69)
 			p.Type_()
 		}
 		{
-			p.SetState(60)
+			p.SetState(70)
 			p.Match(kochanowskiParserNAMED)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -795,7 +869,7 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 			}
 		}
 		{
-			p.SetState(61)
+			p.SetState(71)
 			p.Match(kochanowskiParserID)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -803,7 +877,7 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 			}
 		}
 		{
-			p.SetState(62)
+			p.SetState(72)
 			p.Match(kochanowskiParserWITH_VALUE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -811,11 +885,11 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 			}
 		}
 		{
-			p.SetState(63)
+			p.SetState(73)
 			p.Expr()
 		}
 		{
-			p.SetState(64)
+			p.SetState(74)
 			p.Match(kochanowskiParserDOT)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -852,8 +926,6 @@ type ITypeContext interface {
 	INT64() antlr.TerminalNode
 	F32() antlr.TerminalNode
 	F64() antlr.TerminalNode
-	INT32ARRAY() antlr.TerminalNode
-	F32ARRAY() antlr.TerminalNode
 
 	// IsTypeContext differentiates from other interfaces.
 	IsTypeContext()
@@ -907,14 +979,6 @@ func (s *TypeContext) F64() antlr.TerminalNode {
 	return s.GetToken(kochanowskiParserF64, 0)
 }
 
-func (s *TypeContext) INT32ARRAY() antlr.TerminalNode {
-	return s.GetToken(kochanowskiParserINT32ARRAY, 0)
-}
-
-func (s *TypeContext) F32ARRAY() antlr.TerminalNode {
-	return s.GetToken(kochanowskiParserF32ARRAY, 0)
-}
-
 func (s *TypeContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -942,14 +1006,522 @@ func (p *kochanowskiParser) Type_() (localctx ITypeContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(68)
+		p.SetState(78)
 		_la = p.GetTokenStream().LA(1)
 
-		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&504) != 0) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&1920) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
 			p.Consume()
+		}
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IArray_createContext is an interface to support dynamic dispatch.
+type IArray_createContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	DEFINE() antlr.TerminalNode
+	Array_type() IArray_typeContext
+	NAMED() antlr.TerminalNode
+	ID() antlr.TerminalNode
+	WITH_SIZE() antlr.TerminalNode
+	Expr() IExprContext
+	DOT() antlr.TerminalNode
+
+	// IsArray_createContext differentiates from other interfaces.
+	IsArray_createContext()
+}
+
+type Array_createContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyArray_createContext() *Array_createContext {
+	var p = new(Array_createContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = kochanowskiParserRULE_array_create
+	return p
+}
+
+func InitEmptyArray_createContext(p *Array_createContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = kochanowskiParserRULE_array_create
+}
+
+func (*Array_createContext) IsArray_createContext() {}
+
+func NewArray_createContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Array_createContext {
+	var p = new(Array_createContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = kochanowskiParserRULE_array_create
+
+	return p
+}
+
+func (s *Array_createContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *Array_createContext) DEFINE() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserDEFINE, 0)
+}
+
+func (s *Array_createContext) Array_type() IArray_typeContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IArray_typeContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IArray_typeContext)
+}
+
+func (s *Array_createContext) NAMED() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserNAMED, 0)
+}
+
+func (s *Array_createContext) ID() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserID, 0)
+}
+
+func (s *Array_createContext) WITH_SIZE() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserWITH_SIZE, 0)
+}
+
+func (s *Array_createContext) Expr() IExprContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IExprContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExprContext)
+}
+
+func (s *Array_createContext) DOT() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserDOT, 0)
+}
+
+func (s *Array_createContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Array_createContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *Array_createContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(kochanowskiListener); ok {
+		listenerT.EnterArray_create(s)
+	}
+}
+
+func (s *Array_createContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(kochanowskiListener); ok {
+		listenerT.ExitArray_create(s)
+	}
+}
+
+func (p *kochanowskiParser) Array_create() (localctx IArray_createContext) {
+	localctx = NewArray_createContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 8, kochanowskiParserRULE_array_create)
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(80)
+		p.Match(kochanowskiParserDEFINE)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(81)
+		p.Array_type()
+	}
+	{
+		p.SetState(82)
+		p.Match(kochanowskiParserNAMED)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(83)
+		p.Match(kochanowskiParserID)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(84)
+		p.Match(kochanowskiParserWITH_SIZE)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(85)
+		p.Expr()
+	}
+	{
+		p.SetState(86)
+		p.Match(kochanowskiParserDOT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IArray_typeContext is an interface to support dynamic dispatch.
+type IArray_typeContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	INT32ARRAY() antlr.TerminalNode
+	F32ARRAY() antlr.TerminalNode
+
+	// IsArray_typeContext differentiates from other interfaces.
+	IsArray_typeContext()
+}
+
+type Array_typeContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyArray_typeContext() *Array_typeContext {
+	var p = new(Array_typeContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = kochanowskiParserRULE_array_type
+	return p
+}
+
+func InitEmptyArray_typeContext(p *Array_typeContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = kochanowskiParserRULE_array_type
+}
+
+func (*Array_typeContext) IsArray_typeContext() {}
+
+func NewArray_typeContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Array_typeContext {
+	var p = new(Array_typeContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = kochanowskiParserRULE_array_type
+
+	return p
+}
+
+func (s *Array_typeContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *Array_typeContext) INT32ARRAY() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserINT32ARRAY, 0)
+}
+
+func (s *Array_typeContext) F32ARRAY() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserF32ARRAY, 0)
+}
+
+func (s *Array_typeContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Array_typeContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *Array_typeContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(kochanowskiListener); ok {
+		listenerT.EnterArray_type(s)
+	}
+}
+
+func (s *Array_typeContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(kochanowskiListener); ok {
+		listenerT.ExitArray_type(s)
+	}
+}
+
+func (p *kochanowskiParser) Array_type() (localctx IArray_typeContext) {
+	localctx = NewArray_typeContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 10, kochanowskiParserRULE_array_type)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(88)
+		_la = p.GetTokenStream().LA(1)
+
+		if !(_la == kochanowskiParserINT32ARRAY || _la == kochanowskiParserF32ARRAY) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
+		}
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IArray_assignContext is an interface to support dynamic dispatch.
+type IArray_assignContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	ASSIGN() antlr.TerminalNode
+	ARRAY() antlr.TerminalNode
+	ID() antlr.TerminalNode
+	UNDER() antlr.TerminalNode
+	AllExpr() []IExprContext
+	Expr(i int) IExprContext
+	VALUE() antlr.TerminalNode
+	DOT() antlr.TerminalNode
+
+	// IsArray_assignContext differentiates from other interfaces.
+	IsArray_assignContext()
+}
+
+type Array_assignContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyArray_assignContext() *Array_assignContext {
+	var p = new(Array_assignContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = kochanowskiParserRULE_array_assign
+	return p
+}
+
+func InitEmptyArray_assignContext(p *Array_assignContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = kochanowskiParserRULE_array_assign
+}
+
+func (*Array_assignContext) IsArray_assignContext() {}
+
+func NewArray_assignContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Array_assignContext {
+	var p = new(Array_assignContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = kochanowskiParserRULE_array_assign
+
+	return p
+}
+
+func (s *Array_assignContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *Array_assignContext) ASSIGN() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserASSIGN, 0)
+}
+
+func (s *Array_assignContext) ARRAY() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserARRAY, 0)
+}
+
+func (s *Array_assignContext) ID() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserID, 0)
+}
+
+func (s *Array_assignContext) UNDER() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserUNDER, 0)
+}
+
+func (s *Array_assignContext) AllExpr() []IExprContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IExprContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IExprContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IExprContext); ok {
+			tst[i] = t.(IExprContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *Array_assignContext) Expr(i int) IExprContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IExprContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExprContext)
+}
+
+func (s *Array_assignContext) VALUE() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserVALUE, 0)
+}
+
+func (s *Array_assignContext) DOT() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserDOT, 0)
+}
+
+func (s *Array_assignContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Array_assignContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *Array_assignContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(kochanowskiListener); ok {
+		listenerT.EnterArray_assign(s)
+	}
+}
+
+func (s *Array_assignContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(kochanowskiListener); ok {
+		listenerT.ExitArray_assign(s)
+	}
+}
+
+func (p *kochanowskiParser) Array_assign() (localctx IArray_assignContext) {
+	localctx = NewArray_assignContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 12, kochanowskiParserRULE_array_assign)
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(90)
+		p.Match(kochanowskiParserASSIGN)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(91)
+		p.Match(kochanowskiParserARRAY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(92)
+		p.Match(kochanowskiParserID)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(93)
+		p.Match(kochanowskiParserUNDER)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(94)
+		p.Expr()
+	}
+	{
+		p.SetState(95)
+		p.Match(kochanowskiParserVALUE)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(96)
+		p.Expr()
+	}
+	{
+		p.SetState(97)
+		p.Match(kochanowskiParserDOT)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
 		}
 	}
 
@@ -1065,10 +1637,10 @@ func (s *Var_assignContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *kochanowskiParser) Var_assign() (localctx IVar_assignContext) {
 	localctx = NewVar_assignContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 8, kochanowskiParserRULE_var_assign)
+	p.EnterRule(localctx, 14, kochanowskiParserRULE_var_assign)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(70)
+		p.SetState(99)
 		p.Match(kochanowskiParserASSIGN)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1076,7 +1648,7 @@ func (p *kochanowskiParser) Var_assign() (localctx IVar_assignContext) {
 		}
 	}
 	{
-		p.SetState(71)
+		p.SetState(100)
 		p.Match(kochanowskiParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1084,11 +1656,11 @@ func (p *kochanowskiParser) Var_assign() (localctx IVar_assignContext) {
 		}
 	}
 	{
-		p.SetState(72)
+		p.SetState(101)
 		p.Expr()
 	}
 	{
-		p.SetState(73)
+		p.SetState(102)
 		p.Match(kochanowskiParserDOT)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1191,10 +1763,10 @@ func (s *ReadContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *kochanowskiParser) Read() (localctx IReadContext) {
 	localctx = NewReadContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 10, kochanowskiParserRULE_read)
+	p.EnterRule(localctx, 16, kochanowskiParserRULE_read)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(75)
+		p.SetState(104)
 		p.Match(kochanowskiParserREAD_WORD)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1202,7 +1774,7 @@ func (p *kochanowskiParser) Read() (localctx IReadContext) {
 		}
 	}
 	{
-		p.SetState(76)
+		p.SetState(105)
 		p.Match(kochanowskiParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1210,7 +1782,7 @@ func (p *kochanowskiParser) Read() (localctx IReadContext) {
 		}
 	}
 	{
-		p.SetState(77)
+		p.SetState(106)
 		p.Match(kochanowskiParserDOT)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1325,10 +1897,10 @@ func (s *PrintContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *kochanowskiParser) Print_() (localctx IPrintContext) {
 	localctx = NewPrintContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 12, kochanowskiParserRULE_print)
+	p.EnterRule(localctx, 18, kochanowskiParserRULE_print)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(79)
+		p.SetState(108)
 		p.Match(kochanowskiParserPRINT_WORD)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1336,11 +1908,11 @@ func (p *kochanowskiParser) Print_() (localctx IPrintContext) {
 		}
 	}
 	{
-		p.SetState(80)
+		p.SetState(109)
 		p.Expr()
 	}
 	{
-		p.SetState(81)
+		p.SetState(110)
 		p.Match(kochanowskiParserDOT)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1445,10 +2017,10 @@ func (s *ExprContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *kochanowskiParser) Expr() (localctx IExprContext) {
 	localctx = NewExprContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 14, kochanowskiParserRULE_expr)
+	p.EnterRule(localctx, 20, kochanowskiParserRULE_expr)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(83)
+		p.SetState(112)
 		p.Expr_logic()
 	}
 
@@ -1583,8 +2155,8 @@ func (s *Expr_logicContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *kochanowskiParser) Expr_logic() (localctx IExpr_logicContext) {
 	localctx = NewExpr_logicContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 16, kochanowskiParserRULE_expr_logic)
-	p.SetState(90)
+	p.EnterRule(localctx, 22, kochanowskiParserRULE_expr_logic)
+	p.SetState(119)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -1594,22 +2166,22 @@ func (p *kochanowskiParser) Expr_logic() (localctx IExpr_logicContext) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(85)
+			p.SetState(114)
 			p.Expr_compare()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(86)
+			p.SetState(115)
 			p.Expr_compare()
 		}
 		{
-			p.SetState(87)
+			p.SetState(116)
 			p.Logic_operator()
 		}
 		{
-			p.SetState(88)
+			p.SetState(117)
 			p.Expr_logic()
 		}
 
@@ -1707,12 +2279,12 @@ func (s *Logic_operatorContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *kochanowskiParser) Logic_operator() (localctx ILogic_operatorContext) {
 	localctx = NewLogic_operatorContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 18, kochanowskiParserRULE_logic_operator)
+	p.EnterRule(localctx, 24, kochanowskiParserRULE_logic_operator)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(92)
+		p.SetState(121)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(_la == kochanowskiParserLOGIC_AND || _la == kochanowskiParserLOGIC_OR) {
@@ -1867,8 +2439,8 @@ func (s *Expr_compareContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *kochanowskiParser) Expr_compare() (localctx IExpr_compareContext) {
 	localctx = NewExpr_compareContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 20, kochanowskiParserRULE_expr_compare)
-	p.SetState(119)
+	p.EnterRule(localctx, 26, kochanowskiParserRULE_expr_compare)
+	p.SetState(148)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -1878,18 +2450,18 @@ func (p *kochanowskiParser) Expr_compare() (localctx IExpr_compareContext) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(94)
+			p.SetState(123)
 			p.Expr_mod()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(95)
+			p.SetState(124)
 			p.Expr_mod()
 		}
 		{
-			p.SetState(96)
+			p.SetState(125)
 			p.Match(kochanowskiParserGREATER)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1897,18 +2469,18 @@ func (p *kochanowskiParser) Expr_compare() (localctx IExpr_compareContext) {
 			}
 		}
 		{
-			p.SetState(97)
+			p.SetState(126)
 			p.Expr_compare()
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(99)
+			p.SetState(128)
 			p.Expr_mod()
 		}
 		{
-			p.SetState(100)
+			p.SetState(129)
 			p.Match(kochanowskiParserGREATEREQUAL)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1916,18 +2488,18 @@ func (p *kochanowskiParser) Expr_compare() (localctx IExpr_compareContext) {
 			}
 		}
 		{
-			p.SetState(101)
+			p.SetState(130)
 			p.Expr_compare()
 		}
 
 	case 4:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(103)
+			p.SetState(132)
 			p.Expr_mod()
 		}
 		{
-			p.SetState(104)
+			p.SetState(133)
 			p.Match(kochanowskiParserEQUAL)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1935,18 +2507,18 @@ func (p *kochanowskiParser) Expr_compare() (localctx IExpr_compareContext) {
 			}
 		}
 		{
-			p.SetState(105)
+			p.SetState(134)
 			p.Expr_compare()
 		}
 
 	case 5:
 		p.EnterOuterAlt(localctx, 5)
 		{
-			p.SetState(107)
+			p.SetState(136)
 			p.Expr_mod()
 		}
 		{
-			p.SetState(108)
+			p.SetState(137)
 			p.Match(kochanowskiParserLESSEQUAL)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1954,18 +2526,18 @@ func (p *kochanowskiParser) Expr_compare() (localctx IExpr_compareContext) {
 			}
 		}
 		{
-			p.SetState(109)
+			p.SetState(138)
 			p.Expr_compare()
 		}
 
 	case 6:
 		p.EnterOuterAlt(localctx, 6)
 		{
-			p.SetState(111)
+			p.SetState(140)
 			p.Expr_mod()
 		}
 		{
-			p.SetState(112)
+			p.SetState(141)
 			p.Match(kochanowskiParserLESS)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1973,18 +2545,18 @@ func (p *kochanowskiParser) Expr_compare() (localctx IExpr_compareContext) {
 			}
 		}
 		{
-			p.SetState(113)
+			p.SetState(142)
 			p.Expr_compare()
 		}
 
 	case 7:
 		p.EnterOuterAlt(localctx, 7)
 		{
-			p.SetState(115)
+			p.SetState(144)
 			p.Expr_mod()
 		}
 		{
-			p.SetState(116)
+			p.SetState(145)
 			p.Match(kochanowskiParserNOTEQUAL)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1992,7 +2564,7 @@ func (p *kochanowskiParser) Expr_compare() (localctx IExpr_compareContext) {
 			}
 		}
 		{
-			p.SetState(117)
+			p.SetState(146)
 			p.Expr_compare()
 		}
 
@@ -2119,8 +2691,8 @@ func (s *Expr_modContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *kochanowskiParser) Expr_mod() (localctx IExpr_modContext) {
 	localctx = NewExpr_modContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 22, kochanowskiParserRULE_expr_mod)
-	p.SetState(126)
+	p.EnterRule(localctx, 28, kochanowskiParserRULE_expr_mod)
+	p.SetState(155)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -2130,18 +2702,18 @@ func (p *kochanowskiParser) Expr_mod() (localctx IExpr_modContext) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(121)
+			p.SetState(150)
 			p.Expr_bit()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(122)
+			p.SetState(151)
 			p.Expr_bit()
 		}
 		{
-			p.SetState(123)
+			p.SetState(152)
 			p.Match(kochanowskiParserMODULO)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2149,7 +2721,7 @@ func (p *kochanowskiParser) Expr_mod() (localctx IExpr_modContext) {
 			}
 		}
 		{
-			p.SetState(124)
+			p.SetState(153)
 			p.Expr_mod()
 		}
 
@@ -2286,8 +2858,8 @@ func (s *Expr_bitContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *kochanowskiParser) Expr_bit() (localctx IExpr_bitContext) {
 	localctx = NewExpr_bitContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 24, kochanowskiParserRULE_expr_bit)
-	p.SetState(141)
+	p.EnterRule(localctx, 30, kochanowskiParserRULE_expr_bit)
+	p.SetState(170)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -2297,18 +2869,18 @@ func (p *kochanowskiParser) Expr_bit() (localctx IExpr_bitContext) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(128)
+			p.SetState(157)
 			p.Expr_add()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(129)
+			p.SetState(158)
 			p.Expr_add()
 		}
 		{
-			p.SetState(130)
+			p.SetState(159)
 			p.Match(kochanowskiParserAND)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2316,18 +2888,18 @@ func (p *kochanowskiParser) Expr_bit() (localctx IExpr_bitContext) {
 			}
 		}
 		{
-			p.SetState(131)
+			p.SetState(160)
 			p.Expr_bit()
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(133)
+			p.SetState(162)
 			p.Expr_add()
 		}
 		{
-			p.SetState(134)
+			p.SetState(163)
 			p.Match(kochanowskiParserOR)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2335,18 +2907,18 @@ func (p *kochanowskiParser) Expr_bit() (localctx IExpr_bitContext) {
 			}
 		}
 		{
-			p.SetState(135)
+			p.SetState(164)
 			p.Expr_bit()
 		}
 
 	case 4:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(137)
+			p.SetState(166)
 			p.Expr_add()
 		}
 		{
-			p.SetState(138)
+			p.SetState(167)
 			p.Match(kochanowskiParserXOR)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2354,7 +2926,7 @@ func (p *kochanowskiParser) Expr_bit() (localctx IExpr_bitContext) {
 			}
 		}
 		{
-			p.SetState(139)
+			p.SetState(168)
 			p.Expr_bit()
 		}
 
@@ -2486,8 +3058,8 @@ func (s *Expr_addContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *kochanowskiParser) Expr_add() (localctx IExpr_addContext) {
 	localctx = NewExpr_addContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 26, kochanowskiParserRULE_expr_add)
-	p.SetState(152)
+	p.EnterRule(localctx, 32, kochanowskiParserRULE_expr_add)
+	p.SetState(181)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -2497,18 +3069,18 @@ func (p *kochanowskiParser) Expr_add() (localctx IExpr_addContext) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(143)
+			p.SetState(172)
 			p.Expr_mult()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(144)
+			p.SetState(173)
 			p.Expr_mult()
 		}
 		{
-			p.SetState(145)
+			p.SetState(174)
 			p.Match(kochanowskiParserPLUS)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2516,18 +3088,18 @@ func (p *kochanowskiParser) Expr_add() (localctx IExpr_addContext) {
 			}
 		}
 		{
-			p.SetState(146)
+			p.SetState(175)
 			p.Expr_add()
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(148)
+			p.SetState(177)
 			p.Expr_mult()
 		}
 		{
-			p.SetState(149)
+			p.SetState(178)
 			p.Match(kochanowskiParserMINUS)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2535,7 +3107,7 @@ func (p *kochanowskiParser) Expr_add() (localctx IExpr_addContext) {
 			}
 		}
 		{
-			p.SetState(150)
+			p.SetState(179)
 			p.Expr_add()
 		}
 
@@ -2667,8 +3239,8 @@ func (s *Expr_multContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *kochanowskiParser) Expr_mult() (localctx IExpr_multContext) {
 	localctx = NewExpr_multContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 28, kochanowskiParserRULE_expr_mult)
-	p.SetState(163)
+	p.EnterRule(localctx, 34, kochanowskiParserRULE_expr_mult)
+	p.SetState(192)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -2678,18 +3250,18 @@ func (p *kochanowskiParser) Expr_mult() (localctx IExpr_multContext) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(154)
+			p.SetState(183)
 			p.Expr_power()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(155)
+			p.SetState(184)
 			p.Expr_power()
 		}
 		{
-			p.SetState(156)
+			p.SetState(185)
 			p.Match(kochanowskiParserTIMES)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2697,18 +3269,18 @@ func (p *kochanowskiParser) Expr_mult() (localctx IExpr_multContext) {
 			}
 		}
 		{
-			p.SetState(157)
+			p.SetState(186)
 			p.Expr_mult()
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(159)
+			p.SetState(188)
 			p.Expr_power()
 		}
 		{
-			p.SetState(160)
+			p.SetState(189)
 			p.Match(kochanowskiParserDIVIDE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2716,7 +3288,7 @@ func (p *kochanowskiParser) Expr_mult() (localctx IExpr_multContext) {
 			}
 		}
 		{
-			p.SetState(161)
+			p.SetState(190)
 			p.Expr_mult()
 		}
 
@@ -2843,8 +3415,8 @@ func (s *Expr_powerContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *kochanowskiParser) Expr_power() (localctx IExpr_powerContext) {
 	localctx = NewExpr_powerContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 30, kochanowskiParserRULE_expr_power)
-	p.SetState(170)
+	p.EnterRule(localctx, 36, kochanowskiParserRULE_expr_power)
+	p.SetState(199)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -2854,18 +3426,18 @@ func (p *kochanowskiParser) Expr_power() (localctx IExpr_powerContext) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(165)
+			p.SetState(194)
 			p.Expr_paren()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(166)
+			p.SetState(195)
 			p.Expr_paren()
 		}
 		{
-			p.SetState(167)
+			p.SetState(196)
 			p.Match(kochanowskiParserPOWER)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2873,7 +3445,7 @@ func (p *kochanowskiParser) Expr_power() (localctx IExpr_powerContext) {
 			}
 		}
 		{
-			p.SetState(168)
+			p.SetState(197)
 			p.Expr_power()
 		}
 
@@ -3005,25 +3577,25 @@ func (s *Expr_parenContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *kochanowskiParser) Expr_paren() (localctx IExpr_parenContext) {
 	localctx = NewExpr_parenContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 32, kochanowskiParserRULE_expr_paren)
-	p.SetState(177)
+	p.EnterRule(localctx, 38, kochanowskiParserRULE_expr_paren)
+	p.SetState(206)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
 	switch p.GetTokenStream().LA(1) {
-	case kochanowskiParserMINUS, kochanowskiParserNOT, kochanowskiParserINTEGER, kochanowskiParserDECIMAL, kochanowskiParserID:
+	case kochanowskiParserVALUE, kochanowskiParserMINUS, kochanowskiParserNOT, kochanowskiParserINTEGER, kochanowskiParserDECIMAL, kochanowskiParserID:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(172)
+			p.SetState(201)
 			p.Unary()
 		}
 
 	case kochanowskiParserFIRST:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(173)
+			p.SetState(202)
 			p.Match(kochanowskiParserFIRST)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3031,11 +3603,11 @@ func (p *kochanowskiParser) Expr_paren() (localctx IExpr_parenContext) {
 			}
 		}
 		{
-			p.SetState(174)
+			p.SetState(203)
 			p.Expr()
 		}
 		{
-			p.SetState(175)
+			p.SetState(204)
 			p.Match(kochanowskiParserCALCULATE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3070,6 +3642,7 @@ type IUnaryContext interface {
 
 	// Getter signatures
 	Value() IValueContext
+	Array_value() IArray_valueContext
 	MINUS() antlr.TerminalNode
 	Expr() IExprContext
 	NOT() antlr.TerminalNode
@@ -3126,6 +3699,22 @@ func (s *UnaryContext) Value() IValueContext {
 	return t.(IValueContext)
 }
 
+func (s *UnaryContext) Array_value() IArray_valueContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IArray_valueContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IArray_valueContext)
+}
+
 func (s *UnaryContext) MINUS() antlr.TerminalNode {
 	return s.GetToken(kochanowskiParserMINUS, 0)
 }
@@ -3172,8 +3761,8 @@ func (s *UnaryContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *kochanowskiParser) Unary() (localctx IUnaryContext) {
 	localctx = NewUnaryContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 34, kochanowskiParserRULE_unary)
-	p.SetState(184)
+	p.EnterRule(localctx, 40, kochanowskiParserRULE_unary)
+	p.SetState(214)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -3183,14 +3772,21 @@ func (p *kochanowskiParser) Unary() (localctx IUnaryContext) {
 	case kochanowskiParserINTEGER, kochanowskiParserDECIMAL, kochanowskiParserID:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(179)
+			p.SetState(208)
 			p.Value()
 		}
 
-	case kochanowskiParserMINUS:
+	case kochanowskiParserVALUE:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(180)
+			p.SetState(209)
+			p.Array_value()
+		}
+
+	case kochanowskiParserMINUS:
+		p.EnterOuterAlt(localctx, 3)
+		{
+			p.SetState(210)
 			p.Match(kochanowskiParserMINUS)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3198,14 +3794,14 @@ func (p *kochanowskiParser) Unary() (localctx IUnaryContext) {
 			}
 		}
 		{
-			p.SetState(181)
+			p.SetState(211)
 			p.Expr()
 		}
 
 	case kochanowskiParserNOT:
-		p.EnterOuterAlt(localctx, 3)
+		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(182)
+			p.SetState(212)
 			p.Match(kochanowskiParserNOT)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3213,13 +3809,182 @@ func (p *kochanowskiParser) Unary() (localctx IUnaryContext) {
 			}
 		}
 		{
-			p.SetState(183)
+			p.SetState(213)
 			p.Expr()
 		}
 
 	default:
 		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
 		goto errorExit
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IArray_valueContext is an interface to support dynamic dispatch.
+type IArray_valueContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	VALUE() antlr.TerminalNode
+	UNDER() antlr.TerminalNode
+	CELL() antlr.TerminalNode
+	Expr() IExprContext
+	ARRAY() antlr.TerminalNode
+	ID() antlr.TerminalNode
+
+	// IsArray_valueContext differentiates from other interfaces.
+	IsArray_valueContext()
+}
+
+type Array_valueContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyArray_valueContext() *Array_valueContext {
+	var p = new(Array_valueContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = kochanowskiParserRULE_array_value
+	return p
+}
+
+func InitEmptyArray_valueContext(p *Array_valueContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = kochanowskiParserRULE_array_value
+}
+
+func (*Array_valueContext) IsArray_valueContext() {}
+
+func NewArray_valueContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Array_valueContext {
+	var p = new(Array_valueContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = kochanowskiParserRULE_array_value
+
+	return p
+}
+
+func (s *Array_valueContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *Array_valueContext) VALUE() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserVALUE, 0)
+}
+
+func (s *Array_valueContext) UNDER() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserUNDER, 0)
+}
+
+func (s *Array_valueContext) CELL() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserCELL, 0)
+}
+
+func (s *Array_valueContext) Expr() IExprContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IExprContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExprContext)
+}
+
+func (s *Array_valueContext) ARRAY() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserARRAY, 0)
+}
+
+func (s *Array_valueContext) ID() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserID, 0)
+}
+
+func (s *Array_valueContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Array_valueContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *Array_valueContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(kochanowskiListener); ok {
+		listenerT.EnterArray_value(s)
+	}
+}
+
+func (s *Array_valueContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(kochanowskiListener); ok {
+		listenerT.ExitArray_value(s)
+	}
+}
+
+func (p *kochanowskiParser) Array_value() (localctx IArray_valueContext) {
+	localctx = NewArray_valueContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 42, kochanowskiParserRULE_array_value)
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(216)
+		p.Match(kochanowskiParserVALUE)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(217)
+		p.Match(kochanowskiParserUNDER)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(218)
+		p.Match(kochanowskiParserCELL)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(219)
+		p.Expr()
+	}
+	{
+		p.SetState(220)
+		p.Match(kochanowskiParserARRAY)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	{
+		p.SetState(221)
+		p.Match(kochanowskiParserID)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
 errorExit:
@@ -3317,15 +4082,15 @@ func (s *ValueContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *kochanowskiParser) Value() (localctx IValueContext) {
 	localctx = NewValueContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 36, kochanowskiParserRULE_value)
+	p.EnterRule(localctx, 44, kochanowskiParserRULE_value)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(186)
+		p.SetState(223)
 		_la = p.GetTokenStream().LA(1)
 
-		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&481036337152) != 0) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&15393162788864) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)

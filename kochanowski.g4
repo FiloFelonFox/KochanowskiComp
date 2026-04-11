@@ -10,7 +10,7 @@ var_create
 
 type: INT32 | INT64 | F32 | F64;
 
-array_create : DEFINE  array_type NAMED ID DOT;
+array_create : DEFINE array_type NAMED ID WITH_SIZE expr DOT;
 
 array_type: INT32ARRAY | F32ARRAY;
 
@@ -97,6 +97,7 @@ F64: 'zmiennoprzecinkową olbrzymiej precyzji';
 INT32ARRAY: 'tablicę liczb całkowitych';
 F32ARRAY: 'tablicę liczb zmiennoprzecinkowych';
 
+WITH_SIZE: 'o rozmiarze';
 NAMED: 'o nazwie';
 WITH_VALUE: 'o wartości';
 DOT: '.';

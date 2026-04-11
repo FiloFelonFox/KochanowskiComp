@@ -1,4 +1,3 @@
-Zdefiniuj zmienną zmiennoprzecinkową o nazwie zmienna1 o wartości 2 razy 3 do potęgi 4.
-Wypisz zmienna1.
-Wczytaj zmienna1.
-Wypisz zmienna1.
+Zdefiniuj tablicę liczb zmiennoprzecinkowych o nazwie dupa o rozmiarze 6 plus 7.
+Przypisz tablicy dupa pod 6 wartość 7.7.
+Wypisz wartość pod komórką 6 tablicy dupa.
