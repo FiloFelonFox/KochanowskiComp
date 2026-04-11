@@ -33,9 +33,11 @@ var KochanowskiParserStaticData struct {
 func kochanowskiParserInit() {
 	staticData := &KochanowskiParserStaticData
 	staticData.LiteralNames = []string{
-		"", "'Zdefiniuj'", "'zmienn\\u0105'", "'ca\\u0142kowit\\u0105'", "'o nazwie'",
-		"'o warto\\u015Bci'", "'.'", "'Przypisz'", "'Wypisz'", "'Wczytaj'",
-		"'i jednocze\\u015Bnie'", "'lub'", "'z'", "'wi\\u0119ksze ni\\u017C'",
+		"", "'Zdefiniuj'", "'zmienn\\u0105'", "'ca\\u0142kowit\\u0105'", "'ca\\u0142kowit\\u0105 olbrzymiej wagi'",
+		"'zmiennoprzecinkow\\u0105'", "'zmiennoprzecinkow\\u0105 olbrzymiej precyzji'",
+		"'tablic\\u0119 liczb ca\\u0142kowitych'", "'tablic\\u0119 liczb zmiennoprzecinkowych'",
+		"'o nazwie'", "'o warto\\u015Bci'", "'.'", "'Przypisz'", "'Wypisz'",
+		"'Wczytaj'", "'i jednocze\\u015Bnie'", "'lub'", "'z'", "'wi\\u0119ksze ni\\u017C'",
 		"'wi\\u0119ksze lub r\\u00F3wne'", "'r\\u00F3wne'", "'mniejsze lub r\\u00F3wne'",
 		"'mniejsze ni\\u017C'", "'r\\u00F3\\u017Cne od'", "'modulo'", "'koniunkcja'",
 		"'alternatywa'", "'alternatywa wykluczaj\\u0105ca'", "'plus'", "'minus'",
@@ -43,11 +45,12 @@ func kochanowskiParserInit() {
 		"'policz'",
 	}
 	staticData.SymbolicNames = []string{
-		"", "DEFINE", "VARIABLE", "INT32", "NAMED", "WITH_VALUE", "DOT", "ASSIGN",
-		"PRINT_WORD", "READ_WORD", "LOGIC_AND", "LOGIC_OR", "FROM", "GREATER",
-		"GREATEREQUAL", "EQUAL", "LESSEQUAL", "LESS", "NOTEQUAL", "MODULO",
-		"AND", "OR", "XOR", "PLUS", "MINUS", "TIMES", "DIVIDE", "POWER", "NOT",
-		"FIRST", "CALCULATE", "INTEGER", "DECIMAL", "ID", "WS",
+		"", "DEFINE", "VARIABLE", "INT32", "INT64", "F32", "F64", "INT32ARRAY",
+		"F32ARRAY", "NAMED", "WITH_VALUE", "DOT", "ASSIGN", "PRINT_WORD", "READ_WORD",
+		"LOGIC_AND", "LOGIC_OR", "FROM", "GREATER", "GREATEREQUAL", "EQUAL",
+		"LESSEQUAL", "LESS", "NOTEQUAL", "MODULO", "AND", "OR", "XOR", "PLUS",
+		"MINUS", "TIMES", "DIVIDE", "POWER", "NOT", "FIRST", "CALCULATE", "INTEGER",
+		"DECIMAL", "ID", "WS",
 	}
 	staticData.RuleNames = []string{
 		"body", "statement", "var_create", "type", "var_assign", "read", "print",
@@ -57,7 +60,7 @@ func kochanowskiParserInit() {
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 34, 189, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 1, 39, 189, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
 		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
 		10, 2, 11, 7, 11, 2, 12, 7, 12, 2, 13, 7, 13, 2, 14, 7, 14, 2, 15, 7, 15,
 		2, 16, 7, 16, 2, 17, 7, 17, 2, 18, 7, 18, 1, 0, 5, 0, 40, 8, 0, 10, 0,
@@ -76,66 +79,66 @@ func kochanowskiParserInit() {
 		15, 1, 15, 1, 15, 3, 15, 171, 8, 15, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16,
 		3, 16, 178, 8, 16, 1, 17, 1, 17, 1, 17, 1, 17, 1, 17, 3, 17, 185, 8, 17,
 		1, 18, 1, 18, 1, 18, 0, 0, 19, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22,
-		24, 26, 28, 30, 32, 34, 36, 0, 2, 1, 0, 10, 11, 1, 0, 31, 33, 193, 0, 41,
-		1, 0, 0, 0, 2, 48, 1, 0, 0, 0, 4, 66, 1, 0, 0, 0, 6, 68, 1, 0, 0, 0, 8,
-		70, 1, 0, 0, 0, 10, 75, 1, 0, 0, 0, 12, 79, 1, 0, 0, 0, 14, 83, 1, 0, 0,
-		0, 16, 90, 1, 0, 0, 0, 18, 92, 1, 0, 0, 0, 20, 119, 1, 0, 0, 0, 22, 126,
-		1, 0, 0, 0, 24, 141, 1, 0, 0, 0, 26, 152, 1, 0, 0, 0, 28, 163, 1, 0, 0,
-		0, 30, 170, 1, 0, 0, 0, 32, 177, 1, 0, 0, 0, 34, 184, 1, 0, 0, 0, 36, 186,
-		1, 0, 0, 0, 38, 40, 3, 2, 1, 0, 39, 38, 1, 0, 0, 0, 40, 43, 1, 0, 0, 0,
-		41, 39, 1, 0, 0, 0, 41, 42, 1, 0, 0, 0, 42, 1, 1, 0, 0, 0, 43, 41, 1, 0,
-		0, 0, 44, 49, 3, 4, 2, 0, 45, 49, 3, 8, 4, 0, 46, 49, 3, 12, 6, 0, 47,
-		49, 3, 10, 5, 0, 48, 44, 1, 0, 0, 0, 48, 45, 1, 0, 0, 0, 48, 46, 1, 0,
-		0, 0, 48, 47, 1, 0, 0, 0, 49, 3, 1, 0, 0, 0, 50, 51, 5, 1, 0, 0, 51, 52,
-		5, 2, 0, 0, 52, 53, 3, 6, 3, 0, 53, 54, 5, 4, 0, 0, 54, 55, 5, 33, 0, 0,
-		55, 56, 5, 6, 0, 0, 56, 67, 1, 0, 0, 0, 57, 58, 5, 1, 0, 0, 58, 59, 5,
-		2, 0, 0, 59, 60, 3, 6, 3, 0, 60, 61, 5, 4, 0, 0, 61, 62, 5, 33, 0, 0, 62,
-		63, 5, 5, 0, 0, 63, 64, 3, 14, 7, 0, 64, 65, 5, 6, 0, 0, 65, 67, 1, 0,
-		0, 0, 66, 50, 1, 0, 0, 0, 66, 57, 1, 0, 0, 0, 67, 5, 1, 0, 0, 0, 68, 69,
-		5, 3, 0, 0, 69, 7, 1, 0, 0, 0, 70, 71, 5, 7, 0, 0, 71, 72, 5, 33, 0, 0,
-		72, 73, 3, 14, 7, 0, 73, 74, 5, 6, 0, 0, 74, 9, 1, 0, 0, 0, 75, 76, 5,
-		9, 0, 0, 76, 77, 5, 33, 0, 0, 77, 78, 5, 6, 0, 0, 78, 11, 1, 0, 0, 0, 79,
-		80, 5, 8, 0, 0, 80, 81, 3, 14, 7, 0, 81, 82, 5, 6, 0, 0, 82, 13, 1, 0,
-		0, 0, 83, 84, 3, 16, 8, 0, 84, 15, 1, 0, 0, 0, 85, 91, 3, 20, 10, 0, 86,
-		87, 3, 20, 10, 0, 87, 88, 3, 18, 9, 0, 88, 89, 3, 16, 8, 0, 89, 91, 1,
-		0, 0, 0, 90, 85, 1, 0, 0, 0, 90, 86, 1, 0, 0, 0, 91, 17, 1, 0, 0, 0, 92,
-		93, 7, 0, 0, 0, 93, 19, 1, 0, 0, 0, 94, 120, 3, 22, 11, 0, 95, 96, 3, 22,
-		11, 0, 96, 97, 5, 13, 0, 0, 97, 98, 3, 20, 10, 0, 98, 120, 1, 0, 0, 0,
-		99, 100, 3, 22, 11, 0, 100, 101, 5, 14, 0, 0, 101, 102, 3, 20, 10, 0, 102,
-		120, 1, 0, 0, 0, 103, 104, 3, 22, 11, 0, 104, 105, 5, 15, 0, 0, 105, 106,
-		3, 20, 10, 0, 106, 120, 1, 0, 0, 0, 107, 108, 3, 22, 11, 0, 108, 109, 5,
-		16, 0, 0, 109, 110, 3, 20, 10, 0, 110, 120, 1, 0, 0, 0, 111, 112, 3, 22,
-		11, 0, 112, 113, 5, 17, 0, 0, 113, 114, 3, 20, 10, 0, 114, 120, 1, 0, 0,
-		0, 115, 116, 3, 22, 11, 0, 116, 117, 5, 18, 0, 0, 117, 118, 3, 20, 10,
-		0, 118, 120, 1, 0, 0, 0, 119, 94, 1, 0, 0, 0, 119, 95, 1, 0, 0, 0, 119,
-		99, 1, 0, 0, 0, 119, 103, 1, 0, 0, 0, 119, 107, 1, 0, 0, 0, 119, 111, 1,
-		0, 0, 0, 119, 115, 1, 0, 0, 0, 120, 21, 1, 0, 0, 0, 121, 127, 3, 24, 12,
-		0, 122, 123, 3, 24, 12, 0, 123, 124, 5, 19, 0, 0, 124, 125, 3, 22, 11,
-		0, 125, 127, 1, 0, 0, 0, 126, 121, 1, 0, 0, 0, 126, 122, 1, 0, 0, 0, 127,
-		23, 1, 0, 0, 0, 128, 142, 3, 26, 13, 0, 129, 130, 3, 26, 13, 0, 130, 131,
-		5, 20, 0, 0, 131, 132, 3, 24, 12, 0, 132, 142, 1, 0, 0, 0, 133, 134, 3,
-		26, 13, 0, 134, 135, 5, 21, 0, 0, 135, 136, 3, 24, 12, 0, 136, 142, 1,
-		0, 0, 0, 137, 138, 3, 26, 13, 0, 138, 139, 5, 22, 0, 0, 139, 140, 3, 24,
-		12, 0, 140, 142, 1, 0, 0, 0, 141, 128, 1, 0, 0, 0, 141, 129, 1, 0, 0, 0,
-		141, 133, 1, 0, 0, 0, 141, 137, 1, 0, 0, 0, 142, 25, 1, 0, 0, 0, 143, 153,
-		3, 28, 14, 0, 144, 145, 3, 28, 14, 0, 145, 146, 5, 23, 0, 0, 146, 147,
-		3, 26, 13, 0, 147, 153, 1, 0, 0, 0, 148, 149, 3, 28, 14, 0, 149, 150, 5,
-		24, 0, 0, 150, 151, 3, 26, 13, 0, 151, 153, 1, 0, 0, 0, 152, 143, 1, 0,
-		0, 0, 152, 144, 1, 0, 0, 0, 152, 148, 1, 0, 0, 0, 153, 27, 1, 0, 0, 0,
-		154, 164, 3, 30, 15, 0, 155, 156, 3, 30, 15, 0, 156, 157, 5, 25, 0, 0,
-		157, 158, 3, 28, 14, 0, 158, 164, 1, 0, 0, 0, 159, 160, 3, 30, 15, 0, 160,
-		161, 5, 26, 0, 0, 161, 162, 3, 28, 14, 0, 162, 164, 1, 0, 0, 0, 163, 154,
-		1, 0, 0, 0, 163, 155, 1, 0, 0, 0, 163, 159, 1, 0, 0, 0, 164, 29, 1, 0,
-		0, 0, 165, 171, 3, 32, 16, 0, 166, 167, 3, 32, 16, 0, 167, 168, 5, 27,
-		0, 0, 168, 169, 3, 30, 15, 0, 169, 171, 1, 0, 0, 0, 170, 165, 1, 0, 0,
-		0, 170, 166, 1, 0, 0, 0, 171, 31, 1, 0, 0, 0, 172, 178, 3, 34, 17, 0, 173,
-		174, 5, 29, 0, 0, 174, 175, 3, 14, 7, 0, 175, 176, 5, 30, 0, 0, 176, 178,
-		1, 0, 0, 0, 177, 172, 1, 0, 0, 0, 177, 173, 1, 0, 0, 0, 178, 33, 1, 0,
-		0, 0, 179, 185, 3, 36, 18, 0, 180, 181, 5, 24, 0, 0, 181, 185, 3, 14, 7,
-		0, 182, 183, 5, 28, 0, 0, 183, 185, 3, 14, 7, 0, 184, 179, 1, 0, 0, 0,
-		184, 180, 1, 0, 0, 0, 184, 182, 1, 0, 0, 0, 185, 35, 1, 0, 0, 0, 186, 187,
-		7, 1, 0, 0, 187, 37, 1, 0, 0, 0, 12, 41, 48, 66, 90, 119, 126, 141, 152,
-		163, 170, 177, 184,
+		24, 26, 28, 30, 32, 34, 36, 0, 3, 1, 0, 3, 8, 1, 0, 15, 16, 1, 0, 36, 38,
+		193, 0, 41, 1, 0, 0, 0, 2, 48, 1, 0, 0, 0, 4, 66, 1, 0, 0, 0, 6, 68, 1,
+		0, 0, 0, 8, 70, 1, 0, 0, 0, 10, 75, 1, 0, 0, 0, 12, 79, 1, 0, 0, 0, 14,
+		83, 1, 0, 0, 0, 16, 90, 1, 0, 0, 0, 18, 92, 1, 0, 0, 0, 20, 119, 1, 0,
+		0, 0, 22, 126, 1, 0, 0, 0, 24, 141, 1, 0, 0, 0, 26, 152, 1, 0, 0, 0, 28,
+		163, 1, 0, 0, 0, 30, 170, 1, 0, 0, 0, 32, 177, 1, 0, 0, 0, 34, 184, 1,
+		0, 0, 0, 36, 186, 1, 0, 0, 0, 38, 40, 3, 2, 1, 0, 39, 38, 1, 0, 0, 0, 40,
+		43, 1, 0, 0, 0, 41, 39, 1, 0, 0, 0, 41, 42, 1, 0, 0, 0, 42, 1, 1, 0, 0,
+		0, 43, 41, 1, 0, 0, 0, 44, 49, 3, 4, 2, 0, 45, 49, 3, 8, 4, 0, 46, 49,
+		3, 12, 6, 0, 47, 49, 3, 10, 5, 0, 48, 44, 1, 0, 0, 0, 48, 45, 1, 0, 0,
+		0, 48, 46, 1, 0, 0, 0, 48, 47, 1, 0, 0, 0, 49, 3, 1, 0, 0, 0, 50, 51, 5,
+		1, 0, 0, 51, 52, 5, 2, 0, 0, 52, 53, 3, 6, 3, 0, 53, 54, 5, 9, 0, 0, 54,
+		55, 5, 38, 0, 0, 55, 56, 5, 11, 0, 0, 56, 67, 1, 0, 0, 0, 57, 58, 5, 1,
+		0, 0, 58, 59, 5, 2, 0, 0, 59, 60, 3, 6, 3, 0, 60, 61, 5, 9, 0, 0, 61, 62,
+		5, 38, 0, 0, 62, 63, 5, 10, 0, 0, 63, 64, 3, 14, 7, 0, 64, 65, 5, 11, 0,
+		0, 65, 67, 1, 0, 0, 0, 66, 50, 1, 0, 0, 0, 66, 57, 1, 0, 0, 0, 67, 5, 1,
+		0, 0, 0, 68, 69, 7, 0, 0, 0, 69, 7, 1, 0, 0, 0, 70, 71, 5, 12, 0, 0, 71,
+		72, 5, 38, 0, 0, 72, 73, 3, 14, 7, 0, 73, 74, 5, 11, 0, 0, 74, 9, 1, 0,
+		0, 0, 75, 76, 5, 14, 0, 0, 76, 77, 5, 38, 0, 0, 77, 78, 5, 11, 0, 0, 78,
+		11, 1, 0, 0, 0, 79, 80, 5, 13, 0, 0, 80, 81, 3, 14, 7, 0, 81, 82, 5, 11,
+		0, 0, 82, 13, 1, 0, 0, 0, 83, 84, 3, 16, 8, 0, 84, 15, 1, 0, 0, 0, 85,
+		91, 3, 20, 10, 0, 86, 87, 3, 20, 10, 0, 87, 88, 3, 18, 9, 0, 88, 89, 3,
+		16, 8, 0, 89, 91, 1, 0, 0, 0, 90, 85, 1, 0, 0, 0, 90, 86, 1, 0, 0, 0, 91,
+		17, 1, 0, 0, 0, 92, 93, 7, 1, 0, 0, 93, 19, 1, 0, 0, 0, 94, 120, 3, 22,
+		11, 0, 95, 96, 3, 22, 11, 0, 96, 97, 5, 18, 0, 0, 97, 98, 3, 20, 10, 0,
+		98, 120, 1, 0, 0, 0, 99, 100, 3, 22, 11, 0, 100, 101, 5, 19, 0, 0, 101,
+		102, 3, 20, 10, 0, 102, 120, 1, 0, 0, 0, 103, 104, 3, 22, 11, 0, 104, 105,
+		5, 20, 0, 0, 105, 106, 3, 20, 10, 0, 106, 120, 1, 0, 0, 0, 107, 108, 3,
+		22, 11, 0, 108, 109, 5, 21, 0, 0, 109, 110, 3, 20, 10, 0, 110, 120, 1,
+		0, 0, 0, 111, 112, 3, 22, 11, 0, 112, 113, 5, 22, 0, 0, 113, 114, 3, 20,
+		10, 0, 114, 120, 1, 0, 0, 0, 115, 116, 3, 22, 11, 0, 116, 117, 5, 23, 0,
+		0, 117, 118, 3, 20, 10, 0, 118, 120, 1, 0, 0, 0, 119, 94, 1, 0, 0, 0, 119,
+		95, 1, 0, 0, 0, 119, 99, 1, 0, 0, 0, 119, 103, 1, 0, 0, 0, 119, 107, 1,
+		0, 0, 0, 119, 111, 1, 0, 0, 0, 119, 115, 1, 0, 0, 0, 120, 21, 1, 0, 0,
+		0, 121, 127, 3, 24, 12, 0, 122, 123, 3, 24, 12, 0, 123, 124, 5, 24, 0,
+		0, 124, 125, 3, 22, 11, 0, 125, 127, 1, 0, 0, 0, 126, 121, 1, 0, 0, 0,
+		126, 122, 1, 0, 0, 0, 127, 23, 1, 0, 0, 0, 128, 142, 3, 26, 13, 0, 129,
+		130, 3, 26, 13, 0, 130, 131, 5, 25, 0, 0, 131, 132, 3, 24, 12, 0, 132,
+		142, 1, 0, 0, 0, 133, 134, 3, 26, 13, 0, 134, 135, 5, 26, 0, 0, 135, 136,
+		3, 24, 12, 0, 136, 142, 1, 0, 0, 0, 137, 138, 3, 26, 13, 0, 138, 139, 5,
+		27, 0, 0, 139, 140, 3, 24, 12, 0, 140, 142, 1, 0, 0, 0, 141, 128, 1, 0,
+		0, 0, 141, 129, 1, 0, 0, 0, 141, 133, 1, 0, 0, 0, 141, 137, 1, 0, 0, 0,
+		142, 25, 1, 0, 0, 0, 143, 153, 3, 28, 14, 0, 144, 145, 3, 28, 14, 0, 145,
+		146, 5, 28, 0, 0, 146, 147, 3, 26, 13, 0, 147, 153, 1, 0, 0, 0, 148, 149,
+		3, 28, 14, 0, 149, 150, 5, 29, 0, 0, 150, 151, 3, 26, 13, 0, 151, 153,
+		1, 0, 0, 0, 152, 143, 1, 0, 0, 0, 152, 144, 1, 0, 0, 0, 152, 148, 1, 0,
+		0, 0, 153, 27, 1, 0, 0, 0, 154, 164, 3, 30, 15, 0, 155, 156, 3, 30, 15,
+		0, 156, 157, 5, 30, 0, 0, 157, 158, 3, 28, 14, 0, 158, 164, 1, 0, 0, 0,
+		159, 160, 3, 30, 15, 0, 160, 161, 5, 31, 0, 0, 161, 162, 3, 28, 14, 0,
+		162, 164, 1, 0, 0, 0, 163, 154, 1, 0, 0, 0, 163, 155, 1, 0, 0, 0, 163,
+		159, 1, 0, 0, 0, 164, 29, 1, 0, 0, 0, 165, 171, 3, 32, 16, 0, 166, 167,
+		3, 32, 16, 0, 167, 168, 5, 32, 0, 0, 168, 169, 3, 30, 15, 0, 169, 171,
+		1, 0, 0, 0, 170, 165, 1, 0, 0, 0, 170, 166, 1, 0, 0, 0, 171, 31, 1, 0,
+		0, 0, 172, 178, 3, 34, 17, 0, 173, 174, 5, 34, 0, 0, 174, 175, 3, 14, 7,
+		0, 175, 176, 5, 35, 0, 0, 176, 178, 1, 0, 0, 0, 177, 172, 1, 0, 0, 0, 177,
+		173, 1, 0, 0, 0, 178, 33, 1, 0, 0, 0, 179, 185, 3, 36, 18, 0, 180, 181,
+		5, 29, 0, 0, 181, 185, 3, 14, 7, 0, 182, 183, 5, 33, 0, 0, 183, 185, 3,
+		14, 7, 0, 184, 179, 1, 0, 0, 0, 184, 180, 1, 0, 0, 0, 184, 182, 1, 0, 0,
+		0, 185, 35, 1, 0, 0, 0, 186, 187, 7, 2, 0, 0, 187, 37, 1, 0, 0, 0, 12,
+		41, 48, 66, 90, 119, 126, 141, 152, 163, 170, 177, 184,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -177,37 +180,42 @@ const (
 	kochanowskiParserDEFINE       = 1
 	kochanowskiParserVARIABLE     = 2
 	kochanowskiParserINT32        = 3
-	kochanowskiParserNAMED        = 4
-	kochanowskiParserWITH_VALUE   = 5
-	kochanowskiParserDOT          = 6
-	kochanowskiParserASSIGN       = 7
-	kochanowskiParserPRINT_WORD   = 8
-	kochanowskiParserREAD_WORD    = 9
-	kochanowskiParserLOGIC_AND    = 10
-	kochanowskiParserLOGIC_OR     = 11
-	kochanowskiParserFROM         = 12
-	kochanowskiParserGREATER      = 13
-	kochanowskiParserGREATEREQUAL = 14
-	kochanowskiParserEQUAL        = 15
-	kochanowskiParserLESSEQUAL    = 16
-	kochanowskiParserLESS         = 17
-	kochanowskiParserNOTEQUAL     = 18
-	kochanowskiParserMODULO       = 19
-	kochanowskiParserAND          = 20
-	kochanowskiParserOR           = 21
-	kochanowskiParserXOR          = 22
-	kochanowskiParserPLUS         = 23
-	kochanowskiParserMINUS        = 24
-	kochanowskiParserTIMES        = 25
-	kochanowskiParserDIVIDE       = 26
-	kochanowskiParserPOWER        = 27
-	kochanowskiParserNOT          = 28
-	kochanowskiParserFIRST        = 29
-	kochanowskiParserCALCULATE    = 30
-	kochanowskiParserINTEGER      = 31
-	kochanowskiParserDECIMAL      = 32
-	kochanowskiParserID           = 33
-	kochanowskiParserWS           = 34
+	kochanowskiParserINT64        = 4
+	kochanowskiParserF32          = 5
+	kochanowskiParserF64          = 6
+	kochanowskiParserINT32ARRAY   = 7
+	kochanowskiParserF32ARRAY     = 8
+	kochanowskiParserNAMED        = 9
+	kochanowskiParserWITH_VALUE   = 10
+	kochanowskiParserDOT          = 11
+	kochanowskiParserASSIGN       = 12
+	kochanowskiParserPRINT_WORD   = 13
+	kochanowskiParserREAD_WORD    = 14
+	kochanowskiParserLOGIC_AND    = 15
+	kochanowskiParserLOGIC_OR     = 16
+	kochanowskiParserFROM         = 17
+	kochanowskiParserGREATER      = 18
+	kochanowskiParserGREATEREQUAL = 19
+	kochanowskiParserEQUAL        = 20
+	kochanowskiParserLESSEQUAL    = 21
+	kochanowskiParserLESS         = 22
+	kochanowskiParserNOTEQUAL     = 23
+	kochanowskiParserMODULO       = 24
+	kochanowskiParserAND          = 25
+	kochanowskiParserOR           = 26
+	kochanowskiParserXOR          = 27
+	kochanowskiParserPLUS         = 28
+	kochanowskiParserMINUS        = 29
+	kochanowskiParserTIMES        = 30
+	kochanowskiParserDIVIDE       = 31
+	kochanowskiParserPOWER        = 32
+	kochanowskiParserNOT          = 33
+	kochanowskiParserFIRST        = 34
+	kochanowskiParserCALCULATE    = 35
+	kochanowskiParserINTEGER      = 36
+	kochanowskiParserDECIMAL      = 37
+	kochanowskiParserID           = 38
+	kochanowskiParserWS           = 39
 )
 
 // kochanowskiParser rules.
@@ -354,7 +362,7 @@ func (p *kochanowskiParser) Body() (localctx IBodyContext) {
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&898) != 0 {
+	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&28674) != 0 {
 		{
 			p.SetState(38)
 			p.Statement()
@@ -841,6 +849,11 @@ type ITypeContext interface {
 
 	// Getter signatures
 	INT32() antlr.TerminalNode
+	INT64() antlr.TerminalNode
+	F32() antlr.TerminalNode
+	F64() antlr.TerminalNode
+	INT32ARRAY() antlr.TerminalNode
+	F32ARRAY() antlr.TerminalNode
 
 	// IsTypeContext differentiates from other interfaces.
 	IsTypeContext()
@@ -882,6 +895,26 @@ func (s *TypeContext) INT32() antlr.TerminalNode {
 	return s.GetToken(kochanowskiParserINT32, 0)
 }
 
+func (s *TypeContext) INT64() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserINT64, 0)
+}
+
+func (s *TypeContext) F32() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserF32, 0)
+}
+
+func (s *TypeContext) F64() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserF64, 0)
+}
+
+func (s *TypeContext) INT32ARRAY() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserINT32ARRAY, 0)
+}
+
+func (s *TypeContext) F32ARRAY() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserF32ARRAY, 0)
+}
+
 func (s *TypeContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -905,13 +938,18 @@ func (s *TypeContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *kochanowskiParser) Type_() (localctx ITypeContext) {
 	localctx = NewTypeContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 6, kochanowskiParserRULE_type)
+	var _la int
+
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(68)
-		p.Match(kochanowskiParserINT32)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
+		_la = p.GetTokenStream().LA(1)
+
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&504) != 0) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
 		}
 	}
 
@@ -3287,7 +3325,7 @@ func (p *kochanowskiParser) Value() (localctx IValueContext) {
 		p.SetState(186)
 		_la = p.GetTokenStream().LA(1)
 
-		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&15032385536) != 0) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&481036337152) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)

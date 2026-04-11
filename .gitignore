@@ -17,3 +17,9 @@ go.work.sum
 
 .env
 
+kochanowski.interp
+kochanowski.tokens
+kochanowskiLexer.interp
+kochanowskiLexer.tokens
+kochanowskiParser.java
+kochanowskiLexer.java

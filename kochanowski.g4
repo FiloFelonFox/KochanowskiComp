@@ -2,13 +2,19 @@ grammar kochanowski;
 
 body : statement*;
 
-statement: var_create | var_assign | print | read;
+statement: var_create | var_assign | array_create | array_assign | print | read;
 
 var_create
 	: DEFINE VARIABLE type NAMED ID DOT
 	| DEFINE VARIABLE type NAMED ID WITH_VALUE expr DOT;
 
-type: INT32;
+type: INT32 | INT64 | F32 | F64;
+
+array_create : DEFINE  array_type NAMED ID DOT;
+
+array_type: INT32ARRAY | F32ARRAY;
+
+array_assign: ASSIGN ARRAY ID UNDER expr VALUE expr DOT;
 
 var_assign: ASSIGN ID expr DOT;
 
@@ -65,8 +71,11 @@ expr_paren
 
 unary
 	: value
+	| array_value
 	| MINUS expr
 	| NOT expr;
+
+array_value: VALUE UNDER CELL expr ARRAY ID;
 
 value
 	: INTEGER
@@ -74,9 +83,20 @@ value
 	| ID;
 
 
+ARRAY: 'tablicy';
+UNDER: 'pod';
+VALUE: 'wartość';
+CELL: 'komórką';
+
 DEFINE: 'Zdefiniuj';
 VARIABLE: 'zmienną';
 INT32: 'całkowitą';
+INT64: 'całkowitą olbrzymiej wagi';
+F32: 'zmiennoprzecinkową';
+F64: 'zmiennoprzecinkową olbrzymiej precyzji';
+INT32ARRAY: 'tablicę liczb całkowitych';
+F32ARRAY: 'tablicę liczb zmiennoprzecinkowych';
+
 NAMED: 'o nazwie';
 WITH_VALUE: 'o wartości';
 DOT: '.';
