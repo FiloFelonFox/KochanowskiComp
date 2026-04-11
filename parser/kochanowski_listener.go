@@ -29,6 +29,15 @@ type kochanowskiListener interface {
 	// EnterArray_assign is called when entering the array_assign production.
 	EnterArray_assign(c *Array_assignContext)
 
+	// EnterMatrix_create is called when entering the matrix_create production.
+	EnterMatrix_create(c *Matrix_createContext)
+
+	// EnterMatrix_type is called when entering the matrix_type production.
+	EnterMatrix_type(c *Matrix_typeContext)
+
+	// EnterMatrix_assign is called when entering the matrix_assign production.
+	EnterMatrix_assign(c *Matrix_assignContext)
+
 	// EnterVar_assign is called when entering the var_assign production.
 	EnterVar_assign(c *Var_assignContext)
 
@@ -74,6 +83,9 @@ type kochanowskiListener interface {
 	// EnterArray_value is called when entering the array_value production.
 	EnterArray_value(c *Array_valueContext)
 
+	// EnterMatrix_value is called when entering the matrix_value production.
+	EnterMatrix_value(c *Matrix_valueContext)
+
 	// EnterValue is called when entering the value production.
 	EnterValue(c *ValueContext)
 
@@ -97,6 +109,15 @@ type kochanowskiListener interface {
 
 	// ExitArray_assign is called when exiting the array_assign production.
 	ExitArray_assign(c *Array_assignContext)
+
+	// ExitMatrix_create is called when exiting the matrix_create production.
+	ExitMatrix_create(c *Matrix_createContext)
+
+	// ExitMatrix_type is called when exiting the matrix_type production.
+	ExitMatrix_type(c *Matrix_typeContext)
+
+	// ExitMatrix_assign is called when exiting the matrix_assign production.
+	ExitMatrix_assign(c *Matrix_assignContext)
 
 	// ExitVar_assign is called when exiting the var_assign production.
 	ExitVar_assign(c *Var_assignContext)
@@ -142,6 +163,9 @@ type kochanowskiListener interface {
 
 	// ExitArray_value is called when exiting the array_value production.
 	ExitArray_value(c *Array_valueContext)
+
+	// ExitMatrix_value is called when exiting the matrix_value production.
+	ExitMatrix_value(c *Matrix_valueContext)
 
 	// ExitValue is called when exiting the value production.
 	ExitValue(c *ValueContext)

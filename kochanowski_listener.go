@@ -23,10 +23,17 @@ type t_array struct {
 	_type  string
 }
 
+type t_matrix struct {
+	_value string
+	_type  string
+	_colLen t_var
+}
+
 var prog string = ""
 
 var variables = make(map[string]t_var)
 var arrays = make(map[string]t_array)
+var matrices = make(map[string]t_matrix)
 var varCount int = 0
 
 var stack VariableStack
@@ -193,8 +200,11 @@ func (l *kochanowskiListener) EnterBody(ctx *parser.BodyContext) {
 }
 
 func (l *kochanowskiListener) ExitBody(ctx *parser.BodyContext) {
-	for arr, _ := range arrays {
+	for arr := range arrays {
 		prog += "call void @free(ptr " + arrays[arr]._value + ")\n"
+	}
+	for mat := range matrices {
+		prog += "call void @free(ptr " + matrices[mat]._value + ")\n"
 	}
 	prog += "ret i32 0\n}\n"
 }
@@ -453,6 +463,130 @@ func (l *kochanowskiListener) ExitArray_value(ctx *parser.Array_valueContext) {
 	value := nextVar()
 	prog += value + " = load " + arr._type + ", ptr " + elemPtr + ", " + typeAlignMap[arr._type] + "\n"
 	stack.push(value, arr._type)
+}
+
+// MATRIX_CREATE
+func (l *kochanowskiListener) EnterMatrix_create(ctx *parser.Matrix_createContext) {
+}
+
+func (l *kochanowskiListener) ExitMatrix_create(ctx *parser.Matrix_createContext) {
+	    name := ctx.ID().GetText()
+
+    elemType := ""
+    elemSizeBytes := 0
+    switch ctx.Matrix_type().GetText() {
+    case "macierz liczb całkowitych":
+        elemType = "i32"
+        elemSizeBytes = 4
+    case "macierz liczb zmiennoprzecinkowych":
+        elemType = "float"
+        elemSizeBytes = 4
+    }
+    
+    rows := stack.pop()
+    cols := stack.pop()
+    
+    if !isIntType(rows._type) || !isIntType(cols._type) {
+        fmt.Println("Błąd typów: wymiary macierzy muszą być typu całkowitego")
+        panic(1)
+    }
+
+    rows64 := castIntToI64(rows)
+    cols64 := castIntToI64(cols)
+
+	colLen := nextVar()
+	prog += colLen + " = add i64 " + cols64._value + ", 0\n"
+
+    // Calculate total elements: rows * cols
+    totalElems := nextVar()
+    prog += totalElems + " = mul i64 " + rows64._value + ", " + cols64._value + "\n"
+
+    // Calculate total bytes needed
+    bytes := nextVar()
+    prog += bytes + " = mul i64 " + totalElems + ", " + fmt.Sprint(elemSizeBytes) + "\n"
+
+    base := nextVar()
+    prog += base + " = call ptr @malloc(i64 " + bytes + ")\n"
+    matrices[name] = t_matrix{base, elemType, t_var{colLen, "i64"}}
+}
+
+// MATRIX_VALUE
+func (l *kochanowskiListener) EnterMatrix_value(ctx *parser.Matrix_valueContext) {
+}
+
+func (l *kochanowskiListener) ExitMatrix_value(ctx *parser.Matrix_valueContext) {
+	mat := matrices[ctx.ID().GetText()]
+
+    col := stack.pop()
+    row := stack.pop()
+    
+    if !isIntType(row._type) || !isIntType(col._type) {
+        fmt.Println("Błąd typów: indeksy macierzy muszą być typu całkowitego")
+        panic(1)
+    }
+
+    row64 := castIntToI64(row)
+    col64 := castIntToI64(col)
+
+    // Calculate linear index: row * cols + col
+    // Note: you'll need to track column count separately or pass it
+	colCount := mat._colLen
+	help := nextVar()
+	prog += help + " = mul i64 " + row64._value + ", " + colCount._value + "\n"
+	linearIndex := nextVar()
+	prog += linearIndex + " = add i64 " + help + ", " + col64._value + "\n"
+
+    elemPtr := nextVar()
+	prog += elemPtr + " = getelementptr inbounds " + mat._type + ", ptr " + mat._value + ", i64 " + linearIndex + "\n"
+	value := nextVar()
+	prog += value + " = load " + mat._type + ", ptr " + elemPtr + ", " + typeAlignMap[mat._type] + "\n"
+	stack.push(value, mat._type)
+}
+
+// MATRIX_ASSIGN
+func (l *kochanowskiListener) EnterMatrix_assign(ctx *parser.Matrix_assignContext) {
+}
+
+func (l *kochanowskiListener) ExitMatrix_assign(ctx *parser.Matrix_assignContext) {
+	mat := matrices[ctx.ID().GetText()]
+
+    value := stack.pop()
+    col := stack.pop()
+    row := stack.pop()
+
+    if !isIntType(row._type) || !isIntType(col._type) {
+        fmt.Println("Błąd typów: indeksy macierzy muszą być typu całkowitego")
+        panic(1)
+    }
+
+    if isIntType(mat._type) && isFloatType(value._type) {
+        fmt.Println("Błąd typów: nie można przypisać wartości typu " + value._type + " do macierzy typu " + mat._type)
+        panic(1)
+    }
+
+    if value._type != mat._type {
+        value = castType(value, mat._type)
+    }
+
+    row64 := castIntToI64(row)
+    col64 := castIntToI64(col)
+
+	colCount := mat._colLen
+	help := nextVar()
+	prog += help + " = mul i64 " + row64._value + ", " + colCount._value + "\n"
+	linearIndex := nextVar()
+	prog += linearIndex + " = add i64 " + help + ", " + col64._value + "\n"
+
+    elemPtr := nextVar()
+	prog += elemPtr + " = getelementptr inbounds " + mat._type + ", ptr " + mat._value + ", i64 " + linearIndex + "\n"
+	prog += "store " + mat._type + " " + value._value + ", ptr " + elemPtr + ", " + typeAlignMap[mat._type] + "\n"
+}
+
+// MATRIX_TYPE
+func (l *kochanowskiListener) EnterMatrix_type(ctx *parser.Matrix_typeContext) {
+}
+
+func (l *kochanowskiListener) ExitMatrix_type(ctx *parser.Matrix_typeContext) {
 }
 
 // EXPR

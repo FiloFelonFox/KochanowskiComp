@@ -63,6 +63,24 @@ func (s *BasekochanowskiListener) EnterArray_assign(ctx *Array_assignContext) {}
 // ExitArray_assign is called when production array_assign is exited.
 func (s *BasekochanowskiListener) ExitArray_assign(ctx *Array_assignContext) {}
 
+// EnterMatrix_create is called when production matrix_create is entered.
+func (s *BasekochanowskiListener) EnterMatrix_create(ctx *Matrix_createContext) {}
+
+// ExitMatrix_create is called when production matrix_create is exited.
+func (s *BasekochanowskiListener) ExitMatrix_create(ctx *Matrix_createContext) {}
+
+// EnterMatrix_type is called when production matrix_type is entered.
+func (s *BasekochanowskiListener) EnterMatrix_type(ctx *Matrix_typeContext) {}
+
+// ExitMatrix_type is called when production matrix_type is exited.
+func (s *BasekochanowskiListener) ExitMatrix_type(ctx *Matrix_typeContext) {}
+
+// EnterMatrix_assign is called when production matrix_assign is entered.
+func (s *BasekochanowskiListener) EnterMatrix_assign(ctx *Matrix_assignContext) {}
+
+// ExitMatrix_assign is called when production matrix_assign is exited.
+func (s *BasekochanowskiListener) ExitMatrix_assign(ctx *Matrix_assignContext) {}
+
 // EnterVar_assign is called when production var_assign is entered.
 func (s *BasekochanowskiListener) EnterVar_assign(ctx *Var_assignContext) {}
 
@@ -152,6 +170,12 @@ func (s *BasekochanowskiListener) EnterArray_value(ctx *Array_valueContext) {}
 
 // ExitArray_value is called when production array_value is exited.
 func (s *BasekochanowskiListener) ExitArray_value(ctx *Array_valueContext) {}
+
+// EnterMatrix_value is called when production matrix_value is entered.
+func (s *BasekochanowskiListener) EnterMatrix_value(ctx *Matrix_valueContext) {}
+
+// ExitMatrix_value is called when production matrix_value is exited.
+func (s *BasekochanowskiListener) ExitMatrix_value(ctx *Matrix_valueContext) {}
 
 // EnterValue is called when production value is entered.
 func (s *BasekochanowskiListener) EnterValue(ctx *ValueContext) {}

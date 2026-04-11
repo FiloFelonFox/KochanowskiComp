@@ -2,7 +2,7 @@ grammar kochanowski;
 
 body : statement*;
 
-statement: var_create | var_assign | array_create | array_assign | print | read;
+statement: var_create | var_assign | array_create | array_assign | matrix_create | matrix_assign | print | read;
 
 var_create
 	: DEFINE VARIABLE type NAMED ID DOT
@@ -15,6 +15,12 @@ array_create : DEFINE array_type NAMED ID WITH_SIZE expr DOT;
 array_type: INT32ARRAY | F32ARRAY;
 
 array_assign: ASSIGN ARRAY ID UNDER expr VALUE expr DOT;
+
+matrix_create: DEFINE matrix_type NAMED ID WITH_SIZE expr BY expr DOT;
+
+matrix_type: INT32MATRIX | F32MATRIX;
+
+matrix_assign: ASSIGN MATRIX ID UNDER_COLUMN expr ROW expr VALUE expr DOT;
 
 var_assign: ASSIGN ID expr DOT;
 
@@ -71,17 +77,26 @@ expr_paren
 
 unary
 	: value
+	| matrix_value
 	| array_value
 	| MINUS expr
 	| NOT expr;
 
 array_value: VALUE UNDER CELL expr ARRAY ID;
 
+matrix_value: VALUE UNDER_COLUMN expr ROW expr MATRIX ID;
+
 value
 	: INTEGER
 	| DECIMAL
 	| ID;
 
+BY: 'na';
+INT32MATRIX: 'macierz liczb całkowitych';
+F32MATRIX: 'macierz liczb zmiennoprzecinkowych';
+MATRIX: 'macierzy';
+UNDER_COLUMN: 'pod kolumną';
+ROW: 'wierszem';
 
 ARRAY: 'tablicy';
 UNDER: 'pod';
