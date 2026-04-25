@@ -1,0 +1,5 @@
+Zdefiniuj macierz liczb całkowitych o nazwie grid o rozmiarze 3 na 3.
+Przypisz macierzy grid pod kolumną 0 wierszem 0 wartość 1.
+Przypisz macierzy grid pod kolumną 1 wierszem 1 wartość 2.
+Przypisz macierzy grid pod kolumną 2 wierszem 2 wartość 3.
+Wypisz wartość pod kolumną 1 wierszem 1 macierzy grid.

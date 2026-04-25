@@ -1,0 +1,5 @@
+Zdefiniuj tablicę liczb całkowitych o nazwie numbers o rozmiarze 5.
+Przypisz tablicy numbers pod 0 wartość 10.
+Przypisz tablicy numbers pod 1 wartość 20.
+Przypisz tablicy numbers pod 2 wartość 30.
+Wypisz wartość pod komórką 1 tablicy numbers.

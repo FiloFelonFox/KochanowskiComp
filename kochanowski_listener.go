@@ -5,182 +5,7 @@ import (
 	"fmt"
 )
 
-var typeAlignMap = map[string]string{
-	"i1":    "align 1",
-	"i32":   "align 4",
-	"i64":   "align 8",
-	"float": "align 4",
-	"double": "align 8",
-}
-
-type t_var struct {
-	_value string
-	_type  string
-}
-
-type t_array struct {
-	_value string
-	_type  string
-	_rowLen t_var
-}
-
-type t_matrix struct {
-	_value string
-	_type  string
-	_colLen t_var
-}
-
-var prog string = ""
-
-var variables = make(map[string]t_var)
-var arrays = make(map[string]t_array)
-var matrices = make(map[string]t_matrix)
-var strings = make(map[string]string)
-
-var strCount int = 0
-
-var varCount int = 0
-
-var stack VariableStack
-
-type logicFrame struct {
-	operator   string
-	shortLabel string
-	rhsLabel   string
-	endLabel   string
-}
-
-var logicStack []logicFrame
-var logicCount int = 0
-
-type kochanowskiListener struct {
-	*parser.BasekochanowskiListener
-}
-
-func nextVar() string {
-	varCount++
-	return "%" + fmt.Sprint(varCount)
-}
-
-func isIntType(_type string) bool {
-	return _type == "i1" || _type == "i32" || _type == "i64"
-}
-
-func isFloatType(_type string) bool {
-	return _type == "float" || _type == "double"
-}
-
-func intRank(_type string) int {
-	switch _type {
-	case "i1":
-		return 1
-	case "i32":
-		return 32
-	case "i64":
-		return 64
-	default:
-		return 0
-	}
-}
-
-func castType(v t_var, targetType string) t_var {
-	if v._type == targetType {
-		return v
-	}
-
-	dst := nextVar()
-
-	if isIntType(v._type) && isIntType(targetType) {
-		if intRank(v._type) < intRank(targetType) {
-			prog += dst + " = sext " + v._type + " " + v._value + " to " + targetType + "\n"
-		} else {
-			prog += dst + " = trunc " + v._type + " " + v._value + " to " + targetType + "\n"
-		}
-		return t_var{dst, targetType}
-	}
-
-	if isIntType(v._type) && isFloatType(targetType) {
-		prog += dst + " = sitofp " + v._type + " " + v._value + " to " + targetType + "\n"
-		return t_var{dst, targetType}
-	}
-
-	if isFloatType(v._type) && isIntType(targetType) {
-		prog += dst + " = fptosi " + v._type + " " + v._value + " to " + targetType + "\n"
-		return t_var{dst, targetType}
-	}
-
-	if isFloatType(v._type) && isFloatType(targetType) {
-		if v._type == "float" && targetType == "double" {
-			prog += dst + " = fpext float " + v._value + " to double\n"
-		} else if v._type == "double" && targetType == "float" {
-			prog += dst + " = fptrunc double " + v._value + " to float\n"
-		}
-		return t_var{dst, targetType}
-	}
-
-	fmt.Println("Nie można przekonwertować typu " + v._type + " na " + targetType)
-	panic(1)
-}
-
-func castLastTo(targetType string) {
-	v := castType(stack.peek(), targetType)
-	stack.updateLast(v._value, v._type)
-}
-
-func castSecondTo(targetType string) {
-	v := castType(stack.peekSecond(), targetType)
-	stack.updateSecond(v._value, v._type)
-}
-
-func matchLastTwoTypes() {
-	last := stack.peek()
-	secondLast := stack.peekSecond()
-	if last._type == secondLast._type {
-		return
-	}
-
-	common := "i1"
-	switch {
-	case last._type  == "double" || secondLast._type == "double":
-		common = "double"
-	case last._type  == "float" || secondLast._type == "float":
-		common = "float"
-	case last._type  == "i64" || secondLast._type == "i64":
-		common = "i64"
-	case last._type  == "i32" || secondLast._type == "i32":
-		common = "i32"
-	}
-	
-	castLastTo(common)
-	castSecondTo(common)
-}
-
-func lastTwoToFloat() {
-	castLastTo("float")
-	castSecondTo("float")
-}
-
-func convertLastToi1() {
-	castLastTo("i1")
-}
-
-func castIntToI64(v t_var) t_var {
-	if v._type == "i64" {
-		return v
-	}
-	if isIntType(v._type) {
-		return castType(v, "i64")
-	}
-	fmt.Println("Nie można przekonwertować typu " + v._type + " na i32")
-	panic(1)
-}
-
-/*func emitArrayElemPtr(a t_array, indexVar t_var) string {
-	i := castIntToI32(indexVar)
-	ptr := nextVar()
-	prog += ptr + " = getelementptr inbounds [" + fmt.Sprint(a._size) + " x " + a._type + "], ptr " + a._value + ", i32 0, i32 " + i._value + "\n"
-	return ptr
-}*/
+var sa = new(SemanticAnalyzer)
 
 // BODY
 func (l *kochanowskiListener) EnterBody(ctx *parser.BodyContext) {
@@ -226,7 +51,11 @@ func (l *kochanowskiListener) EnterPrint(ctx *parser.PrintContext) {
 func (l *kochanowskiListener) ExitPrint(ctx *parser.PrintContext) {
 	v := stack.pop()
 	if v._type == "float" {
-		v = castType(v, "double")
+		var err error
+		v, err = castType(v, "double")
+		if err != nil {
+			sa.addError(ctx.GetParser().GetError().GetMessage(), ctx.Expr().GetStart().GetLine(), ctx.Expr().GetStart().GetColumn())
+		}
 	}
 	ret := nextVar()
 	prog += ret + " = call i32 (ptr, ...) @printf(ptr noundef @.str." + v._type + ", " + v._type + " noundef " + v._value + ")\n"
@@ -274,8 +103,7 @@ func (l *kochanowskiListener) ExitRead(ctx *parser.ReadContext) {
 		length := arrays[ctx.ID().GetText()]._rowLen
 		prog += "call void @llvm.memcpy.p0i8.p0i8.i64(ptr align 1 " + variable._value + ", ptr align 1 " + ptr + ", i64 " + length._value + ", i1 false)\n"
 	default:
-		fmt.Println("Nie można wczytać tego typu")
-		panic(1)
+		sa.addError("Nie można wczytać wartości do zmiennej typu " + variable._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 	}
 }
 
@@ -290,23 +118,25 @@ func (l *kochanowskiListener) ExitVar_assign(ctx *parser.Var_assignContext) {
 		switch {
 		case isIntType(variable._type) && isIntType(value._type):
 			if intRank(variable._type) >= intRank(value._type) {
-				castLastTo(variable._type)
+				err := castLastTo(variable._type)
+				if err != nil {
+					sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+				}
 			} else {
-				fmt.Println("Błąd typów" + variable._value + ":" +  variable._type + " " + value._value + ":" + value._type)
-				panic(1)
+				sa.addError("Błąd typów" + variable._value + ":" +  variable._type + " " + value._value + ":" + value._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 			}
 		case isFloatType(variable._type) && isFloatType(value._type):
-			if variable._type == "double" && value._type == "float" {
-				castLastTo(variable._type)
-			} else if variable._type == "float" && stack.peek()._type == "double" {
-				fmt.Println("Błąd typów" + variable._value + ":" +  variable._type + " " + value._value + ":" + value._type)
-				panic(1)
-			}
+				err := castLastTo(variable._type)
+				if err != nil {
+					sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+				}
 		case isIntType(variable._type) && isFloatType(value._type):
-			fmt.Println("Błąd typów" + variable._value + ":" +  variable._type + " " + value._value + ":" + value._type)
-			panic(1)
+			sa.addError("Błąd typów" + variable._value + ":" +  variable._type + " " + value._value + ":" + value._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 		case isFloatType(variable._type) && isIntType(value._type):
-			castLastTo(variable._type)
+			err := castLastTo(variable._type)
+			if err != nil {
+				sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+			}
 		}
 	}
 	v := stack.pop()
@@ -315,7 +145,7 @@ func (l *kochanowskiListener) ExitVar_assign(ctx *parser.Var_assignContext) {
 
 // VAR_CREATE
 func (l *kochanowskiListener) EnterVar_create(ctx *parser.Var_createContext) {
-	//TODO: check for existing variables
+	sa.checkVariableExists(ctx.ID().GetText(), ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
 	v := nextVar()
 	prog += v + " = alloca "
 	variables[ctx.ID().GetText()] = t_var{"%" + fmt.Sprint(varCount), ""}
@@ -327,29 +157,29 @@ func (l *kochanowskiListener) ExitVar_create(ctx *parser.Var_createContext) {
 		variable._type = stack.peekSecond()._type 
 		variables[ctx.ID().GetText()] = variable
 		value := stack.peek()
-		fmt.Println("Przypisywana wartość: " + value._value + " typu " + value._type)
-		fmt.Println("Zmienna: " + variable._value + " typu " + variable._type)
-		if variable._type != value._type { //TODO: Better type mismatch error handling
+		if variable._type != value._type {
 			switch {
 			case isIntType(variable._type) && isIntType(value._type):
 				if intRank(variable._type) >= intRank(value._type) {
-					castLastTo(variable._type)
+					err := castLastTo(variable._type)
+					if err != nil {
+						sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+					}
 				} else {
-					fmt.Println("Błąd typów" + variable._value + ":" +  variable._type + " " + value._value + ":" + value._type)
-					panic(1)
+					sa.addError("Błąd typów" + variable._value + ":" +  variable._type + " " + value._value + ":" + value._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 				}
 			case isFloatType(variable._type) && isFloatType(value._type):
-				if variable._type == "double" && value._type == "float" {
-					castLastTo(variable._type)
-				} else if variable._type == "float" && stack.peek()._type == "double" {
-					fmt.Println("Błąd typów" + variable._value + ":" +  variable._type + " " + value._value + ":" + value._type)
-					panic(1)
+				err := castLastTo(variable._type)
+				if err != nil {
+					sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 				}
 			case isIntType(variable._type) && isFloatType(value._type):
-				fmt.Println("Błąd typów" + variable._value + ":" +  variable._type + " " + value._value + ":" + value._type)
-				panic(1)
+				sa.addError("Błąd typów" + variable._value + ":" +  variable._type + " " + value._value + ":" + value._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 			case isFloatType(variable._type) && isIntType(value._type):
-				castLastTo(variable._type)
+				err := castLastTo(variable._type)
+				if err != nil {
+					sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+				}
 			}
 		}
 		v := stack.pop()
@@ -359,7 +189,6 @@ func (l *kochanowskiListener) ExitVar_create(ctx *parser.Var_createContext) {
 	variables[ctx.ID().GetText()] = variable
 	}
 	stack.pop()
-	fmt.Println("Zadeklarowano zmienną " + ctx.ID().GetText() + " typu " + variables[ctx.ID().GetText()]._type)
 }
 
 // TYPE
@@ -395,6 +224,9 @@ func (l *kochanowskiListener) ExitArray_create(ctx *parser.Array_createContext) 
 	}
 
 	name := ctx.ID().GetText()
+	if arrays[name]._value != "" {
+		sa.addError("Tablica '" + name + "' już istnieje", ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+	}
 
 	elemType := ""
 	elemSizeBytes := 0
@@ -412,11 +244,13 @@ func (l *kochanowskiListener) ExitArray_create(ctx *parser.Array_createContext) 
 	
 	sizeVar := stack.pop()
 	if !isIntType(sizeVar._type) {
-		fmt.Println("Błąd typów: rozmiar tablicy musi być typu całkowitego, a otrzymał " + sizeVar._type)
-		panic(1)
+		sa.addError("Błąd typów: rozmiar tablicy musi być typu całkowitego, a otrzymał " + sizeVar._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 	}
 
-	size64 := castIntToI64(sizeVar)
+	size64, err := castIntToI64(sizeVar)
+	if err != nil {
+		sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+	}
 
 	bytes := nextVar()
 	prog += bytes + " = mul i64 " + size64._value + ", " + fmt.Sprint(elemSizeBytes) + "\n"
@@ -429,8 +263,7 @@ func (l *kochanowskiListener) ExitArray_create(ctx *parser.Array_createContext) 
 	variables[name] = t_var{base, "ptr"}
 	if ctx.String_value() != nil {
 		if str._type != "ptr" {
-			fmt.Println("Błąd typów: wartość początkowa tablicy musi być typu napis, a otrzymał " + str._type)
-			panic(1)
+			sa.addError("Błąd typów: wartość początkowa tablicy musi być typu napis, a otrzymał " + str._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 		}
 		prog += "call void @llvm.memcpy.p0i8.p0i8.i64(ptr align 1 " + base + ", ptr align 1 " + str._value + ", i64 " + bytes + ", i1 false)\n"
 	}
@@ -454,19 +287,24 @@ func (l *kochanowskiListener) ExitArray_assign(ctx *parser.Array_assignContext) 
 	index := stack.pop()
 
 	if !isIntType(index._type) {
-		fmt.Println("Błąd typów: indeks tablicy musi być typu całkowitego, a otrzymał " + index._type)
-		panic(1)
+		sa.addError("Błąd typów: indeks tablicy musi być typu całkowitego, a otrzymał " + index._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 	}
 	if isIntType(arr._type) && isFloatType(value._type) {
-		fmt.Println("Błąd typów: nie można przypisać wartości typu " + value._type + " do tablicy typu " + arr._type)
-		panic(1)
+		sa.addError("Błąd typów: nie można przypisać wartości typu " + value._type + " do tablicy typu " + arr._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 	}
 
 	if value._type != arr._type {
-		value = castType(value, arr._type)
+		var err error
+		value, err = castType(value, arr._type)
+		if err != nil {
+			sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+		}
 	}
 
-	index64 := castIntToI64(index)
+	index64, err := castIntToI64(index)
+	if err != nil {
+		sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+	}
 
 	elemPtr := nextVar()
 	prog += elemPtr + " = getelementptr inbounds " + arr._type + ", ptr " + arr._value + ", i64 " + index64._value + "\n"
@@ -483,11 +321,13 @@ func (l *kochanowskiListener) ExitArray_value(ctx *parser.Array_valueContext) {
 	index := stack.pop()
 	
 	if !isIntType(index._type) {
-		fmt.Println("Błąd typów: indeks tablicy musi być typu całkowitego, a otrzymał " + index._type)
-		panic(1)
+		sa.addError("Błąd typów: indeks tablicy musi być typu całkowitego, a otrzymał " + index._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 	}
 
-	index64 := castIntToI64(index)
+	index64, err := castIntToI64(index)
+	if err != nil {
+		sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+	}
 
 	elemPtr := nextVar()
 	prog += elemPtr + " = getelementptr inbounds " + arr._type + ", ptr " + arr._value + ", i64 " + index64._value + "\n"
@@ -518,12 +358,17 @@ func (l *kochanowskiListener) ExitMatrix_create(ctx *parser.Matrix_createContext
     cols := stack.pop()
     
     if !isIntType(rows._type) || !isIntType(cols._type) {
-        fmt.Println("Błąd typów: wymiary macierzy muszą być typu całkowitego")
-        panic(1)
+        sa.addError("Błąd typów: wymiary macierzy muszą być typu całkowitego", ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
     }
 
-    rows64 := castIntToI64(rows)
-    cols64 := castIntToI64(cols)
+    rows64, err := castIntToI64(rows)
+    if err != nil {
+        sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+    }
+    cols64, err := castIntToI64(cols)
+    if err != nil {
+        sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+    }
 
 	colLen := nextVar()
 	prog += colLen + " = add i64 " + cols64._value + ", 0\n"
@@ -552,12 +397,17 @@ func (l *kochanowskiListener) ExitMatrix_value(ctx *parser.Matrix_valueContext) 
     row := stack.pop()
     
     if !isIntType(row._type) || !isIntType(col._type) {
-        fmt.Println("Błąd typów: indeksy macierzy muszą być typu całkowitego")
-        panic(1)
+		sa.addError("Błąd typów: indeksy macierzy muszą być typu całkowitego", ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
     }
 
-    row64 := castIntToI64(row)
-    col64 := castIntToI64(col)
+    row64, err := castIntToI64(row)
+    if err != nil {
+        sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+    }
+    col64, err := castIntToI64(col)
+    if err != nil {
+        sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+    }
 
     // Calculate linear index: row * cols + col
     // Note: you'll need to track column count separately or pass it
@@ -586,21 +436,29 @@ func (l *kochanowskiListener) ExitMatrix_assign(ctx *parser.Matrix_assignContext
     row := stack.pop()
 
     if !isIntType(row._type) || !isIntType(col._type) {
-        fmt.Println("Błąd typów: indeksy macierzy muszą być typu całkowitego")
-        panic(1)
+        sa.addError("Błąd typów: indeksy macierzy muszą być typu całkowitego", ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
     }
 
     if isIntType(mat._type) && isFloatType(value._type) {
-        fmt.Println("Błąd typów: nie można przypisać wartości typu " + value._type + " do macierzy typu " + mat._type)
-        panic(1)
+		sa.addError("Błąd typów: nie można przypisać wartości typu " + value._type + " do macierzy typu " + mat._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
     }
 
     if value._type != mat._type {
-        value = castType(value, mat._type)
+		var err error
+        value, err = castType(value, mat._type)
+        if err != nil {
+            sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+        }
     }
 
-    row64 := castIntToI64(row)
-    col64 := castIntToI64(col)
+    row64, err := castIntToI64(row)
+    if err != nil {
+        sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+    }
+    col64, err := castIntToI64(col)
+    if err != nil {
+        sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+    }
 
 	colCount := mat._colLen
 	help := nextVar()
@@ -725,7 +583,7 @@ func (l *kochanowskiListener) ExitExpr_compare(ctx *parser.Expr_compareContext) 
 				prog += "icmp sle"
 			}
 		}
-		prog += " " + first._type + " " + first._value + ", " + second._value + "\n"
+		prog += " " + second._type + " " + second._value + ", " + first._value + "\n"
 		stack.push(v, "i1")
 	}
 }
@@ -759,8 +617,7 @@ func (l *kochanowskiListener) ExitExpr_bit(ctx *parser.Expr_bitContext) {
 	if ctx.Expr_bit() != nil {
 		matchLastTwoTypes()
 		if !isIntType(stack.peek()._type) {
-			fmt.Println("Błąd typów: operator bitowy wymaga typu całkowitego, a otrzymał " + stack.peek()._type)
-			panic(1)
+			sa.addError("Błąd typów: operator bitowy wymaga typu całkowitego, a otrzymał " + stack.peek()._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 		}
 		varCount++
 		first := stack.pop()

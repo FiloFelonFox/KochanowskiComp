@@ -27,13 +27,35 @@ func main() {
 	input := antlr.NewInputStream(string(data))
 	
 	lexer := parser.NewkochanowskiLexer(input)
+	errorListener := &ErrorListener{}
+    lexer.RemoveErrorListeners()
+    lexer.AddErrorListener(errorListener)
+
 	tokens := antlr.NewCommonTokenStream(lexer, 0)
 	
 	p := parser.NewkochanowskiParser(tokens)
+	p.RemoveErrorListeners()
+    p.AddErrorListener(errorListener)
+
 	tree := p.Body()
+	if errorListener.HasErrors {
+        fmt.Println("\n=== Wystąpiły błędy podczas parsowania ===")
+        for _, errMsg := range errorListener.Errors {
+            fmt.Println(errMsg)
+        }
+        return
+    }
 
 	listener := &kochanowskiListener{}
 	antlr.ParseTreeWalkerDefault.Walk(listener, tree)
+
+	if sa.hasErrors {
+		fmt.Println("\n=== Wystąpiły błędy podczas analizy semantycznej ===")
+		for _, errMsg := range sa.errors {
+			fmt.Println(errMsg)
+		}
+		return
+	}
 
 	_, err = outFile.WriteString(listener.progprint())
 	if err != nil {
