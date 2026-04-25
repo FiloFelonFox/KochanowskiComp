@@ -80,6 +80,9 @@ type kochanowskiListener interface {
 	// EnterUnary is called when entering the unary production.
 	EnterUnary(c *UnaryContext)
 
+	// EnterString_value is called when entering the string_value production.
+	EnterString_value(c *String_valueContext)
+
 	// EnterArray_value is called when entering the array_value production.
 	EnterArray_value(c *Array_valueContext)
 
@@ -160,6 +163,9 @@ type kochanowskiListener interface {
 
 	// ExitUnary is called when exiting the unary production.
 	ExitUnary(c *UnaryContext)
+
+	// ExitString_value is called when exiting the string_value production.
+	ExitString_value(c *String_valueContext)
 
 	// ExitArray_value is called when exiting the array_value production.
 	ExitArray_value(c *Array_valueContext)

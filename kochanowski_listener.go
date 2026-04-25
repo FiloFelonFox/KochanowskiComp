@@ -21,6 +21,7 @@ type t_var struct {
 type t_array struct {
 	_value string
 	_type  string
+	_rowLen t_var
 }
 
 type t_matrix struct {
@@ -34,6 +35,10 @@ var prog string = ""
 var variables = make(map[string]t_var)
 var arrays = make(map[string]t_array)
 var matrices = make(map[string]t_matrix)
+var strings = make(map[string]string)
+
+var strCount int = 0
+
 var varCount int = 0
 
 var stack VariableStack
@@ -187,11 +192,13 @@ func (l *kochanowskiListener) EnterBody(ctx *parser.BodyContext) {
 	prog += "declare double @llvm.pow.f64(double, double)\n"
 	prog += "declare ptr @malloc(i64)\n"
 	prog += "declare void @free(ptr)\n"
+	prog += "declare void @llvm.memcpy.p0i8.p0i8.i64(ptr align 1, ptr align 1, i64, i1)\n"
 	prog += "\n"
 	prog += "@.str.i1 = private unnamed_addr constant [4 x i8] c\"%d\\0A\\00\", align 1\n"
 	prog += "@.str.i32 = private unnamed_addr constant [4 x i8] c\"%d\\0A\\00\", align 1\n"
 	prog += "@.str.i64 = private unnamed_addr constant [5 x i8] c\"%ld\\0A\\00\", align 1\n"
 	prog += "@.str.double = private unnamed_addr constant [5 x i8] c\"%lg\\0A\\00\", align 1\n"
+	prog += "@.str.ptr = private unnamed_addr constant [4 x i8] c\"%s\\0A\\00\", align 1\n"
 	prog +="\n"
 	prog += "@.scan.str = private unnamed_addr constant [6 x i8] c\"%255s\\00\", align 1\n"
 	prog += "@.read.buf = internal global [256 x i8] zeroinitializer, align 1\n"
@@ -200,6 +207,9 @@ func (l *kochanowskiListener) EnterBody(ctx *parser.BodyContext) {
 }
 
 func (l *kochanowskiListener) ExitBody(ctx *parser.BodyContext) {
+	for str := range strings {
+		prog = str + " = private unnamed_addr constant [" + fmt.Sprint(len(strings[str])+1) + " x i8] c\"" + strings[str] + "\\00\", align 1\n" + prog
+	}
 	for arr := range arrays {
 		prog += "call void @free(ptr " + arrays[arr]._value + ")\n"
 	}
@@ -260,6 +270,9 @@ func (l *kochanowskiListener) ExitRead(ctx *parser.ReadContext) {
 		val := nextVar()
 		prog += val + " = call double @atof(ptr noundef " + ptr + ")\n"
 		prog += "store double " + val + ", ptr " + variable._value + ", align 8\n"
+	case "ptr":
+		length := arrays[ctx.ID().GetText()]._rowLen
+		prog += "call void @llvm.memcpy.p0i8.p0i8.i64(ptr align 1 " + variable._value + ", ptr align 1 " + ptr + ", i64 " + length._value + ", i1 false)\n"
 	default:
 		fmt.Println("Nie można wczytać tego typu")
 		panic(1)
@@ -376,6 +389,11 @@ func (l *kochanowskiListener) EnterArray_create(ctx *parser.Array_createContext)
 }
 
 func (l *kochanowskiListener) ExitArray_create(ctx *parser.Array_createContext) {
+	var str t_var
+	if ctx.String_value() != nil {
+		str = stack.pop()
+	}
+
 	name := ctx.ID().GetText()
 
 	elemType := ""
@@ -387,6 +405,9 @@ func (l *kochanowskiListener) ExitArray_create(ctx *parser.Array_createContext) 
 	case "tablicę liczb zmiennoprzecinkowych":
 		elemType = "float"
 		elemSizeBytes = 4
+	case "napis":
+		elemType = "i8"
+		elemSizeBytes = 1
 	}
 	
 	sizeVar := stack.pop()
@@ -402,7 +423,17 @@ func (l *kochanowskiListener) ExitArray_create(ctx *parser.Array_createContext) 
 
 	base := nextVar()
 	prog += base + " = call ptr @malloc(i64 " + bytes + ")\n"
-	arrays[name] = t_array{base, elemType}
+	rowLen := nextVar()
+	prog += rowLen + " = add i64 " + size64._value + ", 0\n"
+	arrays[name] = t_array{base, elemType, t_var{rowLen, "i64"}}
+	variables[name] = t_var{base, "ptr"}
+	if ctx.String_value() != nil {
+		if str._type != "ptr" {
+			fmt.Println("Błąd typów: wartość początkowa tablicy musi być typu napis, a otrzymał " + str._type)
+			panic(1)
+		}
+		prog += "call void @llvm.memcpy.p0i8.p0i8.i64(ptr align 1 " + base + ", ptr align 1 " + str._value + ", i64 " + bytes + ", i1 false)\n"
+	}
 }
 
 // ARRAY_TYPE
@@ -849,6 +880,24 @@ func (l *kochanowskiListener) ExitUnary(ctx *parser.UnaryContext) {
 	}
 }
 
+//STRING_VALUE
+func (l *kochanowskiListener) EnterString_value(ctx *parser.String_valueContext) {
+}
+
+func (l *kochanowskiListener) ExitString_value(ctx *parser.String_valueContext) {
+	str := ctx.STRING_LITERAL().GetText()
+	str = str[1:len(str)-1]
+	strBytes := len(str) + 1
+
+	strName := "@.str.user." + fmt.Sprint(strCount)
+	strCount++
+	strings[strName] = str
+
+	strVar := nextVar()
+	prog += strVar + " = getelementptr inbounds [" + fmt.Sprint(strBytes) + " x i8], ptr " + strName + ", i32 0, i32 0\n"
+	stack.push(strVar, "ptr")
+}
+
 // VALUE
 func (l *kochanowskiListener) EnterValue(ctx *parser.ValueContext) {
 	if ctx.INTEGER() != nil {
@@ -856,6 +905,10 @@ func (l *kochanowskiListener) EnterValue(ctx *parser.ValueContext) {
 	} else if ctx.DECIMAL() != nil {
 		stack.push(fmt.Sprint(ctx.DECIMAL().GetText()), "double")
 	} else if ctx.ID() != nil {
+			if variables[ctx.ID().GetText()]._type == "ptr" {
+				stack.push(variables[ctx.ID().GetText()]._value, "ptr")
+				return
+			}
 		varCount++
 		prog += "%" + fmt.Sprint(varCount) + " = load " + variables[ctx.ID().GetText()]._type + ", ptr " + variables[ctx.ID().GetText()]._value + ", " + typeAlignMap[variables[ctx.ID().GetText()]._type] + "\n"
 		stack.push("%"+fmt.Sprint(varCount), variables[ctx.ID().GetText()]._type)

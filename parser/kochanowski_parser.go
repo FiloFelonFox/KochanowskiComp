@@ -33,7 +33,7 @@ var KochanowskiParserStaticData struct {
 func kochanowskiParserInit() {
 	staticData := &KochanowskiParserStaticData
 	staticData.LiteralNames = []string{
-		"", "'na'", "'macierz liczb ca\\u0142kowitych'", "'macierz liczb zmiennoprzecinkowych'",
+		"", "'napis'", "'na'", "'macierz liczb ca\\u0142kowitych'", "'macierz liczb zmiennoprzecinkowych'",
 		"'macierzy'", "'pod kolumn\\u0105'", "'wierszem'", "'tablicy'", "'pod'",
 		"'warto\\u015B\\u0107'", "'kom\\u00F3rk\\u0105'", "'Zdefiniuj'", "'zmienn\\u0105'",
 		"'ca\\u0142kowit\\u0105'", "'ca\\u0142kowit\\u0105 olbrzymiej wagi'",
@@ -48,135 +48,143 @@ func kochanowskiParserInit() {
 		"'policz'",
 	}
 	staticData.SymbolicNames = []string{
-		"", "BY", "INT32MATRIX", "F32MATRIX", "MATRIX", "UNDER_COLUMN", "ROW",
-		"ARRAY", "UNDER", "VALUE", "CELL", "DEFINE", "VARIABLE", "INT32", "INT64",
-		"F32", "F64", "INT32ARRAY", "F32ARRAY", "WITH_SIZE", "NAMED", "WITH_VALUE",
-		"DOT", "ASSIGN", "PRINT_WORD", "READ_WORD", "LOGIC_AND", "LOGIC_OR",
-		"FROM", "GREATER", "GREATEREQUAL", "EQUAL", "LESSEQUAL", "LESS", "NOTEQUAL",
-		"MODULO", "AND", "OR", "XOR", "PLUS", "MINUS", "TIMES", "DIVIDE", "POWER",
-		"NOT", "FIRST", "CALCULATE", "INTEGER", "DECIMAL", "ID", "WS",
+		"", "STRING", "BY", "INT32MATRIX", "F32MATRIX", "MATRIX", "UNDER_COLUMN",
+		"ROW", "ARRAY", "UNDER", "VALUE", "CELL", "DEFINE", "VARIABLE", "INT32",
+		"INT64", "F32", "F64", "INT32ARRAY", "F32ARRAY", "WITH_SIZE", "NAMED",
+		"WITH_VALUE", "DOT", "ASSIGN", "PRINT_WORD", "READ_WORD", "LOGIC_AND",
+		"LOGIC_OR", "FROM", "GREATER", "GREATEREQUAL", "EQUAL", "LESSEQUAL",
+		"LESS", "NOTEQUAL", "MODULO", "AND", "OR", "XOR", "PLUS", "MINUS", "TIMES",
+		"DIVIDE", "POWER", "NOT", "FIRST", "CALCULATE", "STRING_LITERAL", "INTEGER",
+		"DECIMAL", "ID", "WS",
 	}
 	staticData.RuleNames = []string{
 		"body", "statement", "var_create", "type", "array_create", "array_type",
 		"array_assign", "matrix_create", "matrix_type", "matrix_assign", "var_assign",
 		"read", "print", "expr", "expr_logic", "logic_operator", "expr_compare",
 		"expr_mod", "expr_bit", "expr_add", "expr_mult", "expr_power", "expr_paren",
-		"unary", "array_value", "matrix_value", "value",
+		"unary", "string_value", "array_value", "matrix_value", "value",
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 50, 268, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 1, 52, 284, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
 		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
 		10, 2, 11, 7, 11, 2, 12, 7, 12, 2, 13, 7, 13, 2, 14, 7, 14, 2, 15, 7, 15,
 		2, 16, 7, 16, 2, 17, 7, 17, 2, 18, 7, 18, 2, 19, 7, 19, 2, 20, 7, 20, 2,
 		21, 7, 21, 2, 22, 7, 22, 2, 23, 7, 23, 2, 24, 7, 24, 2, 25, 7, 25, 2, 26,
-		7, 26, 1, 0, 5, 0, 56, 8, 0, 10, 0, 12, 0, 59, 9, 0, 1, 1, 1, 1, 1, 1,
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 69, 8, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1,
-		2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3,
-		2, 87, 8, 2, 1, 3, 1, 3, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4,
-		1, 5, 1, 5, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 7,
-		1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 8, 1, 8, 1, 9,
-		1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 10, 1, 10,
-		1, 10, 1, 10, 1, 10, 1, 11, 1, 11, 1, 11, 1, 11, 1, 12, 1, 12, 1, 12, 1,
-		12, 1, 13, 1, 13, 1, 14, 1, 14, 1, 14, 1, 14, 1, 14, 3, 14, 153, 8, 14,
-		1, 15, 1, 15, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1,
+		7, 26, 2, 27, 7, 27, 1, 0, 5, 0, 58, 8, 0, 10, 0, 12, 0, 61, 9, 0, 1, 1,
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 71, 8, 1, 1, 2, 1, 2, 1,
+		2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1,
+		2, 1, 2, 3, 2, 89, 8, 2, 1, 3, 1, 3, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4,
+		1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4,
+		3, 4, 111, 8, 4, 1, 5, 1, 5, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6,
+		1, 6, 1, 6, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7,
+		1, 8, 1, 8, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9,
+		1, 9, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 11, 1, 11, 1, 11, 1, 11, 1,
+		12, 1, 12, 1, 12, 1, 12, 1, 13, 1, 13, 1, 14, 1, 14, 1, 14, 1, 14, 1, 14,
+		3, 14, 167, 8, 14, 1, 15, 1, 15, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1,
 		16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16,
-		1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 3, 16, 182, 8, 16, 1, 17, 1,
-		17, 1, 17, 1, 17, 1, 17, 3, 17, 189, 8, 17, 1, 18, 1, 18, 1, 18, 1, 18,
-		1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 3, 18, 204,
-		8, 18, 1, 19, 1, 19, 1, 19, 1, 19, 1, 19, 1, 19, 1, 19, 1, 19, 1, 19, 3,
-		19, 215, 8, 19, 1, 20, 1, 20, 1, 20, 1, 20, 1, 20, 1, 20, 1, 20, 1, 20,
-		1, 20, 3, 20, 226, 8, 20, 1, 21, 1, 21, 1, 21, 1, 21, 1, 21, 3, 21, 233,
-		8, 21, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 3, 22, 240, 8, 22, 1, 23, 1,
-		23, 1, 23, 1, 23, 1, 23, 1, 23, 1, 23, 3, 23, 249, 8, 23, 1, 24, 1, 24,
-		1, 24, 1, 24, 1, 24, 1, 24, 1, 24, 1, 25, 1, 25, 1, 25, 1, 25, 1, 25, 1,
-		25, 1, 25, 1, 25, 1, 26, 1, 26, 1, 26, 0, 0, 27, 0, 2, 4, 6, 8, 10, 12,
-		14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48,
-		50, 52, 0, 5, 1, 0, 13, 16, 1, 0, 17, 18, 1, 0, 2, 3, 1, 0, 26, 27, 1,
-		0, 47, 49, 270, 0, 57, 1, 0, 0, 0, 2, 68, 1, 0, 0, 0, 4, 86, 1, 0, 0, 0,
-		6, 88, 1, 0, 0, 0, 8, 90, 1, 0, 0, 0, 10, 98, 1, 0, 0, 0, 12, 100, 1, 0,
-		0, 0, 14, 109, 1, 0, 0, 0, 16, 119, 1, 0, 0, 0, 18, 121, 1, 0, 0, 0, 20,
-		132, 1, 0, 0, 0, 22, 137, 1, 0, 0, 0, 24, 141, 1, 0, 0, 0, 26, 145, 1,
-		0, 0, 0, 28, 152, 1, 0, 0, 0, 30, 154, 1, 0, 0, 0, 32, 181, 1, 0, 0, 0,
-		34, 188, 1, 0, 0, 0, 36, 203, 1, 0, 0, 0, 38, 214, 1, 0, 0, 0, 40, 225,
-		1, 0, 0, 0, 42, 232, 1, 0, 0, 0, 44, 239, 1, 0, 0, 0, 46, 248, 1, 0, 0,
-		0, 48, 250, 1, 0, 0, 0, 50, 257, 1, 0, 0, 0, 52, 265, 1, 0, 0, 0, 54, 56,
-		3, 2, 1, 0, 55, 54, 1, 0, 0, 0, 56, 59, 1, 0, 0, 0, 57, 55, 1, 0, 0, 0,
-		57, 58, 1, 0, 0, 0, 58, 1, 1, 0, 0, 0, 59, 57, 1, 0, 0, 0, 60, 69, 3, 4,
-		2, 0, 61, 69, 3, 20, 10, 0, 62, 69, 3, 8, 4, 0, 63, 69, 3, 12, 6, 0, 64,
-		69, 3, 14, 7, 0, 65, 69, 3, 18, 9, 0, 66, 69, 3, 24, 12, 0, 67, 69, 3,
-		22, 11, 0, 68, 60, 1, 0, 0, 0, 68, 61, 1, 0, 0, 0, 68, 62, 1, 0, 0, 0,
-		68, 63, 1, 0, 0, 0, 68, 64, 1, 0, 0, 0, 68, 65, 1, 0, 0, 0, 68, 66, 1,
-		0, 0, 0, 68, 67, 1, 0, 0, 0, 69, 3, 1, 0, 0, 0, 70, 71, 5, 11, 0, 0, 71,
-		72, 5, 12, 0, 0, 72, 73, 3, 6, 3, 0, 73, 74, 5, 20, 0, 0, 74, 75, 5, 49,
-		0, 0, 75, 76, 5, 22, 0, 0, 76, 87, 1, 0, 0, 0, 77, 78, 5, 11, 0, 0, 78,
-		79, 5, 12, 0, 0, 79, 80, 3, 6, 3, 0, 80, 81, 5, 20, 0, 0, 81, 82, 5, 49,
-		0, 0, 82, 83, 5, 21, 0, 0, 83, 84, 3, 26, 13, 0, 84, 85, 5, 22, 0, 0, 85,
-		87, 1, 0, 0, 0, 86, 70, 1, 0, 0, 0, 86, 77, 1, 0, 0, 0, 87, 5, 1, 0, 0,
-		0, 88, 89, 7, 0, 0, 0, 89, 7, 1, 0, 0, 0, 90, 91, 5, 11, 0, 0, 91, 92,
-		3, 10, 5, 0, 92, 93, 5, 20, 0, 0, 93, 94, 5, 49, 0, 0, 94, 95, 5, 19, 0,
-		0, 95, 96, 3, 26, 13, 0, 96, 97, 5, 22, 0, 0, 97, 9, 1, 0, 0, 0, 98, 99,
-		7, 1, 0, 0, 99, 11, 1, 0, 0, 0, 100, 101, 5, 23, 0, 0, 101, 102, 5, 7,
-		0, 0, 102, 103, 5, 49, 0, 0, 103, 104, 5, 8, 0, 0, 104, 105, 3, 26, 13,
-		0, 105, 106, 5, 9, 0, 0, 106, 107, 3, 26, 13, 0, 107, 108, 5, 22, 0, 0,
-		108, 13, 1, 0, 0, 0, 109, 110, 5, 11, 0, 0, 110, 111, 3, 16, 8, 0, 111,
-		112, 5, 20, 0, 0, 112, 113, 5, 49, 0, 0, 113, 114, 5, 19, 0, 0, 114, 115,
-		3, 26, 13, 0, 115, 116, 5, 1, 0, 0, 116, 117, 3, 26, 13, 0, 117, 118, 5,
-		22, 0, 0, 118, 15, 1, 0, 0, 0, 119, 120, 7, 2, 0, 0, 120, 17, 1, 0, 0,
-		0, 121, 122, 5, 23, 0, 0, 122, 123, 5, 4, 0, 0, 123, 124, 5, 49, 0, 0,
-		124, 125, 5, 5, 0, 0, 125, 126, 3, 26, 13, 0, 126, 127, 5, 6, 0, 0, 127,
-		128, 3, 26, 13, 0, 128, 129, 5, 9, 0, 0, 129, 130, 3, 26, 13, 0, 130, 131,
-		5, 22, 0, 0, 131, 19, 1, 0, 0, 0, 132, 133, 5, 23, 0, 0, 133, 134, 5, 49,
-		0, 0, 134, 135, 3, 26, 13, 0, 135, 136, 5, 22, 0, 0, 136, 21, 1, 0, 0,
-		0, 137, 138, 5, 25, 0, 0, 138, 139, 5, 49, 0, 0, 139, 140, 5, 22, 0, 0,
-		140, 23, 1, 0, 0, 0, 141, 142, 5, 24, 0, 0, 142, 143, 3, 26, 13, 0, 143,
-		144, 5, 22, 0, 0, 144, 25, 1, 0, 0, 0, 145, 146, 3, 28, 14, 0, 146, 27,
-		1, 0, 0, 0, 147, 153, 3, 32, 16, 0, 148, 149, 3, 32, 16, 0, 149, 150, 3,
-		30, 15, 0, 150, 151, 3, 28, 14, 0, 151, 153, 1, 0, 0, 0, 152, 147, 1, 0,
-		0, 0, 152, 148, 1, 0, 0, 0, 153, 29, 1, 0, 0, 0, 154, 155, 7, 3, 0, 0,
-		155, 31, 1, 0, 0, 0, 156, 182, 3, 34, 17, 0, 157, 158, 3, 34, 17, 0, 158,
-		159, 5, 29, 0, 0, 159, 160, 3, 32, 16, 0, 160, 182, 1, 0, 0, 0, 161, 162,
-		3, 34, 17, 0, 162, 163, 5, 30, 0, 0, 163, 164, 3, 32, 16, 0, 164, 182,
-		1, 0, 0, 0, 165, 166, 3, 34, 17, 0, 166, 167, 5, 31, 0, 0, 167, 168, 3,
-		32, 16, 0, 168, 182, 1, 0, 0, 0, 169, 170, 3, 34, 17, 0, 170, 171, 5, 32,
-		0, 0, 171, 172, 3, 32, 16, 0, 172, 182, 1, 0, 0, 0, 173, 174, 3, 34, 17,
-		0, 174, 175, 5, 33, 0, 0, 175, 176, 3, 32, 16, 0, 176, 182, 1, 0, 0, 0,
-		177, 178, 3, 34, 17, 0, 178, 179, 5, 34, 0, 0, 179, 180, 3, 32, 16, 0,
-		180, 182, 1, 0, 0, 0, 181, 156, 1, 0, 0, 0, 181, 157, 1, 0, 0, 0, 181,
-		161, 1, 0, 0, 0, 181, 165, 1, 0, 0, 0, 181, 169, 1, 0, 0, 0, 181, 173,
-		1, 0, 0, 0, 181, 177, 1, 0, 0, 0, 182, 33, 1, 0, 0, 0, 183, 189, 3, 36,
-		18, 0, 184, 185, 3, 36, 18, 0, 185, 186, 5, 35, 0, 0, 186, 187, 3, 34,
-		17, 0, 187, 189, 1, 0, 0, 0, 188, 183, 1, 0, 0, 0, 188, 184, 1, 0, 0, 0,
-		189, 35, 1, 0, 0, 0, 190, 204, 3, 38, 19, 0, 191, 192, 3, 38, 19, 0, 192,
-		193, 5, 36, 0, 0, 193, 194, 3, 36, 18, 0, 194, 204, 1, 0, 0, 0, 195, 196,
-		3, 38, 19, 0, 196, 197, 5, 37, 0, 0, 197, 198, 3, 36, 18, 0, 198, 204,
-		1, 0, 0, 0, 199, 200, 3, 38, 19, 0, 200, 201, 5, 38, 0, 0, 201, 202, 3,
-		36, 18, 0, 202, 204, 1, 0, 0, 0, 203, 190, 1, 0, 0, 0, 203, 191, 1, 0,
-		0, 0, 203, 195, 1, 0, 0, 0, 203, 199, 1, 0, 0, 0, 204, 37, 1, 0, 0, 0,
-		205, 215, 3, 40, 20, 0, 206, 207, 3, 40, 20, 0, 207, 208, 5, 39, 0, 0,
-		208, 209, 3, 38, 19, 0, 209, 215, 1, 0, 0, 0, 210, 211, 3, 40, 20, 0, 211,
-		212, 5, 40, 0, 0, 212, 213, 3, 38, 19, 0, 213, 215, 1, 0, 0, 0, 214, 205,
-		1, 0, 0, 0, 214, 206, 1, 0, 0, 0, 214, 210, 1, 0, 0, 0, 215, 39, 1, 0,
-		0, 0, 216, 226, 3, 42, 21, 0, 217, 218, 3, 42, 21, 0, 218, 219, 5, 41,
-		0, 0, 219, 220, 3, 40, 20, 0, 220, 226, 1, 0, 0, 0, 221, 222, 3, 42, 21,
-		0, 222, 223, 5, 42, 0, 0, 223, 224, 3, 40, 20, 0, 224, 226, 1, 0, 0, 0,
-		225, 216, 1, 0, 0, 0, 225, 217, 1, 0, 0, 0, 225, 221, 1, 0, 0, 0, 226,
-		41, 1, 0, 0, 0, 227, 233, 3, 44, 22, 0, 228, 229, 3, 44, 22, 0, 229, 230,
-		5, 43, 0, 0, 230, 231, 3, 42, 21, 0, 231, 233, 1, 0, 0, 0, 232, 227, 1,
-		0, 0, 0, 232, 228, 1, 0, 0, 0, 233, 43, 1, 0, 0, 0, 234, 240, 3, 46, 23,
-		0, 235, 236, 5, 45, 0, 0, 236, 237, 3, 26, 13, 0, 237, 238, 5, 46, 0, 0,
-		238, 240, 1, 0, 0, 0, 239, 234, 1, 0, 0, 0, 239, 235, 1, 0, 0, 0, 240,
-		45, 1, 0, 0, 0, 241, 249, 3, 52, 26, 0, 242, 249, 3, 50, 25, 0, 243, 249,
-		3, 48, 24, 0, 244, 245, 5, 40, 0, 0, 245, 249, 3, 26, 13, 0, 246, 247,
-		5, 44, 0, 0, 247, 249, 3, 26, 13, 0, 248, 241, 1, 0, 0, 0, 248, 242, 1,
-		0, 0, 0, 248, 243, 1, 0, 0, 0, 248, 244, 1, 0, 0, 0, 248, 246, 1, 0, 0,
-		0, 249, 47, 1, 0, 0, 0, 250, 251, 5, 9, 0, 0, 251, 252, 5, 8, 0, 0, 252,
-		253, 5, 10, 0, 0, 253, 254, 3, 26, 13, 0, 254, 255, 5, 7, 0, 0, 255, 256,
-		5, 49, 0, 0, 256, 49, 1, 0, 0, 0, 257, 258, 5, 9, 0, 0, 258, 259, 5, 5,
-		0, 0, 259, 260, 3, 26, 13, 0, 260, 261, 5, 6, 0, 0, 261, 262, 3, 26, 13,
-		0, 262, 263, 5, 4, 0, 0, 263, 264, 5, 49, 0, 0, 264, 51, 1, 0, 0, 0, 265,
-		266, 7, 4, 0, 0, 266, 53, 1, 0, 0, 0, 12, 57, 68, 86, 152, 181, 188, 203,
-		214, 225, 232, 239, 248,
+		1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 1, 16, 3, 16, 196,
+		8, 16, 1, 17, 1, 17, 1, 17, 1, 17, 1, 17, 3, 17, 203, 8, 17, 1, 18, 1,
+		18, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18, 1, 18,
+		1, 18, 3, 18, 218, 8, 18, 1, 19, 1, 19, 1, 19, 1, 19, 1, 19, 1, 19, 1,
+		19, 1, 19, 1, 19, 3, 19, 229, 8, 19, 1, 20, 1, 20, 1, 20, 1, 20, 1, 20,
+		1, 20, 1, 20, 1, 20, 1, 20, 3, 20, 240, 8, 20, 1, 21, 1, 21, 1, 21, 1,
+		21, 1, 21, 3, 21, 247, 8, 21, 1, 22, 1, 22, 1, 22, 1, 22, 1, 22, 3, 22,
+		254, 8, 22, 1, 23, 1, 23, 1, 23, 1, 23, 1, 23, 1, 23, 1, 23, 3, 23, 263,
+		8, 23, 1, 24, 1, 24, 1, 25, 1, 25, 1, 25, 1, 25, 1, 25, 1, 25, 1, 25, 1,
+		26, 1, 26, 1, 26, 1, 26, 1, 26, 1, 26, 1, 26, 1, 26, 1, 27, 1, 27, 1, 27,
+		0, 0, 28, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32,
+		34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 0, 5, 1, 0, 14, 17, 2, 0, 1,
+		1, 18, 19, 1, 0, 3, 4, 1, 0, 27, 28, 1, 0, 49, 51, 286, 0, 59, 1, 0, 0,
+		0, 2, 70, 1, 0, 0, 0, 4, 88, 1, 0, 0, 0, 6, 90, 1, 0, 0, 0, 8, 110, 1,
+		0, 0, 0, 10, 112, 1, 0, 0, 0, 12, 114, 1, 0, 0, 0, 14, 123, 1, 0, 0, 0,
+		16, 133, 1, 0, 0, 0, 18, 135, 1, 0, 0, 0, 20, 146, 1, 0, 0, 0, 22, 151,
+		1, 0, 0, 0, 24, 155, 1, 0, 0, 0, 26, 159, 1, 0, 0, 0, 28, 166, 1, 0, 0,
+		0, 30, 168, 1, 0, 0, 0, 32, 195, 1, 0, 0, 0, 34, 202, 1, 0, 0, 0, 36, 217,
+		1, 0, 0, 0, 38, 228, 1, 0, 0, 0, 40, 239, 1, 0, 0, 0, 42, 246, 1, 0, 0,
+		0, 44, 253, 1, 0, 0, 0, 46, 262, 1, 0, 0, 0, 48, 264, 1, 0, 0, 0, 50, 266,
+		1, 0, 0, 0, 52, 273, 1, 0, 0, 0, 54, 281, 1, 0, 0, 0, 56, 58, 3, 2, 1,
+		0, 57, 56, 1, 0, 0, 0, 58, 61, 1, 0, 0, 0, 59, 57, 1, 0, 0, 0, 59, 60,
+		1, 0, 0, 0, 60, 1, 1, 0, 0, 0, 61, 59, 1, 0, 0, 0, 62, 71, 3, 4, 2, 0,
+		63, 71, 3, 20, 10, 0, 64, 71, 3, 8, 4, 0, 65, 71, 3, 12, 6, 0, 66, 71,
+		3, 14, 7, 0, 67, 71, 3, 18, 9, 0, 68, 71, 3, 24, 12, 0, 69, 71, 3, 22,
+		11, 0, 70, 62, 1, 0, 0, 0, 70, 63, 1, 0, 0, 0, 70, 64, 1, 0, 0, 0, 70,
+		65, 1, 0, 0, 0, 70, 66, 1, 0, 0, 0, 70, 67, 1, 0, 0, 0, 70, 68, 1, 0, 0,
+		0, 70, 69, 1, 0, 0, 0, 71, 3, 1, 0, 0, 0, 72, 73, 5, 12, 0, 0, 73, 74,
+		5, 13, 0, 0, 74, 75, 3, 6, 3, 0, 75, 76, 5, 21, 0, 0, 76, 77, 5, 51, 0,
+		0, 77, 78, 5, 23, 0, 0, 78, 89, 1, 0, 0, 0, 79, 80, 5, 12, 0, 0, 80, 81,
+		5, 13, 0, 0, 81, 82, 3, 6, 3, 0, 82, 83, 5, 21, 0, 0, 83, 84, 5, 51, 0,
+		0, 84, 85, 5, 22, 0, 0, 85, 86, 3, 26, 13, 0, 86, 87, 5, 23, 0, 0, 87,
+		89, 1, 0, 0, 0, 88, 72, 1, 0, 0, 0, 88, 79, 1, 0, 0, 0, 89, 5, 1, 0, 0,
+		0, 90, 91, 7, 0, 0, 0, 91, 7, 1, 0, 0, 0, 92, 93, 5, 12, 0, 0, 93, 94,
+		3, 10, 5, 0, 94, 95, 5, 21, 0, 0, 95, 96, 5, 51, 0, 0, 96, 97, 5, 20, 0,
+		0, 97, 98, 3, 26, 13, 0, 98, 99, 5, 23, 0, 0, 99, 111, 1, 0, 0, 0, 100,
+		101, 5, 12, 0, 0, 101, 102, 3, 10, 5, 0, 102, 103, 5, 21, 0, 0, 103, 104,
+		5, 51, 0, 0, 104, 105, 5, 20, 0, 0, 105, 106, 3, 26, 13, 0, 106, 107, 5,
+		22, 0, 0, 107, 108, 3, 48, 24, 0, 108, 109, 5, 23, 0, 0, 109, 111, 1, 0,
+		0, 0, 110, 92, 1, 0, 0, 0, 110, 100, 1, 0, 0, 0, 111, 9, 1, 0, 0, 0, 112,
+		113, 7, 1, 0, 0, 113, 11, 1, 0, 0, 0, 114, 115, 5, 24, 0, 0, 115, 116,
+		5, 8, 0, 0, 116, 117, 5, 51, 0, 0, 117, 118, 5, 9, 0, 0, 118, 119, 3, 26,
+		13, 0, 119, 120, 5, 10, 0, 0, 120, 121, 3, 26, 13, 0, 121, 122, 5, 23,
+		0, 0, 122, 13, 1, 0, 0, 0, 123, 124, 5, 12, 0, 0, 124, 125, 3, 16, 8, 0,
+		125, 126, 5, 21, 0, 0, 126, 127, 5, 51, 0, 0, 127, 128, 5, 20, 0, 0, 128,
+		129, 3, 26, 13, 0, 129, 130, 5, 2, 0, 0, 130, 131, 3, 26, 13, 0, 131, 132,
+		5, 23, 0, 0, 132, 15, 1, 0, 0, 0, 133, 134, 7, 2, 0, 0, 134, 17, 1, 0,
+		0, 0, 135, 136, 5, 24, 0, 0, 136, 137, 5, 5, 0, 0, 137, 138, 5, 51, 0,
+		0, 138, 139, 5, 6, 0, 0, 139, 140, 3, 26, 13, 0, 140, 141, 5, 7, 0, 0,
+		141, 142, 3, 26, 13, 0, 142, 143, 5, 10, 0, 0, 143, 144, 3, 26, 13, 0,
+		144, 145, 5, 23, 0, 0, 145, 19, 1, 0, 0, 0, 146, 147, 5, 24, 0, 0, 147,
+		148, 5, 51, 0, 0, 148, 149, 3, 26, 13, 0, 149, 150, 5, 23, 0, 0, 150, 21,
+		1, 0, 0, 0, 151, 152, 5, 26, 0, 0, 152, 153, 5, 51, 0, 0, 153, 154, 5,
+		23, 0, 0, 154, 23, 1, 0, 0, 0, 155, 156, 5, 25, 0, 0, 156, 157, 3, 26,
+		13, 0, 157, 158, 5, 23, 0, 0, 158, 25, 1, 0, 0, 0, 159, 160, 3, 28, 14,
+		0, 160, 27, 1, 0, 0, 0, 161, 167, 3, 32, 16, 0, 162, 163, 3, 32, 16, 0,
+		163, 164, 3, 30, 15, 0, 164, 165, 3, 28, 14, 0, 165, 167, 1, 0, 0, 0, 166,
+		161, 1, 0, 0, 0, 166, 162, 1, 0, 0, 0, 167, 29, 1, 0, 0, 0, 168, 169, 7,
+		3, 0, 0, 169, 31, 1, 0, 0, 0, 170, 196, 3, 34, 17, 0, 171, 172, 3, 34,
+		17, 0, 172, 173, 5, 30, 0, 0, 173, 174, 3, 32, 16, 0, 174, 196, 1, 0, 0,
+		0, 175, 176, 3, 34, 17, 0, 176, 177, 5, 31, 0, 0, 177, 178, 3, 32, 16,
+		0, 178, 196, 1, 0, 0, 0, 179, 180, 3, 34, 17, 0, 180, 181, 5, 32, 0, 0,
+		181, 182, 3, 32, 16, 0, 182, 196, 1, 0, 0, 0, 183, 184, 3, 34, 17, 0, 184,
+		185, 5, 33, 0, 0, 185, 186, 3, 32, 16, 0, 186, 196, 1, 0, 0, 0, 187, 188,
+		3, 34, 17, 0, 188, 189, 5, 34, 0, 0, 189, 190, 3, 32, 16, 0, 190, 196,
+		1, 0, 0, 0, 191, 192, 3, 34, 17, 0, 192, 193, 5, 35, 0, 0, 193, 194, 3,
+		32, 16, 0, 194, 196, 1, 0, 0, 0, 195, 170, 1, 0, 0, 0, 195, 171, 1, 0,
+		0, 0, 195, 175, 1, 0, 0, 0, 195, 179, 1, 0, 0, 0, 195, 183, 1, 0, 0, 0,
+		195, 187, 1, 0, 0, 0, 195, 191, 1, 0, 0, 0, 196, 33, 1, 0, 0, 0, 197, 203,
+		3, 36, 18, 0, 198, 199, 3, 36, 18, 0, 199, 200, 5, 36, 0, 0, 200, 201,
+		3, 34, 17, 0, 201, 203, 1, 0, 0, 0, 202, 197, 1, 0, 0, 0, 202, 198, 1,
+		0, 0, 0, 203, 35, 1, 0, 0, 0, 204, 218, 3, 38, 19, 0, 205, 206, 3, 38,
+		19, 0, 206, 207, 5, 37, 0, 0, 207, 208, 3, 36, 18, 0, 208, 218, 1, 0, 0,
+		0, 209, 210, 3, 38, 19, 0, 210, 211, 5, 38, 0, 0, 211, 212, 3, 36, 18,
+		0, 212, 218, 1, 0, 0, 0, 213, 214, 3, 38, 19, 0, 214, 215, 5, 39, 0, 0,
+		215, 216, 3, 36, 18, 0, 216, 218, 1, 0, 0, 0, 217, 204, 1, 0, 0, 0, 217,
+		205, 1, 0, 0, 0, 217, 209, 1, 0, 0, 0, 217, 213, 1, 0, 0, 0, 218, 37, 1,
+		0, 0, 0, 219, 229, 3, 40, 20, 0, 220, 221, 3, 40, 20, 0, 221, 222, 5, 40,
+		0, 0, 222, 223, 3, 38, 19, 0, 223, 229, 1, 0, 0, 0, 224, 225, 3, 40, 20,
+		0, 225, 226, 5, 41, 0, 0, 226, 227, 3, 38, 19, 0, 227, 229, 1, 0, 0, 0,
+		228, 219, 1, 0, 0, 0, 228, 220, 1, 0, 0, 0, 228, 224, 1, 0, 0, 0, 229,
+		39, 1, 0, 0, 0, 230, 240, 3, 42, 21, 0, 231, 232, 3, 42, 21, 0, 232, 233,
+		5, 42, 0, 0, 233, 234, 3, 40, 20, 0, 234, 240, 1, 0, 0, 0, 235, 236, 3,
+		42, 21, 0, 236, 237, 5, 43, 0, 0, 237, 238, 3, 40, 20, 0, 238, 240, 1,
+		0, 0, 0, 239, 230, 1, 0, 0, 0, 239, 231, 1, 0, 0, 0, 239, 235, 1, 0, 0,
+		0, 240, 41, 1, 0, 0, 0, 241, 247, 3, 44, 22, 0, 242, 243, 3, 44, 22, 0,
+		243, 244, 5, 44, 0, 0, 244, 245, 3, 42, 21, 0, 245, 247, 1, 0, 0, 0, 246,
+		241, 1, 0, 0, 0, 246, 242, 1, 0, 0, 0, 247, 43, 1, 0, 0, 0, 248, 254, 3,
+		46, 23, 0, 249, 250, 5, 46, 0, 0, 250, 251, 3, 26, 13, 0, 251, 252, 5,
+		47, 0, 0, 252, 254, 1, 0, 0, 0, 253, 248, 1, 0, 0, 0, 253, 249, 1, 0, 0,
+		0, 254, 45, 1, 0, 0, 0, 255, 263, 3, 54, 27, 0, 256, 263, 3, 52, 26, 0,
+		257, 263, 3, 50, 25, 0, 258, 259, 5, 41, 0, 0, 259, 263, 3, 26, 13, 0,
+		260, 261, 5, 45, 0, 0, 261, 263, 3, 26, 13, 0, 262, 255, 1, 0, 0, 0, 262,
+		256, 1, 0, 0, 0, 262, 257, 1, 0, 0, 0, 262, 258, 1, 0, 0, 0, 262, 260,
+		1, 0, 0, 0, 263, 47, 1, 0, 0, 0, 264, 265, 5, 48, 0, 0, 265, 49, 1, 0,
+		0, 0, 266, 267, 5, 10, 0, 0, 267, 268, 5, 9, 0, 0, 268, 269, 5, 11, 0,
+		0, 269, 270, 3, 26, 13, 0, 270, 271, 5, 8, 0, 0, 271, 272, 5, 51, 0, 0,
+		272, 51, 1, 0, 0, 0, 273, 274, 5, 10, 0, 0, 274, 275, 5, 6, 0, 0, 275,
+		276, 3, 26, 13, 0, 276, 277, 5, 7, 0, 0, 277, 278, 3, 26, 13, 0, 278, 279,
+		5, 5, 0, 0, 279, 280, 5, 51, 0, 0, 280, 53, 1, 0, 0, 0, 281, 282, 7, 4,
+		0, 0, 282, 55, 1, 0, 0, 0, 13, 59, 70, 88, 110, 166, 195, 202, 217, 228,
+		239, 246, 253, 262,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -214,57 +222,59 @@ func NewkochanowskiParser(input antlr.TokenStream) *kochanowskiParser {
 
 // kochanowskiParser tokens.
 const (
-	kochanowskiParserEOF          = antlr.TokenEOF
-	kochanowskiParserBY           = 1
-	kochanowskiParserINT32MATRIX  = 2
-	kochanowskiParserF32MATRIX    = 3
-	kochanowskiParserMATRIX       = 4
-	kochanowskiParserUNDER_COLUMN = 5
-	kochanowskiParserROW          = 6
-	kochanowskiParserARRAY        = 7
-	kochanowskiParserUNDER        = 8
-	kochanowskiParserVALUE        = 9
-	kochanowskiParserCELL         = 10
-	kochanowskiParserDEFINE       = 11
-	kochanowskiParserVARIABLE     = 12
-	kochanowskiParserINT32        = 13
-	kochanowskiParserINT64        = 14
-	kochanowskiParserF32          = 15
-	kochanowskiParserF64          = 16
-	kochanowskiParserINT32ARRAY   = 17
-	kochanowskiParserF32ARRAY     = 18
-	kochanowskiParserWITH_SIZE    = 19
-	kochanowskiParserNAMED        = 20
-	kochanowskiParserWITH_VALUE   = 21
-	kochanowskiParserDOT          = 22
-	kochanowskiParserASSIGN       = 23
-	kochanowskiParserPRINT_WORD   = 24
-	kochanowskiParserREAD_WORD    = 25
-	kochanowskiParserLOGIC_AND    = 26
-	kochanowskiParserLOGIC_OR     = 27
-	kochanowskiParserFROM         = 28
-	kochanowskiParserGREATER      = 29
-	kochanowskiParserGREATEREQUAL = 30
-	kochanowskiParserEQUAL        = 31
-	kochanowskiParserLESSEQUAL    = 32
-	kochanowskiParserLESS         = 33
-	kochanowskiParserNOTEQUAL     = 34
-	kochanowskiParserMODULO       = 35
-	kochanowskiParserAND          = 36
-	kochanowskiParserOR           = 37
-	kochanowskiParserXOR          = 38
-	kochanowskiParserPLUS         = 39
-	kochanowskiParserMINUS        = 40
-	kochanowskiParserTIMES        = 41
-	kochanowskiParserDIVIDE       = 42
-	kochanowskiParserPOWER        = 43
-	kochanowskiParserNOT          = 44
-	kochanowskiParserFIRST        = 45
-	kochanowskiParserCALCULATE    = 46
-	kochanowskiParserINTEGER      = 47
-	kochanowskiParserDECIMAL      = 48
-	kochanowskiParserID           = 49
-	kochanowskiParserWS           = 50
+	kochanowskiParserEOF            = antlr.TokenEOF
+	kochanowskiParserSTRING         = 1
+	kochanowskiParserBY             = 2
+	kochanowskiParserINT32MATRIX    = 3
+	kochanowskiParserF32MATRIX      = 4
+	kochanowskiParserMATRIX         = 5
+	kochanowskiParserUNDER_COLUMN   = 6
+	kochanowskiParserROW            = 7
+	kochanowskiParserARRAY          = 8
+	kochanowskiParserUNDER          = 9
+	kochanowskiParserVALUE          = 10
+	kochanowskiParserCELL           = 11
+	kochanowskiParserDEFINE         = 12
+	kochanowskiParserVARIABLE       = 13
+	kochanowskiParserINT32          = 14
+	kochanowskiParserINT64          = 15
+	kochanowskiParserF32            = 16
+	kochanowskiParserF64            = 17
+	kochanowskiParserINT32ARRAY     = 18
+	kochanowskiParserF32ARRAY       = 19
+	kochanowskiParserWITH_SIZE      = 20
+	kochanowskiParserNAMED          = 21
+	kochanowskiParserWITH_VALUE     = 22
+	kochanowskiParserDOT            = 23
+	kochanowskiParserASSIGN         = 24
+	kochanowskiParserPRINT_WORD     = 25
+	kochanowskiParserREAD_WORD      = 26
+	kochanowskiParserLOGIC_AND      = 27
+	kochanowskiParserLOGIC_OR       = 28
+	kochanowskiParserFROM           = 29
+	kochanowskiParserGREATER        = 30
+	kochanowskiParserGREATEREQUAL   = 31
+	kochanowskiParserEQUAL          = 32
+	kochanowskiParserLESSEQUAL      = 33
+	kochanowskiParserLESS           = 34
+	kochanowskiParserNOTEQUAL       = 35
+	kochanowskiParserMODULO         = 36
+	kochanowskiParserAND            = 37
+	kochanowskiParserOR             = 38
+	kochanowskiParserXOR            = 39
+	kochanowskiParserPLUS           = 40
+	kochanowskiParserMINUS          = 41
+	kochanowskiParserTIMES          = 42
+	kochanowskiParserDIVIDE         = 43
+	kochanowskiParserPOWER          = 44
+	kochanowskiParserNOT            = 45
+	kochanowskiParserFIRST          = 46
+	kochanowskiParserCALCULATE      = 47
+	kochanowskiParserSTRING_LITERAL = 48
+	kochanowskiParserINTEGER        = 49
+	kochanowskiParserDECIMAL        = 50
+	kochanowskiParserID             = 51
+	kochanowskiParserWS             = 52
 )
 
 // kochanowskiParser rules.
@@ -293,9 +303,10 @@ const (
 	kochanowskiParserRULE_expr_power     = 21
 	kochanowskiParserRULE_expr_paren     = 22
 	kochanowskiParserRULE_unary          = 23
-	kochanowskiParserRULE_array_value    = 24
-	kochanowskiParserRULE_matrix_value   = 25
-	kochanowskiParserRULE_value          = 26
+	kochanowskiParserRULE_string_value   = 24
+	kochanowskiParserRULE_array_value    = 25
+	kochanowskiParserRULE_matrix_value   = 26
+	kochanowskiParserRULE_value          = 27
 )
 
 // IBodyContext is an interface to support dynamic dispatch.
@@ -412,20 +423,20 @@ func (p *kochanowskiParser) Body() (localctx IBodyContext) {
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(57)
+	p.SetState(59)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&58722304) != 0 {
+	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&117444608) != 0 {
 		{
-			p.SetState(54)
+			p.SetState(56)
 			p.Statement()
 		}
 
-		p.SetState(59)
+		p.SetState(61)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -650,7 +661,7 @@ func (s *StatementContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *kochanowskiParser) Statement() (localctx IStatementContext) {
 	localctx = NewStatementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 2, kochanowskiParserRULE_statement)
-	p.SetState(68)
+	p.SetState(70)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -660,56 +671,56 @@ func (p *kochanowskiParser) Statement() (localctx IStatementContext) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(60)
+			p.SetState(62)
 			p.Var_create()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(61)
+			p.SetState(63)
 			p.Var_assign()
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(62)
+			p.SetState(64)
 			p.Array_create()
 		}
 
 	case 4:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(63)
+			p.SetState(65)
 			p.Array_assign()
 		}
 
 	case 5:
 		p.EnterOuterAlt(localctx, 5)
 		{
-			p.SetState(64)
+			p.SetState(66)
 			p.Matrix_create()
 		}
 
 	case 6:
 		p.EnterOuterAlt(localctx, 6)
 		{
-			p.SetState(65)
+			p.SetState(67)
 			p.Matrix_assign()
 		}
 
 	case 7:
 		p.EnterOuterAlt(localctx, 7)
 		{
-			p.SetState(66)
+			p.SetState(68)
 			p.Print_()
 		}
 
 	case 8:
 		p.EnterOuterAlt(localctx, 8)
 		{
-			p.SetState(67)
+			p.SetState(69)
 			p.Read()
 		}
 
@@ -862,7 +873,7 @@ func (s *Var_createContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 	localctx = NewVar_createContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 4, kochanowskiParserRULE_var_create)
-	p.SetState(86)
+	p.SetState(88)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -872,7 +883,7 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(70)
+			p.SetState(72)
 			p.Match(kochanowskiParserDEFINE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -880,7 +891,7 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 			}
 		}
 		{
-			p.SetState(71)
+			p.SetState(73)
 			p.Match(kochanowskiParserVARIABLE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -888,11 +899,11 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 			}
 		}
 		{
-			p.SetState(72)
+			p.SetState(74)
 			p.Type_()
 		}
 		{
-			p.SetState(73)
+			p.SetState(75)
 			p.Match(kochanowskiParserNAMED)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -900,7 +911,7 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 			}
 		}
 		{
-			p.SetState(74)
+			p.SetState(76)
 			p.Match(kochanowskiParserID)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -908,7 +919,7 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 			}
 		}
 		{
-			p.SetState(75)
+			p.SetState(77)
 			p.Match(kochanowskiParserDOT)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -919,7 +930,7 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(77)
+			p.SetState(79)
 			p.Match(kochanowskiParserDEFINE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -927,7 +938,7 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 			}
 		}
 		{
-			p.SetState(78)
+			p.SetState(80)
 			p.Match(kochanowskiParserVARIABLE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -935,11 +946,11 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 			}
 		}
 		{
-			p.SetState(79)
+			p.SetState(81)
 			p.Type_()
 		}
 		{
-			p.SetState(80)
+			p.SetState(82)
 			p.Match(kochanowskiParserNAMED)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -947,7 +958,7 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 			}
 		}
 		{
-			p.SetState(81)
+			p.SetState(83)
 			p.Match(kochanowskiParserID)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -955,7 +966,7 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 			}
 		}
 		{
-			p.SetState(82)
+			p.SetState(84)
 			p.Match(kochanowskiParserWITH_VALUE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -963,11 +974,11 @@ func (p *kochanowskiParser) Var_create() (localctx IVar_createContext) {
 			}
 		}
 		{
-			p.SetState(83)
+			p.SetState(85)
 			p.Expr()
 		}
 		{
-			p.SetState(84)
+			p.SetState(86)
 			p.Match(kochanowskiParserDOT)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -1084,10 +1095,10 @@ func (p *kochanowskiParser) Type_() (localctx ITypeContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(88)
+		p.SetState(90)
 		_la = p.GetTokenStream().LA(1)
 
-		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&122880) != 0) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&245760) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -1123,6 +1134,8 @@ type IArray_createContext interface {
 	WITH_SIZE() antlr.TerminalNode
 	Expr() IExprContext
 	DOT() antlr.TerminalNode
+	WITH_VALUE() antlr.TerminalNode
+	String_value() IString_valueContext
 
 	// IsArray_createContext differentiates from other interfaces.
 	IsArray_createContext()
@@ -1212,6 +1225,26 @@ func (s *Array_createContext) DOT() antlr.TerminalNode {
 	return s.GetToken(kochanowskiParserDOT, 0)
 }
 
+func (s *Array_createContext) WITH_VALUE() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserWITH_VALUE, 0)
+}
+
+func (s *Array_createContext) String_value() IString_valueContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IString_valueContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IString_valueContext)
+}
+
 func (s *Array_createContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -1235,54 +1268,129 @@ func (s *Array_createContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *kochanowskiParser) Array_create() (localctx IArray_createContext) {
 	localctx = NewArray_createContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 8, kochanowskiParserRULE_array_create)
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(90)
-		p.Match(kochanowskiParserDEFINE)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
+	p.SetState(110)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 3, p.GetParserRuleContext()) {
+	case 1:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(92)
+			p.Match(kochanowskiParserDEFINE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
-	}
-	{
-		p.SetState(91)
-		p.Array_type()
-	}
-	{
-		p.SetState(92)
-		p.Match(kochanowskiParserNAMED)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
+		{
+			p.SetState(93)
+			p.Array_type()
 		}
-	}
-	{
-		p.SetState(93)
-		p.Match(kochanowskiParserID)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
+		{
+			p.SetState(94)
+			p.Match(kochanowskiParserNAMED)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
-	}
-	{
-		p.SetState(94)
-		p.Match(kochanowskiParserWITH_SIZE)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
+		{
+			p.SetState(95)
+			p.Match(kochanowskiParserID)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
-	}
-	{
-		p.SetState(95)
-		p.Expr()
-	}
-	{
-		p.SetState(96)
-		p.Match(kochanowskiParserDOT)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
+		{
+			p.SetState(96)
+			p.Match(kochanowskiParserWITH_SIZE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
+		{
+			p.SetState(97)
+			p.Expr()
+		}
+		{
+			p.SetState(98)
+			p.Match(kochanowskiParserDOT)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+
+	case 2:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(100)
+			p.Match(kochanowskiParserDEFINE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(101)
+			p.Array_type()
+		}
+		{
+			p.SetState(102)
+			p.Match(kochanowskiParserNAMED)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(103)
+			p.Match(kochanowskiParserID)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(104)
+			p.Match(kochanowskiParserWITH_SIZE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(105)
+			p.Expr()
+		}
+		{
+			p.SetState(106)
+			p.Match(kochanowskiParserWITH_VALUE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(107)
+			p.String_value()
+		}
+		{
+			p.SetState(108)
+			p.Match(kochanowskiParserDOT)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+
+	case antlr.ATNInvalidAltNumber:
+		goto errorExit
 	}
 
 errorExit:
@@ -1308,6 +1416,7 @@ type IArray_typeContext interface {
 	// Getter signatures
 	INT32ARRAY() antlr.TerminalNode
 	F32ARRAY() antlr.TerminalNode
+	STRING() antlr.TerminalNode
 
 	// IsArray_typeContext differentiates from other interfaces.
 	IsArray_typeContext()
@@ -1353,6 +1462,10 @@ func (s *Array_typeContext) F32ARRAY() antlr.TerminalNode {
 	return s.GetToken(kochanowskiParserF32ARRAY, 0)
 }
 
+func (s *Array_typeContext) STRING() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserSTRING, 0)
+}
+
 func (s *Array_typeContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
@@ -1380,10 +1493,10 @@ func (p *kochanowskiParser) Array_type() (localctx IArray_typeContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(98)
+		p.SetState(112)
 		_la = p.GetTokenStream().LA(1)
 
-		if !(_la == kochanowskiParserINT32ARRAY || _la == kochanowskiParserF32ARRAY) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&786434) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)
@@ -1547,7 +1660,7 @@ func (p *kochanowskiParser) Array_assign() (localctx IArray_assignContext) {
 	p.EnterRule(localctx, 12, kochanowskiParserRULE_array_assign)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(100)
+		p.SetState(114)
 		p.Match(kochanowskiParserASSIGN)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1555,7 +1668,7 @@ func (p *kochanowskiParser) Array_assign() (localctx IArray_assignContext) {
 		}
 	}
 	{
-		p.SetState(101)
+		p.SetState(115)
 		p.Match(kochanowskiParserARRAY)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1563,7 +1676,7 @@ func (p *kochanowskiParser) Array_assign() (localctx IArray_assignContext) {
 		}
 	}
 	{
-		p.SetState(102)
+		p.SetState(116)
 		p.Match(kochanowskiParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1571,7 +1684,7 @@ func (p *kochanowskiParser) Array_assign() (localctx IArray_assignContext) {
 		}
 	}
 	{
-		p.SetState(103)
+		p.SetState(117)
 		p.Match(kochanowskiParserUNDER)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1579,11 +1692,11 @@ func (p *kochanowskiParser) Array_assign() (localctx IArray_assignContext) {
 		}
 	}
 	{
-		p.SetState(104)
+		p.SetState(118)
 		p.Expr()
 	}
 	{
-		p.SetState(105)
+		p.SetState(119)
 		p.Match(kochanowskiParserVALUE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1591,11 +1704,11 @@ func (p *kochanowskiParser) Array_assign() (localctx IArray_assignContext) {
 		}
 	}
 	{
-		p.SetState(106)
+		p.SetState(120)
 		p.Expr()
 	}
 	{
-		p.SetState(107)
+		p.SetState(121)
 		p.Match(kochanowskiParserDOT)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1776,7 +1889,7 @@ func (p *kochanowskiParser) Matrix_create() (localctx IMatrix_createContext) {
 	p.EnterRule(localctx, 14, kochanowskiParserRULE_matrix_create)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(109)
+		p.SetState(123)
 		p.Match(kochanowskiParserDEFINE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1784,11 +1897,11 @@ func (p *kochanowskiParser) Matrix_create() (localctx IMatrix_createContext) {
 		}
 	}
 	{
-		p.SetState(110)
+		p.SetState(124)
 		p.Matrix_type()
 	}
 	{
-		p.SetState(111)
+		p.SetState(125)
 		p.Match(kochanowskiParserNAMED)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1796,7 +1909,7 @@ func (p *kochanowskiParser) Matrix_create() (localctx IMatrix_createContext) {
 		}
 	}
 	{
-		p.SetState(112)
+		p.SetState(126)
 		p.Match(kochanowskiParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1804,7 +1917,7 @@ func (p *kochanowskiParser) Matrix_create() (localctx IMatrix_createContext) {
 		}
 	}
 	{
-		p.SetState(113)
+		p.SetState(127)
 		p.Match(kochanowskiParserWITH_SIZE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1812,11 +1925,11 @@ func (p *kochanowskiParser) Matrix_create() (localctx IMatrix_createContext) {
 		}
 	}
 	{
-		p.SetState(114)
+		p.SetState(128)
 		p.Expr()
 	}
 	{
-		p.SetState(115)
+		p.SetState(129)
 		p.Match(kochanowskiParserBY)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1824,11 +1937,11 @@ func (p *kochanowskiParser) Matrix_create() (localctx IMatrix_createContext) {
 		}
 	}
 	{
-		p.SetState(116)
+		p.SetState(130)
 		p.Expr()
 	}
 	{
-		p.SetState(117)
+		p.SetState(131)
 		p.Match(kochanowskiParserDOT)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -1931,7 +2044,7 @@ func (p *kochanowskiParser) Matrix_type() (localctx IMatrix_typeContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(119)
+		p.SetState(133)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(_la == kochanowskiParserINT32MATRIX || _la == kochanowskiParserF32MATRIX) {
@@ -2103,7 +2216,7 @@ func (p *kochanowskiParser) Matrix_assign() (localctx IMatrix_assignContext) {
 	p.EnterRule(localctx, 18, kochanowskiParserRULE_matrix_assign)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(121)
+		p.SetState(135)
 		p.Match(kochanowskiParserASSIGN)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2111,7 +2224,7 @@ func (p *kochanowskiParser) Matrix_assign() (localctx IMatrix_assignContext) {
 		}
 	}
 	{
-		p.SetState(122)
+		p.SetState(136)
 		p.Match(kochanowskiParserMATRIX)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2119,7 +2232,7 @@ func (p *kochanowskiParser) Matrix_assign() (localctx IMatrix_assignContext) {
 		}
 	}
 	{
-		p.SetState(123)
+		p.SetState(137)
 		p.Match(kochanowskiParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2127,7 +2240,7 @@ func (p *kochanowskiParser) Matrix_assign() (localctx IMatrix_assignContext) {
 		}
 	}
 	{
-		p.SetState(124)
+		p.SetState(138)
 		p.Match(kochanowskiParserUNDER_COLUMN)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2135,11 +2248,11 @@ func (p *kochanowskiParser) Matrix_assign() (localctx IMatrix_assignContext) {
 		}
 	}
 	{
-		p.SetState(125)
+		p.SetState(139)
 		p.Expr()
 	}
 	{
-		p.SetState(126)
+		p.SetState(140)
 		p.Match(kochanowskiParserROW)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2147,11 +2260,11 @@ func (p *kochanowskiParser) Matrix_assign() (localctx IMatrix_assignContext) {
 		}
 	}
 	{
-		p.SetState(127)
+		p.SetState(141)
 		p.Expr()
 	}
 	{
-		p.SetState(128)
+		p.SetState(142)
 		p.Match(kochanowskiParserVALUE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2159,11 +2272,11 @@ func (p *kochanowskiParser) Matrix_assign() (localctx IMatrix_assignContext) {
 		}
 	}
 	{
-		p.SetState(129)
+		p.SetState(143)
 		p.Expr()
 	}
 	{
-		p.SetState(130)
+		p.SetState(144)
 		p.Match(kochanowskiParserDOT)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2286,7 +2399,7 @@ func (p *kochanowskiParser) Var_assign() (localctx IVar_assignContext) {
 	p.EnterRule(localctx, 20, kochanowskiParserRULE_var_assign)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(132)
+		p.SetState(146)
 		p.Match(kochanowskiParserASSIGN)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2294,7 +2407,7 @@ func (p *kochanowskiParser) Var_assign() (localctx IVar_assignContext) {
 		}
 	}
 	{
-		p.SetState(133)
+		p.SetState(147)
 		p.Match(kochanowskiParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2302,11 +2415,11 @@ func (p *kochanowskiParser) Var_assign() (localctx IVar_assignContext) {
 		}
 	}
 	{
-		p.SetState(134)
+		p.SetState(148)
 		p.Expr()
 	}
 	{
-		p.SetState(135)
+		p.SetState(149)
 		p.Match(kochanowskiParserDOT)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2412,7 +2525,7 @@ func (p *kochanowskiParser) Read() (localctx IReadContext) {
 	p.EnterRule(localctx, 22, kochanowskiParserRULE_read)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(137)
+		p.SetState(151)
 		p.Match(kochanowskiParserREAD_WORD)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2420,7 +2533,7 @@ func (p *kochanowskiParser) Read() (localctx IReadContext) {
 		}
 	}
 	{
-		p.SetState(138)
+		p.SetState(152)
 		p.Match(kochanowskiParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2428,7 +2541,7 @@ func (p *kochanowskiParser) Read() (localctx IReadContext) {
 		}
 	}
 	{
-		p.SetState(139)
+		p.SetState(153)
 		p.Match(kochanowskiParserDOT)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2546,7 +2659,7 @@ func (p *kochanowskiParser) Print_() (localctx IPrintContext) {
 	p.EnterRule(localctx, 24, kochanowskiParserRULE_print)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(141)
+		p.SetState(155)
 		p.Match(kochanowskiParserPRINT_WORD)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2554,11 +2667,11 @@ func (p *kochanowskiParser) Print_() (localctx IPrintContext) {
 		}
 	}
 	{
-		p.SetState(142)
+		p.SetState(156)
 		p.Expr()
 	}
 	{
-		p.SetState(143)
+		p.SetState(157)
 		p.Match(kochanowskiParserDOT)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2666,7 +2779,7 @@ func (p *kochanowskiParser) Expr() (localctx IExprContext) {
 	p.EnterRule(localctx, 26, kochanowskiParserRULE_expr)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(145)
+		p.SetState(159)
 		p.Expr_logic()
 	}
 
@@ -2802,32 +2915,32 @@ func (s *Expr_logicContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *kochanowskiParser) Expr_logic() (localctx IExpr_logicContext) {
 	localctx = NewExpr_logicContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 28, kochanowskiParserRULE_expr_logic)
-	p.SetState(152)
+	p.SetState(166)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 3, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 4, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(147)
+			p.SetState(161)
 			p.Expr_compare()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(148)
+			p.SetState(162)
 			p.Expr_compare()
 		}
 		{
-			p.SetState(149)
+			p.SetState(163)
 			p.Logic_operator()
 		}
 		{
-			p.SetState(150)
+			p.SetState(164)
 			p.Expr_logic()
 		}
 
@@ -2930,7 +3043,7 @@ func (p *kochanowskiParser) Logic_operator() (localctx ILogic_operatorContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(154)
+		p.SetState(168)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(_la == kochanowskiParserLOGIC_AND || _la == kochanowskiParserLOGIC_OR) {
@@ -3086,28 +3199,28 @@ func (s *Expr_compareContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *kochanowskiParser) Expr_compare() (localctx IExpr_compareContext) {
 	localctx = NewExpr_compareContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 32, kochanowskiParserRULE_expr_compare)
-	p.SetState(181)
+	p.SetState(195)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 4, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 5, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(156)
+			p.SetState(170)
 			p.Expr_mod()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(157)
+			p.SetState(171)
 			p.Expr_mod()
 		}
 		{
-			p.SetState(158)
+			p.SetState(172)
 			p.Match(kochanowskiParserGREATER)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3115,18 +3228,18 @@ func (p *kochanowskiParser) Expr_compare() (localctx IExpr_compareContext) {
 			}
 		}
 		{
-			p.SetState(159)
+			p.SetState(173)
 			p.Expr_compare()
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(161)
+			p.SetState(175)
 			p.Expr_mod()
 		}
 		{
-			p.SetState(162)
+			p.SetState(176)
 			p.Match(kochanowskiParserGREATEREQUAL)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3134,18 +3247,18 @@ func (p *kochanowskiParser) Expr_compare() (localctx IExpr_compareContext) {
 			}
 		}
 		{
-			p.SetState(163)
+			p.SetState(177)
 			p.Expr_compare()
 		}
 
 	case 4:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(165)
+			p.SetState(179)
 			p.Expr_mod()
 		}
 		{
-			p.SetState(166)
+			p.SetState(180)
 			p.Match(kochanowskiParserEQUAL)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3153,18 +3266,18 @@ func (p *kochanowskiParser) Expr_compare() (localctx IExpr_compareContext) {
 			}
 		}
 		{
-			p.SetState(167)
+			p.SetState(181)
 			p.Expr_compare()
 		}
 
 	case 5:
 		p.EnterOuterAlt(localctx, 5)
 		{
-			p.SetState(169)
+			p.SetState(183)
 			p.Expr_mod()
 		}
 		{
-			p.SetState(170)
+			p.SetState(184)
 			p.Match(kochanowskiParserLESSEQUAL)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3172,18 +3285,18 @@ func (p *kochanowskiParser) Expr_compare() (localctx IExpr_compareContext) {
 			}
 		}
 		{
-			p.SetState(171)
+			p.SetState(185)
 			p.Expr_compare()
 		}
 
 	case 6:
 		p.EnterOuterAlt(localctx, 6)
 		{
-			p.SetState(173)
+			p.SetState(187)
 			p.Expr_mod()
 		}
 		{
-			p.SetState(174)
+			p.SetState(188)
 			p.Match(kochanowskiParserLESS)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3191,18 +3304,18 @@ func (p *kochanowskiParser) Expr_compare() (localctx IExpr_compareContext) {
 			}
 		}
 		{
-			p.SetState(175)
+			p.SetState(189)
 			p.Expr_compare()
 		}
 
 	case 7:
 		p.EnterOuterAlt(localctx, 7)
 		{
-			p.SetState(177)
+			p.SetState(191)
 			p.Expr_mod()
 		}
 		{
-			p.SetState(178)
+			p.SetState(192)
 			p.Match(kochanowskiParserNOTEQUAL)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3210,7 +3323,7 @@ func (p *kochanowskiParser) Expr_compare() (localctx IExpr_compareContext) {
 			}
 		}
 		{
-			p.SetState(179)
+			p.SetState(193)
 			p.Expr_compare()
 		}
 
@@ -3338,28 +3451,28 @@ func (s *Expr_modContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *kochanowskiParser) Expr_mod() (localctx IExpr_modContext) {
 	localctx = NewExpr_modContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 34, kochanowskiParserRULE_expr_mod)
-	p.SetState(188)
+	p.SetState(202)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 5, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 6, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(183)
+			p.SetState(197)
 			p.Expr_bit()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(184)
+			p.SetState(198)
 			p.Expr_bit()
 		}
 		{
-			p.SetState(185)
+			p.SetState(199)
 			p.Match(kochanowskiParserMODULO)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3367,7 +3480,7 @@ func (p *kochanowskiParser) Expr_mod() (localctx IExpr_modContext) {
 			}
 		}
 		{
-			p.SetState(186)
+			p.SetState(200)
 			p.Expr_mod()
 		}
 
@@ -3505,28 +3618,28 @@ func (s *Expr_bitContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *kochanowskiParser) Expr_bit() (localctx IExpr_bitContext) {
 	localctx = NewExpr_bitContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 36, kochanowskiParserRULE_expr_bit)
-	p.SetState(203)
+	p.SetState(217)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 6, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 7, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(190)
+			p.SetState(204)
 			p.Expr_add()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(191)
+			p.SetState(205)
 			p.Expr_add()
 		}
 		{
-			p.SetState(192)
+			p.SetState(206)
 			p.Match(kochanowskiParserAND)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3534,18 +3647,18 @@ func (p *kochanowskiParser) Expr_bit() (localctx IExpr_bitContext) {
 			}
 		}
 		{
-			p.SetState(193)
+			p.SetState(207)
 			p.Expr_bit()
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(195)
+			p.SetState(209)
 			p.Expr_add()
 		}
 		{
-			p.SetState(196)
+			p.SetState(210)
 			p.Match(kochanowskiParserOR)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3553,18 +3666,18 @@ func (p *kochanowskiParser) Expr_bit() (localctx IExpr_bitContext) {
 			}
 		}
 		{
-			p.SetState(197)
+			p.SetState(211)
 			p.Expr_bit()
 		}
 
 	case 4:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(199)
+			p.SetState(213)
 			p.Expr_add()
 		}
 		{
-			p.SetState(200)
+			p.SetState(214)
 			p.Match(kochanowskiParserXOR)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3572,7 +3685,7 @@ func (p *kochanowskiParser) Expr_bit() (localctx IExpr_bitContext) {
 			}
 		}
 		{
-			p.SetState(201)
+			p.SetState(215)
 			p.Expr_bit()
 		}
 
@@ -3705,28 +3818,28 @@ func (s *Expr_addContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *kochanowskiParser) Expr_add() (localctx IExpr_addContext) {
 	localctx = NewExpr_addContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 38, kochanowskiParserRULE_expr_add)
-	p.SetState(214)
+	p.SetState(228)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 7, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 8, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(205)
+			p.SetState(219)
 			p.Expr_mult()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(206)
+			p.SetState(220)
 			p.Expr_mult()
 		}
 		{
-			p.SetState(207)
+			p.SetState(221)
 			p.Match(kochanowskiParserPLUS)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3734,18 +3847,18 @@ func (p *kochanowskiParser) Expr_add() (localctx IExpr_addContext) {
 			}
 		}
 		{
-			p.SetState(208)
+			p.SetState(222)
 			p.Expr_add()
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(210)
+			p.SetState(224)
 			p.Expr_mult()
 		}
 		{
-			p.SetState(211)
+			p.SetState(225)
 			p.Match(kochanowskiParserMINUS)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3753,7 +3866,7 @@ func (p *kochanowskiParser) Expr_add() (localctx IExpr_addContext) {
 			}
 		}
 		{
-			p.SetState(212)
+			p.SetState(226)
 			p.Expr_add()
 		}
 
@@ -3886,28 +3999,28 @@ func (s *Expr_multContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *kochanowskiParser) Expr_mult() (localctx IExpr_multContext) {
 	localctx = NewExpr_multContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 40, kochanowskiParserRULE_expr_mult)
-	p.SetState(225)
+	p.SetState(239)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 8, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 9, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(216)
+			p.SetState(230)
 			p.Expr_power()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(217)
+			p.SetState(231)
 			p.Expr_power()
 		}
 		{
-			p.SetState(218)
+			p.SetState(232)
 			p.Match(kochanowskiParserTIMES)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3915,18 +4028,18 @@ func (p *kochanowskiParser) Expr_mult() (localctx IExpr_multContext) {
 			}
 		}
 		{
-			p.SetState(219)
+			p.SetState(233)
 			p.Expr_mult()
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(221)
+			p.SetState(235)
 			p.Expr_power()
 		}
 		{
-			p.SetState(222)
+			p.SetState(236)
 			p.Match(kochanowskiParserDIVIDE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -3934,7 +4047,7 @@ func (p *kochanowskiParser) Expr_mult() (localctx IExpr_multContext) {
 			}
 		}
 		{
-			p.SetState(223)
+			p.SetState(237)
 			p.Expr_mult()
 		}
 
@@ -4062,28 +4175,28 @@ func (s *Expr_powerContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *kochanowskiParser) Expr_power() (localctx IExpr_powerContext) {
 	localctx = NewExpr_powerContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 42, kochanowskiParserRULE_expr_power)
-	p.SetState(232)
+	p.SetState(246)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 9, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 10, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(227)
+			p.SetState(241)
 			p.Expr_paren()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(228)
+			p.SetState(242)
 			p.Expr_paren()
 		}
 		{
-			p.SetState(229)
+			p.SetState(243)
 			p.Match(kochanowskiParserPOWER)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -4091,7 +4204,7 @@ func (p *kochanowskiParser) Expr_power() (localctx IExpr_powerContext) {
 			}
 		}
 		{
-			p.SetState(230)
+			p.SetState(244)
 			p.Expr_power()
 		}
 
@@ -4224,7 +4337,7 @@ func (s *Expr_parenContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *kochanowskiParser) Expr_paren() (localctx IExpr_parenContext) {
 	localctx = NewExpr_parenContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 44, kochanowskiParserRULE_expr_paren)
-	p.SetState(239)
+	p.SetState(253)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -4234,14 +4347,14 @@ func (p *kochanowskiParser) Expr_paren() (localctx IExpr_parenContext) {
 	case kochanowskiParserVALUE, kochanowskiParserMINUS, kochanowskiParserNOT, kochanowskiParserINTEGER, kochanowskiParserDECIMAL, kochanowskiParserID:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(234)
+			p.SetState(248)
 			p.Unary()
 		}
 
 	case kochanowskiParserFIRST:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(235)
+			p.SetState(249)
 			p.Match(kochanowskiParserFIRST)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -4249,11 +4362,11 @@ func (p *kochanowskiParser) Expr_paren() (localctx IExpr_parenContext) {
 			}
 		}
 		{
-			p.SetState(236)
+			p.SetState(250)
 			p.Expr()
 		}
 		{
-			p.SetState(237)
+			p.SetState(251)
 			p.Match(kochanowskiParserCALCULATE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -4425,38 +4538,38 @@ func (s *UnaryContext) ExitRule(listener antlr.ParseTreeListener) {
 func (p *kochanowskiParser) Unary() (localctx IUnaryContext) {
 	localctx = NewUnaryContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 46, kochanowskiParserRULE_unary)
-	p.SetState(248)
+	p.SetState(262)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 11, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 12, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(241)
+			p.SetState(255)
 			p.Value()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(242)
+			p.SetState(256)
 			p.Matrix_value()
 		}
 
 	case 3:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(243)
+			p.SetState(257)
 			p.Array_value()
 		}
 
 	case 4:
 		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(244)
+			p.SetState(258)
 			p.Match(kochanowskiParserMINUS)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -4464,14 +4577,14 @@ func (p *kochanowskiParser) Unary() (localctx IUnaryContext) {
 			}
 		}
 		{
-			p.SetState(245)
+			p.SetState(259)
 			p.Expr()
 		}
 
 	case 5:
 		p.EnterOuterAlt(localctx, 5)
 		{
-			p.SetState(246)
+			p.SetState(260)
 			p.Match(kochanowskiParserNOT)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -4479,12 +4592,108 @@ func (p *kochanowskiParser) Unary() (localctx IUnaryContext) {
 			}
 		}
 		{
-			p.SetState(247)
+			p.SetState(261)
 			p.Expr()
 		}
 
 	case antlr.ATNInvalidAltNumber:
 		goto errorExit
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IString_valueContext is an interface to support dynamic dispatch.
+type IString_valueContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	STRING_LITERAL() antlr.TerminalNode
+
+	// IsString_valueContext differentiates from other interfaces.
+	IsString_valueContext()
+}
+
+type String_valueContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyString_valueContext() *String_valueContext {
+	var p = new(String_valueContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = kochanowskiParserRULE_string_value
+	return p
+}
+
+func InitEmptyString_valueContext(p *String_valueContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = kochanowskiParserRULE_string_value
+}
+
+func (*String_valueContext) IsString_valueContext() {}
+
+func NewString_valueContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *String_valueContext {
+	var p = new(String_valueContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = kochanowskiParserRULE_string_value
+
+	return p
+}
+
+func (s *String_valueContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *String_valueContext) STRING_LITERAL() antlr.TerminalNode {
+	return s.GetToken(kochanowskiParserSTRING_LITERAL, 0)
+}
+
+func (s *String_valueContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *String_valueContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *String_valueContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(kochanowskiListener); ok {
+		listenerT.EnterString_value(s)
+	}
+}
+
+func (s *String_valueContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(kochanowskiListener); ok {
+		listenerT.ExitString_value(s)
+	}
+}
+
+func (p *kochanowskiParser) String_value() (localctx IString_valueContext) {
+	localctx = NewString_valueContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 48, kochanowskiParserRULE_string_value)
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(264)
+		p.Match(kochanowskiParserSTRING_LITERAL)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 
 errorExit:
@@ -4609,10 +4818,10 @@ func (s *Array_valueContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *kochanowskiParser) Array_value() (localctx IArray_valueContext) {
 	localctx = NewArray_valueContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 48, kochanowskiParserRULE_array_value)
+	p.EnterRule(localctx, 50, kochanowskiParserRULE_array_value)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(250)
+		p.SetState(266)
 		p.Match(kochanowskiParserVALUE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -4620,7 +4829,7 @@ func (p *kochanowskiParser) Array_value() (localctx IArray_valueContext) {
 		}
 	}
 	{
-		p.SetState(251)
+		p.SetState(267)
 		p.Match(kochanowskiParserUNDER)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -4628,7 +4837,7 @@ func (p *kochanowskiParser) Array_value() (localctx IArray_valueContext) {
 		}
 	}
 	{
-		p.SetState(252)
+		p.SetState(268)
 		p.Match(kochanowskiParserCELL)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -4636,11 +4845,11 @@ func (p *kochanowskiParser) Array_value() (localctx IArray_valueContext) {
 		}
 	}
 	{
-		p.SetState(253)
+		p.SetState(269)
 		p.Expr()
 	}
 	{
-		p.SetState(254)
+		p.SetState(270)
 		p.Match(kochanowskiParserARRAY)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -4648,7 +4857,7 @@ func (p *kochanowskiParser) Array_value() (localctx IArray_valueContext) {
 		}
 	}
 	{
-		p.SetState(255)
+		p.SetState(271)
 		p.Match(kochanowskiParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -4804,10 +5013,10 @@ func (s *Matrix_valueContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *kochanowskiParser) Matrix_value() (localctx IMatrix_valueContext) {
 	localctx = NewMatrix_valueContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 50, kochanowskiParserRULE_matrix_value)
+	p.EnterRule(localctx, 52, kochanowskiParserRULE_matrix_value)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(257)
+		p.SetState(273)
 		p.Match(kochanowskiParserVALUE)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -4815,7 +5024,7 @@ func (p *kochanowskiParser) Matrix_value() (localctx IMatrix_valueContext) {
 		}
 	}
 	{
-		p.SetState(258)
+		p.SetState(274)
 		p.Match(kochanowskiParserUNDER_COLUMN)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -4823,11 +5032,11 @@ func (p *kochanowskiParser) Matrix_value() (localctx IMatrix_valueContext) {
 		}
 	}
 	{
-		p.SetState(259)
+		p.SetState(275)
 		p.Expr()
 	}
 	{
-		p.SetState(260)
+		p.SetState(276)
 		p.Match(kochanowskiParserROW)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -4835,11 +5044,11 @@ func (p *kochanowskiParser) Matrix_value() (localctx IMatrix_valueContext) {
 		}
 	}
 	{
-		p.SetState(261)
+		p.SetState(277)
 		p.Expr()
 	}
 	{
-		p.SetState(262)
+		p.SetState(278)
 		p.Match(kochanowskiParserMATRIX)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -4847,7 +5056,7 @@ func (p *kochanowskiParser) Matrix_value() (localctx IMatrix_valueContext) {
 		}
 	}
 	{
-		p.SetState(263)
+		p.SetState(279)
 		p.Match(kochanowskiParserID)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -4950,15 +5159,15 @@ func (s *ValueContext) ExitRule(listener antlr.ParseTreeListener) {
 
 func (p *kochanowskiParser) Value() (localctx IValueContext) {
 	localctx = NewValueContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 52, kochanowskiParserRULE_value)
+	p.EnterRule(localctx, 54, kochanowskiParserRULE_value)
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(265)
+		p.SetState(281)
 		_la = p.GetTokenStream().LA(1)
 
-		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&985162418487296) != 0) {
+		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&3940649673949184) != 0) {
 			p.GetErrorHandler().RecoverInline(p)
 		} else {
 			p.GetErrorHandler().ReportMatch(p)

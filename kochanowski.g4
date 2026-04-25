@@ -10,9 +10,11 @@ var_create
 
 type: INT32 | INT64 | F32 | F64;
 
-array_create : DEFINE array_type NAMED ID WITH_SIZE expr DOT;
+array_create 
+	: DEFINE array_type NAMED ID WITH_SIZE expr DOT
+	| DEFINE array_type NAMED ID WITH_SIZE expr WITH_VALUE string_value DOT;
 
-array_type: INT32ARRAY | F32ARRAY;
+array_type: INT32ARRAY | F32ARRAY | STRING;
 
 array_assign: ASSIGN ARRAY ID UNDER expr VALUE expr DOT;
 
@@ -82,6 +84,8 @@ unary
 	| MINUS expr
 	| NOT expr;
 
+string_value: STRING_LITERAL;
+
 array_value: VALUE UNDER CELL expr ARRAY ID;
 
 matrix_value: VALUE UNDER_COLUMN expr ROW expr MATRIX ID;
@@ -90,6 +94,8 @@ value
 	: INTEGER
 	| DECIMAL
 	| ID;
+
+STRING: 'napis';
 
 BY: 'na';
 INT32MATRIX: 'macierz liczb całkowitych';
@@ -142,6 +148,9 @@ POWER: 'do potęgi';
 NOT: 'nie';
 FIRST: 'wpierw';
 CALCULATE: 'policz';
+
+
+STRING_LITERAL: '"' [a-z]* '"';
 
 INTEGER: [0-9]+;
 DECIMAL: [0-9]*'.'[0-9]+;

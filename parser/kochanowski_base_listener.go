@@ -165,6 +165,12 @@ func (s *BasekochanowskiListener) EnterUnary(ctx *UnaryContext) {}
 // ExitUnary is called when production unary is exited.
 func (s *BasekochanowskiListener) ExitUnary(ctx *UnaryContext) {}
 
+// EnterString_value is called when production string_value is entered.
+func (s *BasekochanowskiListener) EnterString_value(ctx *String_valueContext) {}
+
+// ExitString_value is called when production string_value is exited.
+func (s *BasekochanowskiListener) ExitString_value(ctx *String_valueContext) {}
+
 // EnterArray_value is called when production array_value is entered.
 func (s *BasekochanowskiListener) EnterArray_value(ctx *Array_valueContext) {}
 
