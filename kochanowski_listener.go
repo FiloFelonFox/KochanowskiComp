@@ -114,8 +114,18 @@ func (l *kochanowskiListener) EnterVar_assign(ctx *parser.Var_assignContext) {
 func (l *kochanowskiListener) ExitVar_assign(ctx *parser.Var_assignContext) {
 	variable := variables[ctx.ID().GetText()]
 	value := stack.peek()
+	if variable._type == "ptr" {
+		if value._type != "ptr" {
+			sa.addError("Błąd typów: nie można przypisać wartości typu " + value._type + " do zmiennej typu " + variable._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+		}
+		prog += "call void @llvm.memcpy.p0i8.p0i8.i64(ptr align 1 " + variable._value + ", ptr align 1 " + value._value + ", i64 " + arrays[ctx.ID().GetText()]._rowLen._value + ", i1 false)\n"
+		stack.pop()
+		return
+	}
 	if variable._type != value._type { //TODO: Better type mismatch error handling
 		switch {
+		case value._type == "ptr":
+			sa.addError("Błąd typów: nie można przypisać wartości typu " + value._type + " do zmiennej typu " + variable._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 		case isIntType(variable._type) && isIntType(value._type):
 			if intRank(variable._type) >= intRank(value._type) {
 				err := castLastTo(variable._type)

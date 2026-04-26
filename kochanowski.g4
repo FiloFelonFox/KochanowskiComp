@@ -24,7 +24,9 @@ matrix_type: INT32MATRIX | F32MATRIX;
 
 matrix_assign: ASSIGN MATRIX ID UNDER_COLUMN expr ROW expr VALUE expr DOT;
 
-var_assign: ASSIGN ID expr DOT;
+var_assign
+	: ASSIGN ID expr DOT
+	| ASSIGN ID string_value DOT;
 
 read: READ_WORD ID DOT;
 
