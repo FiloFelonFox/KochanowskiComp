@@ -21,6 +21,12 @@ func (s *BasekochanowskiListener) EnterEveryRule(ctx antlr.ParserRuleContext) {}
 // ExitEveryRule is called when any rule is exited.
 func (s *BasekochanowskiListener) ExitEveryRule(ctx antlr.ParserRuleContext) {}
 
+// EnterProg is called when production prog is entered.
+func (s *BasekochanowskiListener) EnterProg(ctx *ProgContext) {}
+
+// ExitProg is called when production prog is exited.
+func (s *BasekochanowskiListener) ExitProg(ctx *ProgContext) {}
+
 // EnterBody is called when production body is entered.
 func (s *BasekochanowskiListener) EnterBody(ctx *BodyContext) {}
 
@@ -32,6 +38,12 @@ func (s *BasekochanowskiListener) EnterStatement(ctx *StatementContext) {}
 
 // ExitStatement is called when production statement is exited.
 func (s *BasekochanowskiListener) ExitStatement(ctx *StatementContext) {}
+
+// EnterBlock is called when production block is entered.
+func (s *BasekochanowskiListener) EnterBlock(ctx *BlockContext) {}
+
+// ExitBlock is called when production block is exited.
+func (s *BasekochanowskiListener) ExitBlock(ctx *BlockContext) {}
 
 // EnterVar_create is called when production var_create is entered.
 func (s *BasekochanowskiListener) EnterVar_create(ctx *Var_createContext) {}

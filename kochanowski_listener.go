@@ -5,7 +5,27 @@ import (
 	"fmt"
 )
 
-var sa = new(SemanticAnalyzer)
+type kochanowskiListener struct {
+	*parser.BasekochanowskiListener
+}
+
+//PROG
+func (l* kochanowskiListener) EnterProg(ctx *parser.ProgContext) {
+	initEnviroment()
+}
+
+func (l* kochanowskiListener) ExitProg(ctx *parser.ProgContext) {
+
+}
+
+//BLOCK
+func (l* kochanowskiListener) EnterBlock(ctx *parser.BlockContext) {
+	upscopeEnviroment()
+}
+
+func (l* kochanowskiListener) ExitBlock(ctx *parser.BlockContext) {
+	downscopeEnviroment()
+}
 
 // BODY
 func (l *kochanowskiListener) EnterBody(ctx *parser.BodyContext) {
@@ -35,11 +55,11 @@ func (l *kochanowskiListener) ExitBody(ctx *parser.BodyContext) {
 	for str := range strings {
 		prog = str + " = private unnamed_addr constant [" + fmt.Sprint(len(strings[str])+1) + " x i8] c\"" + strings[str] + "\\00\", align 1\n" + prog
 	}
-	for arr := range arrays {
-		prog += "call void @free(ptr " + arrays[arr]._value + ")\n"
+	for arr := range env.context.arrays {
+		prog += "call void @free(ptr " + env.context.arrays[arr]._value + ")\n"
 	}
-	for mat := range matrices {
-		prog += "call void @free(ptr " + matrices[mat]._value + ")\n"
+	for mat := range env.context.matrices {
+		prog += "call void @free(ptr " + env.context.matrices[mat]._value + ")\n"
 	}
 	prog += "ret i32 0\n}\n"
 }
@@ -49,7 +69,7 @@ func (l *kochanowskiListener) EnterPrint(ctx *parser.PrintContext) {
 }
 
 func (l *kochanowskiListener) ExitPrint(ctx *parser.PrintContext) {
-	v := stack.pop()
+	v, _ := env.context.varStack.pop()
 	if v._type == "float" {
 		var err error
 		v, err = castType(v, "double")
@@ -67,7 +87,7 @@ func (l *kochanowskiListener) EnterRead(ctx *parser.ReadContext) {
 }
 
 func (l *kochanowskiListener) ExitRead(ctx *parser.ReadContext) {
-	variable := variables[ctx.ID().GetText()]
+	variable := env.context.variables[ctx.ID().GetText()]
 	ptr := nextVar()
 	prog +=  ptr + " = getelementptr inbounds [256 x i8], ptr @.read.buf, i32 0, i32 0\n"
 	scan := nextVar()
@@ -100,7 +120,7 @@ func (l *kochanowskiListener) ExitRead(ctx *parser.ReadContext) {
 		prog += val + " = call double @atof(ptr noundef " + ptr + ")\n"
 		prog += "store double " + val + ", ptr " + variable._value + ", align 8\n"
 	case "ptr":
-		length := arrays[ctx.ID().GetText()]._rowLen
+		length := env.context.arrays[ctx.ID().GetText()]._rowLen
 		prog += "call void @llvm.memcpy.p0i8.p0i8.i64(ptr align 1 " + variable._value + ", ptr align 1 " + ptr + ", i64 " + length._value + ", i1 false)\n"
 	default:
 		sa.addError("Nie można wczytać wartości do zmiennej typu " + variable._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
@@ -112,14 +132,14 @@ func (l *kochanowskiListener) EnterVar_assign(ctx *parser.Var_assignContext) {
 }
 
 func (l *kochanowskiListener) ExitVar_assign(ctx *parser.Var_assignContext) {
-	variable := variables[ctx.ID().GetText()]
-	value := stack.peek()
+	variable := env.context.variables[ctx.ID().GetText()]
+	value, _ := env.context.varStack.peek()
 	if variable._type == "ptr" {
 		if value._type != "ptr" {
 			sa.addError("Błąd typów: nie można przypisać wartości typu " + value._type + " do zmiennej typu " + variable._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 		}
-		prog += "call void @llvm.memcpy.p0i8.p0i8.i64(ptr align 1 " + variable._value + ", ptr align 1 " + value._value + ", i64 " + arrays[ctx.ID().GetText()]._rowLen._value + ", i1 false)\n"
-		stack.pop()
+		prog += "call void @llvm.memcpy.p0i8.p0i8.i64(ptr align 1 " + variable._value + ", ptr align 1 " + value._value + ", i64 " + env.context.arrays[ctx.ID().GetText()]._rowLen._value + ", i1 false)\n"
+		env.context.varStack.pop()//
 		return
 	}
 	if variable._type != value._type { //TODO: Better type mismatch error handling
@@ -127,7 +147,9 @@ func (l *kochanowskiListener) ExitVar_assign(ctx *parser.Var_assignContext) {
 		case value._type == "ptr":
 			sa.addError("Błąd typów: nie można przypisać wartości typu " + value._type + " do zmiennej typu " + variable._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 		case isIntType(variable._type) && isIntType(value._type):
-			if intRank(variable._type) >= intRank(value._type) {
+			varRank, _ := intRank(variable._type)
+			valRank, _ := intRank(value._type)
+			if varRank >= valRank {
 				err := castLastTo(variable._type)
 				if err != nil {
 					sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
@@ -149,7 +171,7 @@ func (l *kochanowskiListener) ExitVar_assign(ctx *parser.Var_assignContext) {
 			}
 		}
 	}
-	v := stack.pop()
+	v, _ := env.context.varStack.pop()
 	prog += "store " + v._type + " " + v._value + ",ptr " + variable._value + "\n"
 }
 
@@ -158,19 +180,22 @@ func (l *kochanowskiListener) EnterVar_create(ctx *parser.Var_createContext) {
 	sa.checkVariableExists(ctx.ID().GetText(), ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
 	v := nextVar()
 	prog += v + " = alloca "
-	variables[ctx.ID().GetText()] = t_var{"%" + fmt.Sprint(varCount), ""}
+	env.context.variables[ctx.ID().GetText()] = t_var{"%" + fmt.Sprint(varCount), ""}
 }
 
 func (l *kochanowskiListener) ExitVar_create(ctx *parser.Var_createContext) {
-	variable := variables[ctx.ID().GetText()]
+	variable, _ := env.context.variables[ctx.ID().GetText()]
 	if ctx.Expr() != nil {
-		variable._type = stack.peekSecond()._type 
-		variables[ctx.ID().GetText()] = variable
-		value := stack.peek()
+		second, _ := env.context.varStack.peekSecond()
+		variable._type = second._type 
+		env.context.variables[ctx.ID().GetText()] = variable
+		value, _ := env.context.varStack.peek()
 		if variable._type != value._type {
 			switch {
 			case isIntType(variable._type) && isIntType(value._type):
-				if intRank(variable._type) >= intRank(value._type) {
+				varRank, _ := intRank(variable._type)
+				valRank, _ := intRank(value._type)
+				if varRank >= valRank {
 					err := castLastTo(variable._type)
 					if err != nil {
 						sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
@@ -192,13 +217,14 @@ func (l *kochanowskiListener) ExitVar_create(ctx *parser.Var_createContext) {
 				}
 			}
 		}
-		v := stack.pop()
+		v, _ := env.context.varStack.pop()
 		prog += "store " + v._type + " " + v._value + ", ptr " + variable._value + "\n"
 	} else {
-	variable._type = stack.peek()._type 
-	variables[ctx.ID().GetText()] = variable
+	peek, _ := env.context.varStack.peek()
+	variable._type = peek._type 
+	env.context.variables[ctx.ID().GetText()] = variable
 	}
-	stack.pop()
+	env.context.varStack.pop()//
 }
 
 // TYPE
@@ -206,16 +232,16 @@ func (l *kochanowskiListener) EnterType(ctx *parser.TypeContext) {
 	switch ctx.GetText() {
 	case "całkowitą":
 		prog += "i32, align 4\n"
-		stack.push("i32", "i32")
+		env.context.varStack.push("i32", "i32")
 	case "całkowitą olbrzymiej wagi":
 		prog += "i64, align 8\n"
-		stack.push("i64", "i64")
+		env.context.varStack.push("i64", "i64")
 	case "zmiennoprzecinkową":
 		prog += "float, align 4\n"
-		stack.push("float", "float")
+		env.context.varStack.push("float", "float")
 	case "zmiennoprzecinkową olbrzymiej precyzji":
 		prog += "double, align 8\n"
-		stack.push("double", "double")
+		env.context.varStack.push("double", "double")
 	}
 }
 
@@ -230,11 +256,11 @@ func (l *kochanowskiListener) EnterArray_create(ctx *parser.Array_createContext)
 func (l *kochanowskiListener) ExitArray_create(ctx *parser.Array_createContext) {
 	var str t_var
 	if ctx.String_value() != nil {
-		str = stack.pop()
+		str, _ = env.context.varStack.pop()
 	}
 
 	name := ctx.ID().GetText()
-	if arrays[name]._value != "" {
+	if env.context.arrays[name]._value != "" {
 		sa.addError("Tablica '" + name + "' już istnieje", ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
 	}
 
@@ -252,12 +278,12 @@ func (l *kochanowskiListener) ExitArray_create(ctx *parser.Array_createContext) 
 		elemSizeBytes = 1
 	}
 	
-	sizeVar := stack.pop()
+	sizeVar, _ := env.context.varStack.pop()
 	if !isIntType(sizeVar._type) {
 		sa.addError("Błąd typów: rozmiar tablicy musi być typu całkowitego, a otrzymał " + sizeVar._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 	}
 
-	size64, err := castIntToI64(sizeVar)
+	size64, err := castType(sizeVar, "i64")
 	if err != nil {
 		sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 	}
@@ -269,8 +295,8 @@ func (l *kochanowskiListener) ExitArray_create(ctx *parser.Array_createContext) 
 	prog += base + " = call ptr @malloc(i64 " + bytes + ")\n"
 	rowLen := nextVar()
 	prog += rowLen + " = add i64 " + size64._value + ", 0\n"
-	arrays[name] = t_array{base, elemType, t_var{rowLen, "i64"}}
-	variables[name] = t_var{base, "ptr"}
+	env.context.arrays[name] = t_array{base, elemType, t_var{rowLen, "i64"}}
+	env.context.variables[name] = t_var{base, "ptr"}
 	if ctx.String_value() != nil {
 		if str._type != "ptr" {
 			sa.addError("Błąd typów: wartość początkowa tablicy musi być typu napis, a otrzymał " + str._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
@@ -291,10 +317,10 @@ func (l *kochanowskiListener) EnterArray_assign(ctx *parser.Array_assignContext)
 }
 
 func (l *kochanowskiListener) ExitArray_assign(ctx *parser.Array_assignContext) {
-	arr := arrays[ctx.ID().GetText()]
+	arr := env.context.arrays[ctx.ID().GetText()]
 
-	value := stack.pop()
-	index := stack.pop()
+	value, _ := env.context.varStack.pop()
+	index, _ := env.context.varStack.pop()
 
 	if !isIntType(index._type) {
 		sa.addError("Błąd typów: indeks tablicy musi być typu całkowitego, a otrzymał " + index._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
@@ -311,7 +337,7 @@ func (l *kochanowskiListener) ExitArray_assign(ctx *parser.Array_assignContext) 
 		}
 	}
 
-	index64, err := castIntToI64(index)
+	index64, err := castType(index, "i64")
 	if err != nil {
 		sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 	}
@@ -326,15 +352,15 @@ func (l *kochanowskiListener) EnterArray_value(ctx *parser.Array_valueContext) {
 }
 
 func (l *kochanowskiListener) ExitArray_value(ctx *parser.Array_valueContext) {
-	arr := arrays[ctx.ID().GetText()]
+	arr := env.context.arrays[ctx.ID().GetText()]
 
-	index := stack.pop()
+	index, _ := env.context.varStack.pop()
 	
 	if !isIntType(index._type) {
 		sa.addError("Błąd typów: indeks tablicy musi być typu całkowitego, a otrzymał " + index._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 	}
 
-	index64, err := castIntToI64(index)
+	index64, err := castType(index, "i64")
 	if err != nil {
 		sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 	}
@@ -343,7 +369,7 @@ func (l *kochanowskiListener) ExitArray_value(ctx *parser.Array_valueContext) {
 	prog += elemPtr + " = getelementptr inbounds " + arr._type + ", ptr " + arr._value + ", i64 " + index64._value + "\n"
 	value := nextVar()
 	prog += value + " = load " + arr._type + ", ptr " + elemPtr + ", " + typeAlignMap[arr._type] + "\n"
-	stack.push(value, arr._type)
+	env.context.varStack.push(value, arr._type)//
 }
 
 // MATRIX_CREATE
@@ -364,24 +390,27 @@ func (l *kochanowskiListener) ExitMatrix_create(ctx *parser.Matrix_createContext
         elemSizeBytes = 4
     }
     
-    rows := stack.pop()
-    cols := stack.pop()
+    rows, _ := env.context.varStack.pop()
+    cols, _ := env.context.varStack.pop()
     
     if !isIntType(rows._type) || !isIntType(cols._type) {
         sa.addError("Błąd typów: wymiary macierzy muszą być typu całkowitego", ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
     }
 
-    rows64, err := castIntToI64(rows)
+    rows64, err := castType(rows, "i64")
     if err != nil {
         sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
     }
-    cols64, err := castIntToI64(cols)
+    cols64, err := castType(cols, "i64")
     if err != nil {
         sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
     }
 
 	colLen := nextVar()
 	prog += colLen + " = add i64 " + cols64._value + ", 0\n"
+
+	rowLen := nextVar()
+	prog += rowLen + " = add i64 " + rows64._value + ", 0\n"
 
     // Calculate total elements: rows * cols
     totalElems := nextVar()
@@ -393,7 +422,7 @@ func (l *kochanowskiListener) ExitMatrix_create(ctx *parser.Matrix_createContext
 
     base := nextVar()
     prog += base + " = call ptr @malloc(i64 " + bytes + ")\n"
-    matrices[name] = t_matrix{base, elemType, t_var{colLen, "i64"}}
+    env.context.matrices[name] = t_matrix{base, elemType, t_var{colLen, "i64"}, t_var{rowLen, "i64"}}
 }
 
 // MATRIX_VALUE
@@ -401,20 +430,20 @@ func (l *kochanowskiListener) EnterMatrix_value(ctx *parser.Matrix_valueContext)
 }
 
 func (l *kochanowskiListener) ExitMatrix_value(ctx *parser.Matrix_valueContext) {
-	mat := matrices[ctx.ID().GetText()]
+	mat := env.context.matrices[ctx.ID().GetText()]
 
-    col := stack.pop()
-    row := stack.pop()
+    col, _ := env.context.varStack.pop()
+    row, _ := env.context.varStack.pop()
     
     if !isIntType(row._type) || !isIntType(col._type) {
 		sa.addError("Błąd typów: indeksy macierzy muszą być typu całkowitego", ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
     }
 
-    row64, err := castIntToI64(row)
+    row64, err := castType(row, "i64")
     if err != nil {
         sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
     }
-    col64, err := castIntToI64(col)
+    col64, err := castType(col, "i64")
     if err != nil {
         sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
     }
@@ -431,7 +460,7 @@ func (l *kochanowskiListener) ExitMatrix_value(ctx *parser.Matrix_valueContext) 
 	prog += elemPtr + " = getelementptr inbounds " + mat._type + ", ptr " + mat._value + ", i64 " + linearIndex + "\n"
 	value := nextVar()
 	prog += value + " = load " + mat._type + ", ptr " + elemPtr + ", " + typeAlignMap[mat._type] + "\n"
-	stack.push(value, mat._type)
+	env.context.varStack.push(value, mat._type)
 }
 
 // MATRIX_ASSIGN
@@ -439,11 +468,11 @@ func (l *kochanowskiListener) EnterMatrix_assign(ctx *parser.Matrix_assignContex
 }
 
 func (l *kochanowskiListener) ExitMatrix_assign(ctx *parser.Matrix_assignContext) {
-	mat := matrices[ctx.ID().GetText()]
+	mat := env.context.matrices[ctx.ID().GetText()]
 
-    value := stack.pop()
-    col := stack.pop()
-    row := stack.pop()
+    value, _ := env.context.varStack.pop()
+    col, _ := env.context.varStack.pop()
+    row, _ := env.context.varStack.pop()
 
     if !isIntType(row._type) || !isIntType(col._type) {
         sa.addError("Błąd typów: indeksy macierzy muszą być typu całkowitego", ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
@@ -461,11 +490,11 @@ func (l *kochanowskiListener) ExitMatrix_assign(ctx *parser.Matrix_assignContext
         }
     }
 
-    row64, err := castIntToI64(row)
+    row64, err := castType(row, "i64")
     if err != nil {
         sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
     }
-    col64, err := castIntToI64(col)
+    col64, err := castType(col, "i64")
     if err != nil {
         sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
     }
@@ -499,42 +528,44 @@ func (l *kochanowskiListener) ExitExpr(ctx *parser.ExprContext) {
 func (l *kochanowskiListener) EnterExpr_logic(ctx *parser.Expr_logicContext) {
 	if ctx.Expr_logic() != nil {
 		varCount++
-		frame := logicFrame{
-			rhsLabel:   fmt.Sprintf("logic_rhs_%d", varCount),
-			endLabel:   fmt.Sprintf("logic_end_%d", varCount),
-			shortLabel: fmt.Sprintf("logic_short_%d", varCount),
-		}
-		logicStack = append(logicStack, frame)
-		logicCount++
+		env.context.logicStack.newElement(varCount)
 	}
 }
 
 func (l *kochanowskiListener) ExitExpr_logic(ctx *parser.Expr_logicContext) {
-	if ctx.Expr_logic() != nil {
-		convertLastToi1()
-		v := nextVar()
-		prog += "br label %" + logicStack[logicCount-1].endLabel + "\n"
-		prog += logicStack[logicCount-1].shortLabel + ":\n"
-		prog += "br label %" + logicStack[logicCount-1].endLabel + "\n"
-		prog += logicStack[logicCount-1].endLabel + ":\n"
-		if logicStack[logicCount-1].operator == "and" {
-			if logicCount < len(logicStack) && len(logicStack) > 1 {
-				prog += v + " = phi i1 [ 0, %" + logicStack[logicCount-1].shortLabel + " ], [ " + stack.peek()._value + ", %" + logicStack[logicCount].endLabel + " ]\n"
-			} else {
-				prog += v + " = phi i1 [ 0, %" + logicStack[logicCount-1].shortLabel + " ], [ " + stack.peek()._value + ", %" + logicStack[logicCount-1].rhsLabel + " ]\n"
-			}
-		} else if logicStack[logicCount-1].operator == "or" {
-			if logicCount < len(logicStack) && len(logicStack) > 1 {
-				prog += v + " = phi i1 [ 1, %" + logicStack[logicCount-1].shortLabel + " ], [ " + stack.peek()._value + ", %" + logicStack[logicCount].endLabel + " ]\n"
-			} else {
-				prog += v + " = phi i1 [ 1, %" + logicStack[logicCount-1].shortLabel + " ], [ " + stack.peek()._value + ", %" + logicStack[logicCount-1].rhsLabel + " ]\n"
-			}
-		}
-		logicCount--
-		stack.pop()
-		stack.pop()
-		stack.push("%"+fmt.Sprint(varCount), "i1")
-	}
+    if ctx.Expr_logic() != nil {
+        castLastTo("i1")
+        v := nextVar()
+        lastFrame, _ := env.context.logicStack.pop()
+        
+        prog += "br label %" + lastFrame.endLabel + "\n"
+        prog += lastFrame.shortLabel + ":\n"
+        prog += "br label %" + lastFrame.endLabel + "\n"
+        prog += lastFrame.endLabel + ":\n"
+        
+        topFrame, err := env.context.logicStack.peek()
+        hasParent := err == nil
+        
+		peek, _ := env.context.varStack.peek()
+
+        if lastFrame.operator == "and" {
+            if hasParent {
+                prog += v + " = phi i1 [ 0, %" + lastFrame.shortLabel + " ], [ " + peek._value + ", %" + topFrame.endLabel + " ]\n"
+            } else {
+                prog += v + " = phi i1 [ 0, %" + lastFrame.shortLabel + " ], [ " + peek._value + ", %" + lastFrame.rhsLabel + " ]\n"
+            }
+        } else if lastFrame.operator == "or" {
+            if hasParent {
+                prog += v + " = phi i1 [ 1, %" + lastFrame.shortLabel + " ], [ " + peek._value + ", %" + topFrame.endLabel + " ]\n"
+            } else {
+                prog += v + " = phi i1 [ 1, %" + lastFrame.shortLabel + " ], [ " + peek._value + ", %" + lastFrame.rhsLabel + " ]\n"
+            }
+        }
+        
+        env.context.varStack.pop()
+        env.context.varStack.pop()
+        env.context.varStack.push("%"+fmt.Sprint(varCount), "i1")
+    }
 }
 
 // LOGIC_OPERATOR
@@ -542,15 +573,17 @@ func (l *kochanowskiListener) EnterLogic_operator(ctx *parser.Logic_operatorCont
 }
 
 func (l *kochanowskiListener) ExitLogic_operator(ctx *parser.Logic_operatorContext) {
-	convertLastToi1()
+	castLastTo("i1")
+	logicPeek, _ := env.context.logicStack.peek()
+	varPeek, _ := env.context.varStack.peek()
 	if ctx.LOGIC_AND() != nil {
-		logicStack[len(logicStack)-1].operator = "and"
-		prog += "br i1 " + stack.peek()._value + ", label %" + logicStack[len(logicStack)-1].rhsLabel + ", label %" + logicStack[len(logicStack)-1].shortLabel + "\n"
+		logicPeek.operator = "and"
+		prog += "br i1 " + varPeek._value + ", label %" + logicPeek.rhsLabel + ", label %" + logicPeek.shortLabel + "\n"
 	} else if ctx.LOGIC_OR() != nil {
-		logicStack[len(logicStack)-1].operator = "or"
-		prog += "br i1 " + stack.peek()._value + ", label %" + logicStack[len(logicStack)-1].shortLabel + ", label %" + logicStack[len(logicStack)-1].rhsLabel + "\n"
+		logicPeek.operator = "or"
+		prog += "br i1 " + varPeek._value + ", label %" + logicPeek.shortLabel + ", label %" + logicPeek.rhsLabel + "\n"
 	}
-	prog += logicStack[len(logicStack)-1].rhsLabel + ":\n"
+	prog += logicPeek.rhsLabel + ":\n"
 }
 
 // EXPR_COMPARE
@@ -561,8 +594,8 @@ func (l *kochanowskiListener) ExitExpr_compare(ctx *parser.Expr_compareContext) 
 	if ctx.Expr_compare() != nil {
 		matchLastTwoTypes()
 		v := nextVar()
-		first := stack.pop()
-		second := stack.pop()
+		first, _ := env.context.varStack.pop()
+		second, _ := env.context.varStack.pop()
 		prog += v + " = "
 		if isFloatType(first._type) {
 			if ctx.GREATER() != nil {
@@ -594,7 +627,7 @@ func (l *kochanowskiListener) ExitExpr_compare(ctx *parser.Expr_compareContext) 
 			}
 		}
 		prog += " " + second._type + " " + second._value + ", " + first._value + "\n"
-		stack.push(v, "i1")
+		env.context.varStack.push(v, "i1")
 	}
 }
 
@@ -606,8 +639,8 @@ func (l *kochanowskiListener) ExitExpr_mod(ctx *parser.Expr_modContext) {
 	if ctx.Expr_mod() != nil {
 		matchLastTwoTypes()
 		varCount++
-		first := stack.pop()
-		second := stack.pop()
+		first, _ := env.context.varStack.pop()
+		second, _ := env.context.varStack.pop()
 		prog += "%" + fmt.Sprint(varCount) + " = "
 		if isFloatType(first._type) {
 			prog += "frem"
@@ -615,7 +648,7 @@ func (l *kochanowskiListener) ExitExpr_mod(ctx *parser.Expr_modContext) {
 			prog += "srem"
 		}
 		prog += " " + first._type + " " + second._value + ", " + first._value + "\n"
-		stack.push("%"+fmt.Sprint(varCount), first._type)
+		env.context.varStack.push("%"+fmt.Sprint(varCount), first._type)
 	}
 }
 
@@ -626,12 +659,13 @@ func (l *kochanowskiListener) EnterExpr_bit(ctx *parser.Expr_bitContext) {
 func (l *kochanowskiListener) ExitExpr_bit(ctx *parser.Expr_bitContext) {
 	if ctx.Expr_bit() != nil {
 		matchLastTwoTypes()
-		if !isIntType(stack.peek()._type) {
-			sa.addError("Błąd typów: operator bitowy wymaga typu całkowitego, a otrzymał " + stack.peek()._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+		peek, _ := env.context.varStack.peek()
+		if !isIntType(peek._type) {
+			sa.addError("Błąd typów: operator bitowy wymaga typu całkowitego, a otrzymał " + peek._type, ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
 		}
 		varCount++
-		first := stack.pop()
-		second := stack.pop()
+		first, _ := env.context.varStack.pop()
+		second, _ := env.context.varStack.pop()
 		prog += "%" + fmt.Sprint(varCount) + " = "
 		if ctx.AND() != nil {
 			prog += "and"
@@ -641,7 +675,7 @@ func (l *kochanowskiListener) ExitExpr_bit(ctx *parser.Expr_bitContext) {
 			prog += "xor"
 		}
 		prog += " " + first._type + " " + first._value + ", " + second._value + "\n"
-		stack.push("%"+fmt.Sprint(varCount), first._type)
+		env.context.varStack.push("%"+fmt.Sprint(varCount), first._type)
 	}
 }
 
@@ -653,8 +687,8 @@ func (l *kochanowskiListener) ExitExpr_add(ctx *parser.Expr_addContext) {
 	if ctx.Expr_add() != nil {
 		matchLastTwoTypes()
 		varCount++
-		first := stack.pop()
-		second := stack.pop()
+		first, _ := env.context.varStack.pop()
+		second, _ := env.context.varStack.pop()
 		prog += "%" + fmt.Sprint(varCount) + " = "
 		if isFloatType(first._type) {
 			prog += "f"
@@ -665,7 +699,7 @@ func (l *kochanowskiListener) ExitExpr_add(ctx *parser.Expr_addContext) {
 			prog += "sub"
 		}
 		prog += " " + first._type + " " + second._value + ", " + first._value + "\n"
-		stack.push("%"+fmt.Sprint(varCount), first._type)
+		env.context.varStack.push("%"+fmt.Sprint(varCount), first._type)
 	}
 }
 
@@ -678,8 +712,8 @@ func (l *kochanowskiListener) ExitExpr_mult(ctx *parser.Expr_multContext) {
 	if ctx.Expr_mult() != nil {
 		matchLastTwoTypes()
 		varCount++
-		first := stack.pop()
-		second := stack.pop()
+		first, _ := env.context.varStack.pop()
+		second, _ := env.context.varStack.pop()
 		prog += "%" + fmt.Sprint(varCount) + " = "
 		if isFloatType(first._type) {
 			prog += "f"
@@ -690,7 +724,7 @@ func (l *kochanowskiListener) ExitExpr_mult(ctx *parser.Expr_multContext) {
 			prog += "div"
 		}
 		prog += " " + first._type + " " + second._value + ", " + first._value + "\n"
-		stack.push("%"+fmt.Sprint(varCount), first._type)
+		env.context.varStack.push("%"+fmt.Sprint(varCount), first._type)
 	}
 }
 
@@ -701,19 +735,20 @@ func (l *kochanowskiListener) EnterExpr_power(ctx *parser.Expr_powerContext) {
 func (l *kochanowskiListener) ExitExpr_power(ctx *parser.Expr_powerContext) {
 	if ctx.Expr_power() != nil {
 			matchLastTwoTypes()
-			if stack.peek()._type == "i1" || stack.peek()._type == "i32" || stack.peek()._type == "i64" {
+			peek, _ := env.context.varStack.peek()
+			if isIntType(peek._type) {
 				castLastTo("float")
 				castSecondTo("float")
 			}
 			varCount++
-			first := stack.pop()
-			second := stack.pop()
+			first, _ := env.context.varStack.pop()
+			second, _ := env.context.varStack.pop()
 			if first._type == "double" {
 				prog += "%" + fmt.Sprint(varCount) + " = call double @llvm.pow.f64( double " + second._value + ", double " + first._value + ")\n"
-				stack.push("%"+fmt.Sprint(varCount), "double")
+				env.context.varStack.push("%"+fmt.Sprint(varCount), "double")
 			} else {
 				prog += "%" + fmt.Sprint(varCount) + " = call float @llvm.pow.f32( float " + second._value + ", float " + first._value + ")\n"
-				stack.push("%"+fmt.Sprint(varCount), "float")
+				env.context.varStack.push("%"+fmt.Sprint(varCount), "float")
 			} 
 	}
 }
@@ -725,23 +760,23 @@ func (l *kochanowskiListener) EnterUnary(ctx *parser.UnaryContext) {
 func (l *kochanowskiListener) ExitUnary(ctx *parser.UnaryContext) {
 	if ctx.Expr() != nil {
 		varCount++
-		first := stack.pop()
+		first, _ := env.context.varStack.pop()
 		prog += "%" + fmt.Sprint(varCount) + " = "
 		if isFloatType(first._type) {
 			if ctx.MINUS() != nil {
 				prog += "fneg float" + first._value + "\n"
-				stack.push("%"+fmt.Sprint(varCount), "float")
+				env.context.varStack.push("%"+fmt.Sprint(varCount), "float")
 			} else if ctx.NOT() != nil {
 				prog += "fcmp oeq " + first._type + " " + first._value + ", 0.0\n"
-				stack.push("%"+fmt.Sprint(varCount), "i1")
+				env.context.varStack.push("%"+fmt.Sprint(varCount), "i1")
 			}
 		} else {
 			if ctx.MINUS() != nil {
 				prog += "sub " + first._type + " 0, " + first._value + "\n"
-				stack.push("%"+fmt.Sprint(varCount), first._type)
+				env.context.varStack.push("%"+fmt.Sprint(varCount), first._type)
 			} else if ctx.NOT() != nil {
 				prog += "icmp eq " + first._type + " " + first._value + ", 0\n"
-				stack.push("%"+fmt.Sprint(varCount), "i1")
+				env.context.varStack.push("%"+fmt.Sprint(varCount), "i1")
 			}
 		}
 	}
@@ -762,23 +797,23 @@ func (l *kochanowskiListener) ExitString_value(ctx *parser.String_valueContext) 
 
 	strVar := nextVar()
 	prog += strVar + " = getelementptr inbounds [" + fmt.Sprint(strBytes) + " x i8], ptr " + strName + ", i32 0, i32 0\n"
-	stack.push(strVar, "ptr")
+	env.context.varStack.push(strVar, "ptr")
 }
 
 // VALUE
 func (l *kochanowskiListener) EnterValue(ctx *parser.ValueContext) {
 	if ctx.INTEGER() != nil {
-		stack.push(fmt.Sprint(ctx.INTEGER().GetText()), "i32")
+		env.context.varStack.push(fmt.Sprint(ctx.INTEGER().GetText()), "i32")
 	} else if ctx.DECIMAL() != nil {
-		stack.push(fmt.Sprint(ctx.DECIMAL().GetText()), "double")
+		env.context.varStack.push(fmt.Sprint(ctx.DECIMAL().GetText()), "double")
 	} else if ctx.ID() != nil {
-			if variables[ctx.ID().GetText()]._type == "ptr" {
-				stack.push(variables[ctx.ID().GetText()]._value, "ptr")
+			if env.context.variables[ctx.ID().GetText()]._type == "ptr" {
+				env.context.varStack.push(env.context.variables[ctx.ID().GetText()]._value, "ptr")
 				return
 			}
 		varCount++
-		prog += "%" + fmt.Sprint(varCount) + " = load " + variables[ctx.ID().GetText()]._type + ", ptr " + variables[ctx.ID().GetText()]._value + ", " + typeAlignMap[variables[ctx.ID().GetText()]._type] + "\n"
-		stack.push("%"+fmt.Sprint(varCount), variables[ctx.ID().GetText()]._type)
+		prog += "%" + fmt.Sprint(varCount) + " = load " + env.context.variables[ctx.ID().GetText()]._type + ", ptr " + env.context.variables[ctx.ID().GetText()]._value + ", " + typeAlignMap[env.context.variables[ctx.ID().GetText()]._type] + "\n"
+		env.context.varStack.push("%"+fmt.Sprint(varCount), env.context.variables[ctx.ID().GetText()]._type)
 	}
 }
 

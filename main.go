@@ -37,7 +37,7 @@ func main() {
 	p.RemoveErrorListeners()
     p.AddErrorListener(errorListener)
 
-	tree := p.Body()
+	tree := p.Prog()
 	if errorListener.HasErrors {
         fmt.Println("\n=== Wystąpiły błędy podczas parsowania ===")
         for _, errMsg := range errorListener.Errors {

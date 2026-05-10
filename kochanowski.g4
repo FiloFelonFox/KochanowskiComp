@@ -1,8 +1,15 @@
 grammar kochanowski;
 
+prog : body;
+ 
 body : statement*;
 
-statement: var_create | var_assign | array_create | array_assign | matrix_create | matrix_assign | print | read;
+statement: var_create | var_assign | array_create | array_assign | matrix_create | matrix_assign | print | read | block;
+
+block: START_BLOCK body END_BLOCK;
+
+START_BLOCK: '{';
+END_BLOCK: '}';
 
 var_create
 	: DEFINE VARIABLE type NAMED ID DOT

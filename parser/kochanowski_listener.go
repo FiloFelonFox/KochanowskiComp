@@ -8,11 +8,17 @@ import "github.com/antlr4-go/antlr/v4"
 type kochanowskiListener interface {
 	antlr.ParseTreeListener
 
+	// EnterProg is called when entering the prog production.
+	EnterProg(c *ProgContext)
+
 	// EnterBody is called when entering the body production.
 	EnterBody(c *BodyContext)
 
 	// EnterStatement is called when entering the statement production.
 	EnterStatement(c *StatementContext)
+
+	// EnterBlock is called when entering the block production.
+	EnterBlock(c *BlockContext)
 
 	// EnterVar_create is called when entering the var_create production.
 	EnterVar_create(c *Var_createContext)
@@ -92,11 +98,17 @@ type kochanowskiListener interface {
 	// EnterValue is called when entering the value production.
 	EnterValue(c *ValueContext)
 
+	// ExitProg is called when exiting the prog production.
+	ExitProg(c *ProgContext)
+
 	// ExitBody is called when exiting the body production.
 	ExitBody(c *BodyContext)
 
 	// ExitStatement is called when exiting the statement production.
 	ExitStatement(c *StatementContext)
+
+	// ExitBlock is called when exiting the block production.
+	ExitBlock(c *BlockContext)
 
 	// ExitVar_create is called when exiting the var_create production.
 	ExitVar_create(c *Var_createContext)
