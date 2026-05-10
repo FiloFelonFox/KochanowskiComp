@@ -9,26 +9,7 @@ type kochanowskiListener struct {
 	*parser.BasekochanowskiListener
 }
 
-//PROG
-func (l* kochanowskiListener) EnterProg(ctx *parser.ProgContext) {
-	initEnviroment()
-}
-
-func (l* kochanowskiListener) ExitProg(ctx *parser.ProgContext) {
-
-}
-
-//BLOCK
-func (l* kochanowskiListener) EnterBlock(ctx *parser.BlockContext) {
-	upscopeEnviroment()
-}
-
-func (l* kochanowskiListener) ExitBlock(ctx *parser.BlockContext) {
-	downscopeEnviroment()
-}
-
-// BODY
-func (l *kochanowskiListener) EnterBody(ctx *parser.BodyContext) {
+func declareStandardGlobals() {
 	prog += "declare i32 @printf(ptr noundef, ...)\n"
 	prog += "declare i32 @__isoc99_scanf(ptr noundef, ...)\n"
 	prog += "declare i32 @atoi(ptr noundef)\n"
@@ -48,13 +29,39 @@ func (l *kochanowskiListener) EnterBody(ctx *parser.BodyContext) {
 	prog += "@.scan.str = private unnamed_addr constant [6 x i8] c\"%255s\\00\", align 1\n"
 	prog += "@.read.buf = internal global [256 x i8] zeroinitializer, align 1\n"
 	prog += "\n"
+}
+
+func declareConstantStrings() {
+	for str := range strings {
+		prog = str + " = private unnamed_addr constant [" + fmt.Sprint(len(strings[str])+1) + " x i8] c\"" + strings[str] + "\\00\", align 1\n" + prog
+	}
+}
+
+//PROG
+func (l* kochanowskiListener) EnterProg(ctx *parser.ProgContext) {
+	initEnviroment()
+	declareStandardGlobals()
+}
+
+func (l* kochanowskiListener) ExitProg(ctx *parser.ProgContext) {
+	declareConstantStrings()
+}
+
+//BLOCK
+func (l* kochanowskiListener) EnterBlock(ctx *parser.BlockContext) {
+	upscopeEnviroment()
+}
+
+func (l* kochanowskiListener) ExitBlock(ctx *parser.BlockContext) {
+	downscopeEnviroment()
+}
+
+// BODY
+func (l *kochanowskiListener) EnterBody(ctx *parser.BodyContext) {
 	prog += "define dso_local i32 @main() {\n"
 }
 
 func (l *kochanowskiListener) ExitBody(ctx *parser.BodyContext) {
-	for str := range strings {
-		prog = str + " = private unnamed_addr constant [" + fmt.Sprint(len(strings[str])+1) + " x i8] c\"" + strings[str] + "\\00\", align 1\n" + prog
-	}
 	for arr := range env.context.arrays {
 		prog += "call void @free(ptr " + env.context.arrays[arr]._value + ")\n"
 	}
