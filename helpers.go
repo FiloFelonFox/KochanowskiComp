@@ -29,6 +29,13 @@ var ordToType = map[int]string{
 	5 : "double",
 }
 
+var typeToLLVM = map[string]string{
+	"całkowitą": "i32",
+	"całkowitą olbrzymiej wagi": "i64",
+	"zmiennoprzecinkową": "float",
+	"zmiennoprzecinkową olbrzymiej precyzji": "double",
+}
+
 func nextVar() string {
 	varCount++
 	return "%" + fmt.Sprint(varCount)

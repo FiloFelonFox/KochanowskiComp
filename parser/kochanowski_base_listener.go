@@ -33,11 +33,83 @@ func (s *BasekochanowskiListener) EnterBody(ctx *BodyContext) {}
 // ExitBody is called when production body is exited.
 func (s *BasekochanowskiListener) ExitBody(ctx *BodyContext) {}
 
+// EnterFunction_decl is called when production function_decl is entered.
+func (s *BasekochanowskiListener) EnterFunction_decl(ctx *Function_declContext) {}
+
+// ExitFunction_decl is called when production function_decl is exited.
+func (s *BasekochanowskiListener) ExitFunction_decl(ctx *Function_declContext) {}
+
+// EnterParam_list is called when production param_list is entered.
+func (s *BasekochanowskiListener) EnterParam_list(ctx *Param_listContext) {}
+
+// ExitParam_list is called when production param_list is exited.
+func (s *BasekochanowskiListener) ExitParam_list(ctx *Param_listContext) {}
+
+// EnterParam is called when production param is entered.
+func (s *BasekochanowskiListener) EnterParam(ctx *ParamContext) {}
+
+// ExitParam is called when production param is exited.
+func (s *BasekochanowskiListener) ExitParam(ctx *ParamContext) {}
+
+// EnterFunc_type is called when production func_type is entered.
+func (s *BasekochanowskiListener) EnterFunc_type(ctx *Func_typeContext) {}
+
+// ExitFunc_type is called when production func_type is exited.
+func (s *BasekochanowskiListener) ExitFunc_type(ctx *Func_typeContext) {}
+
 // EnterStatement is called when production statement is entered.
 func (s *BasekochanowskiListener) EnterStatement(ctx *StatementContext) {}
 
 // ExitStatement is called when production statement is exited.
 func (s *BasekochanowskiListener) ExitStatement(ctx *StatementContext) {}
+
+// EnterIf is called when production if is entered.
+func (s *BasekochanowskiListener) EnterIf(ctx *IfContext) {}
+
+// ExitIf is called when production if is exited.
+func (s *BasekochanowskiListener) ExitIf(ctx *IfContext) {}
+
+// EnterConditional_body is called when production conditional_body is entered.
+func (s *BasekochanowskiListener) EnterConditional_body(ctx *Conditional_bodyContext) {}
+
+// ExitConditional_body is called when production conditional_body is exited.
+func (s *BasekochanowskiListener) ExitConditional_body(ctx *Conditional_bodyContext) {}
+
+// EnterIf_expr is called when production if_expr is entered.
+func (s *BasekochanowskiListener) EnterIf_expr(ctx *If_exprContext) {}
+
+// ExitIf_expr is called when production if_expr is exited.
+func (s *BasekochanowskiListener) ExitIf_expr(ctx *If_exprContext) {}
+
+// EnterIf_body is called when production if_body is entered.
+func (s *BasekochanowskiListener) EnterIf_body(ctx *If_bodyContext) {}
+
+// ExitIf_body is called when production if_body is exited.
+func (s *BasekochanowskiListener) ExitIf_body(ctx *If_bodyContext) {}
+
+// EnterElse_body is called when production else_body is entered.
+func (s *BasekochanowskiListener) EnterElse_body(ctx *Else_bodyContext) {}
+
+// ExitElse_body is called when production else_body is exited.
+func (s *BasekochanowskiListener) ExitElse_body(ctx *Else_bodyContext) {}
+
+// EnterWhile is called when production while is entered.
+func (s *BasekochanowskiListener) EnterWhile(ctx *WhileContext) {}
+
+// ExitWhile is called when production while is exited.
+func (s *BasekochanowskiListener) ExitWhile(ctx *WhileContext) {}
+
+// EnterWhile_body is called when production while_body is entered.
+func (s *BasekochanowskiListener) EnterWhile_body(ctx *While_bodyContext) {}
+
+// ExitWhile_body is called when production while_body is exited.
+func (s *BasekochanowskiListener) ExitWhile_body(ctx *While_bodyContext) {}
+
+// EnterReturn is called when production return is entered.
+func (s *BasekochanowskiListener) EnterReturn(ctx *ReturnContext) {}
+
+// ExitReturn is called when production return is exited.
+func (s *BasekochanowskiListener) ExitReturn(ctx *ReturnContext) {}
 
 // EnterBlock is called when production block is entered.
 func (s *BasekochanowskiListener) EnterBlock(ctx *BlockContext) {}
@@ -176,6 +248,18 @@ func (s *BasekochanowskiListener) EnterUnary(ctx *UnaryContext) {}
 
 // ExitUnary is called when production unary is exited.
 func (s *BasekochanowskiListener) ExitUnary(ctx *UnaryContext) {}
+
+// EnterFunction_call is called when production function_call is entered.
+func (s *BasekochanowskiListener) EnterFunction_call(ctx *Function_callContext) {}
+
+// ExitFunction_call is called when production function_call is exited.
+func (s *BasekochanowskiListener) ExitFunction_call(ctx *Function_callContext) {}
+
+// EnterCall_arguments is called when production call_arguments is entered.
+func (s *BasekochanowskiListener) EnterCall_arguments(ctx *Call_argumentsContext) {}
+
+// ExitCall_arguments is called when production call_arguments is exited.
+func (s *BasekochanowskiListener) ExitCall_arguments(ctx *Call_argumentsContext) {}
 
 // EnterString_value is called when production string_value is entered.
 func (s *BasekochanowskiListener) EnterString_value(ctx *String_valueContext) {}

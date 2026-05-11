@@ -1,12 +1,35 @@
 grammar kochanowski;
 
-prog : body;
- 
-body : statement*;
+prog : body EOF;
 
-statement: var_create | var_assign | array_create | array_assign | matrix_create | matrix_assign | print | read | block;
+body : (statement | function_decl)*;
 
-block: START_BLOCK body END_BLOCK;
+function_decl : FUNCTION func_type ID '(' param_list? ')' block;
+param_list     : param (',' param)*;
+param          : func_type ID;
+func_type	   : INT32 | INT64 | F32 | F64;
+
+FUNCTION : 'funkcja';
+
+statement: var_create | var_assign | array_create | array_assign | matrix_create | matrix_assign | print | read | block | return | if | while;
+
+if: if_expr conditional_body;
+conditional_body: if_body else_body?;
+
+if_expr: IF expr;
+if_body: THEN block;
+else_body: ELSE block;
+IF: 'Jeśli';
+THEN: 'to';
+ELSE: 'w przeciwnym wypadku';
+
+while: WHILE expr while_body;
+while_body: block;
+WHILE: 'Powtarzaj dopóki';
+
+return: 'return' expr DOT;
+
+block: START_BLOCK statement* END_BLOCK;
 
 START_BLOCK: '{';
 END_BLOCK: '}';
@@ -90,8 +113,14 @@ unary
 	: value
 	| matrix_value
 	| array_value
+	| function_call
 	| MINUS expr
 	| NOT expr;
+
+function_call
+	: ID '(' call_arguments? ')';
+
+call_arguments: expr (',' expr)*;
 
 string_value: STRING_LITERAL;
 

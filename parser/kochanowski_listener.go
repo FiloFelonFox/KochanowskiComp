@@ -14,8 +14,44 @@ type kochanowskiListener interface {
 	// EnterBody is called when entering the body production.
 	EnterBody(c *BodyContext)
 
+	// EnterFunction_decl is called when entering the function_decl production.
+	EnterFunction_decl(c *Function_declContext)
+
+	// EnterParam_list is called when entering the param_list production.
+	EnterParam_list(c *Param_listContext)
+
+	// EnterParam is called when entering the param production.
+	EnterParam(c *ParamContext)
+
+	// EnterFunc_type is called when entering the func_type production.
+	EnterFunc_type(c *Func_typeContext)
+
 	// EnterStatement is called when entering the statement production.
 	EnterStatement(c *StatementContext)
+
+	// EnterIf is called when entering the if production.
+	EnterIf(c *IfContext)
+
+	// EnterConditional_body is called when entering the conditional_body production.
+	EnterConditional_body(c *Conditional_bodyContext)
+
+	// EnterIf_expr is called when entering the if_expr production.
+	EnterIf_expr(c *If_exprContext)
+
+	// EnterIf_body is called when entering the if_body production.
+	EnterIf_body(c *If_bodyContext)
+
+	// EnterElse_body is called when entering the else_body production.
+	EnterElse_body(c *Else_bodyContext)
+
+	// EnterWhile is called when entering the while production.
+	EnterWhile(c *WhileContext)
+
+	// EnterWhile_body is called when entering the while_body production.
+	EnterWhile_body(c *While_bodyContext)
+
+	// EnterReturn is called when entering the return production.
+	EnterReturn(c *ReturnContext)
 
 	// EnterBlock is called when entering the block production.
 	EnterBlock(c *BlockContext)
@@ -86,6 +122,12 @@ type kochanowskiListener interface {
 	// EnterUnary is called when entering the unary production.
 	EnterUnary(c *UnaryContext)
 
+	// EnterFunction_call is called when entering the function_call production.
+	EnterFunction_call(c *Function_callContext)
+
+	// EnterCall_arguments is called when entering the call_arguments production.
+	EnterCall_arguments(c *Call_argumentsContext)
+
 	// EnterString_value is called when entering the string_value production.
 	EnterString_value(c *String_valueContext)
 
@@ -104,8 +146,44 @@ type kochanowskiListener interface {
 	// ExitBody is called when exiting the body production.
 	ExitBody(c *BodyContext)
 
+	// ExitFunction_decl is called when exiting the function_decl production.
+	ExitFunction_decl(c *Function_declContext)
+
+	// ExitParam_list is called when exiting the param_list production.
+	ExitParam_list(c *Param_listContext)
+
+	// ExitParam is called when exiting the param production.
+	ExitParam(c *ParamContext)
+
+	// ExitFunc_type is called when exiting the func_type production.
+	ExitFunc_type(c *Func_typeContext)
+
 	// ExitStatement is called when exiting the statement production.
 	ExitStatement(c *StatementContext)
+
+	// ExitIf is called when exiting the if production.
+	ExitIf(c *IfContext)
+
+	// ExitConditional_body is called when exiting the conditional_body production.
+	ExitConditional_body(c *Conditional_bodyContext)
+
+	// ExitIf_expr is called when exiting the if_expr production.
+	ExitIf_expr(c *If_exprContext)
+
+	// ExitIf_body is called when exiting the if_body production.
+	ExitIf_body(c *If_bodyContext)
+
+	// ExitElse_body is called when exiting the else_body production.
+	ExitElse_body(c *Else_bodyContext)
+
+	// ExitWhile is called when exiting the while production.
+	ExitWhile(c *WhileContext)
+
+	// ExitWhile_body is called when exiting the while_body production.
+	ExitWhile_body(c *While_bodyContext)
+
+	// ExitReturn is called when exiting the return production.
+	ExitReturn(c *ReturnContext)
 
 	// ExitBlock is called when exiting the block production.
 	ExitBlock(c *BlockContext)
@@ -175,6 +253,12 @@ type kochanowskiListener interface {
 
 	// ExitUnary is called when exiting the unary production.
 	ExitUnary(c *UnaryContext)
+
+	// ExitFunction_call is called when exiting the function_call production.
+	ExitFunction_call(c *Function_callContext)
+
+	// ExitCall_arguments is called when exiting the call_arguments production.
+	ExitCall_arguments(c *Call_argumentsContext)
 
 	// ExitString_value is called when exiting the string_value production.
 	ExitString_value(c *String_valueContext)

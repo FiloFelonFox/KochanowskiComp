@@ -45,6 +45,56 @@ func (l* kochanowskiListener) EnterProg(ctx *parser.ProgContext) {
 
 func (l* kochanowskiListener) ExitProg(ctx *parser.ProgContext) {
 	declareConstantStrings()
+	prog += "\n" + swapProg
+}
+
+func (l* kochanowskiListener) EnterFunction_decl(ctx *parser.Function_declContext) {
+	name := ctx.ID().GetText()
+	functions[name] = t_func{_value: name, _type: ctx.Func_type().GetText(), params: make([]t_var, 0), body: ""}
+
+    // Build signature from params
+    sig := ""
+    for i, p := range ctx.Param_list().AllParam() {
+        t := typeToLLVM[p.Func_type().GetText()]
+        if i > 0 { sig += ", " }
+        sig += t + " %" + p.ID().GetText()
+    }
+
+	swapProgFunc()
+
+    prog += "define dso_local " +typeToLLVM[ctx.Func_type().GetText()]+ " @" + name + "(" + sig + ") {\n"
+	fmt.Println(ctx.Func_type().GetText())
+    // New scope for function locals/params
+    swapEnviroments()
+	initEnviroment()
+
+    // Allocate + store params as local variables
+    for _, p := range ctx.Param_list().AllParam() {
+        id := p.ID().GetText()
+        t := typeToLLVM[p.Func_type().GetText()]
+
+        ptr := nextVar()
+        prog += ptr + " = alloca " + t + ", " + typeAlignMap[t] + "\n"
+        prog += "store " + t + " %" + id + ", ptr " + ptr + ", " + typeAlignMap[t] + "\n"
+        env.context.variables[id] = t_var{ptr, t}
+		fn := functions[name]
+		fn.params = append(fn.params, t_var{ptr, t})
+		functions[name] = fn
+    }
+}
+
+func (l* kochanowskiListener) ExitFunction_decl(ctx *parser.Function_declContext) {
+	prog += "}\n"
+    swapEnviroments()
+	swapProgFunc()
+}
+
+func (l* kochanowskiListener) EnterReturn(ctx *parser.ReturnContext) {
+}
+
+func (l* kochanowskiListener) ExitReturn(ctx *parser.ReturnContext) {
+	pop, _ := env.context.varStack.pop()
+	prog += "ret " + pop._type + " " + pop._value + "\n"
 }
 
 //BLOCK
@@ -69,6 +119,64 @@ func (l *kochanowskiListener) ExitBody(ctx *parser.BodyContext) {
 		prog += "call void @free(ptr " + env.context.matrices[mat]._value + ")\n"
 	}
 	prog += "ret i32 0\n}\n"
+}
+
+func (l *kochanowskiListener) EnterIf_body(ctx *parser.If_bodyContext) {
+	logicFrame, _ := env.context.logicStack.peek()
+	castLastTo("i1")
+	condition, _ := env.context.varStack.pop()
+	prog += "br i1 " + condition._value + ", label %" + logicFrame.shortLabel + ", label %" + logicFrame.rhsLabel + "\n"
+	prog += logicFrame.shortLabel + ":\n"
+}
+
+func (l *kochanowskiListener) ExitIf_body(ctx *parser.If_bodyContext) {
+	logicFrame, _ := env.context.logicStack.peek()
+	prog += "br label %" + logicFrame.endLabel + "\n"
+	prog += logicFrame.rhsLabel + ":\n"
+}
+
+func (l *kochanowskiListener) EnterElse_body(ctx *parser.Else_bodyContext) {
+}
+
+func (l *kochanowskiListener) ExitElse_body(ctx *parser.Else_bodyContext) {
+}
+
+func (l *kochanowskiListener) EnterConditional_body(ctx *parser.Conditional_bodyContext) {
+	varCount++
+	env.context.logicStack.newElement(varCount)
+}
+
+func (l *kochanowskiListener) ExitConditional_body(ctx *parser.Conditional_bodyContext) {
+	logicFrame, _ := env.context.logicStack.peek()
+	prog += "br label %" + logicFrame.endLabel + "\n"
+	prog += logicFrame.endLabel + ":\n"
+	env.context.logicStack.pop()
+}
+
+func (l *kochanowskiListener) EnterWhile(ctx *parser.WhileContext) {
+	varCount++
+	env.context.logicStack.newElement(varCount)
+	logicFrame, _ := env.context.logicStack.peek()
+	prog += "br label %" + logicFrame.rhsLabel + "\n"
+	prog += logicFrame.rhsLabel + ":\n"
+}
+
+func (l *kochanowskiListener) ExitWhile(ctx *parser.WhileContext) {
+	env.context.logicStack.pop()
+}
+
+func (l *kochanowskiListener) EnterWhile_body(ctx *parser.While_bodyContext) {
+	logicFrame, _ := env.context.logicStack.peek()
+	castLastTo("i1")
+	condition, _ := env.context.varStack.pop()
+	prog += "br i1 " + condition._value + ", label %" + logicFrame.shortLabel + ", label %" + logicFrame.endLabel + "\n"
+	prog += logicFrame.shortLabel + ":\n"
+}
+
+func (l *kochanowskiListener) ExitWhile_body(ctx *parser.While_bodyContext) {
+	logicFrame, _ := env.context.logicStack.peek()
+	prog += "br label %" + logicFrame.rhsLabel + "\n"
+	prog += logicFrame.endLabel + ":\n"
 }
 
 // PRINT
@@ -139,7 +247,7 @@ func (l *kochanowskiListener) EnterVar_assign(ctx *parser.Var_assignContext) {
 }
 
 func (l *kochanowskiListener) ExitVar_assign(ctx *parser.Var_assignContext) {
-	variable := env.context.variables[ctx.ID().GetText()]
+	variable, _ := env.getVariable(ctx.ID().GetText())
 	value, _ := env.context.varStack.peek()
 	if variable._type == "ptr" {
 		if value._type != "ptr" {
@@ -524,6 +632,64 @@ func (l *kochanowskiListener) EnterMatrix_type(ctx *parser.Matrix_typeContext) {
 func (l *kochanowskiListener) ExitMatrix_type(ctx *parser.Matrix_typeContext) {
 }
 
+// FUNCTION_CALL
+func (l *kochanowskiListener) EnterFunction_call(ctx *parser.Function_callContext) {
+}
+
+func (l *kochanowskiListener) ExitFunction_call(ctx *parser.Function_callContext) {
+    name := ctx.ID().GetText()
+
+    fn, exists := functions[name]
+    if !exists {
+        sa.addError("Nieznana funkcja '"+name+"'", ctx.GetStart().GetLine(), ctx.GetStart().GetColumn())
+        return
+    }
+
+    args := make([]t_var, 0, len(ctx.Call_arguments().AllExpr()))
+    for range ctx.Call_arguments().AllExpr() {
+        arg, _ := env.context.varStack.pop()
+        args = append([]t_var{arg}, args...)
+    }
+
+    if len(args) != len(fn.params) {
+        sa.addError(
+            "Nieprawidłowa liczba argumentów w wywołaniu funkcji '"+name+"'",
+            ctx.GetStart().GetLine(),
+            ctx.GetStart().GetColumn(),
+        )
+        return
+    }
+
+    for i := range args {
+        expectedType := fn.params[i]._type
+        if args[i]._type != expectedType {
+            var err error
+            args[i], err = castType(args[i], expectedType)
+            if err != nil {
+                sa.addError(err.Error(), ctx.GetStop().GetLine(), ctx.GetStop().GetColumn())
+                return
+            }
+        }
+    }
+
+    retType := typeToLLVM[fn._type]
+    callArgs := ""
+    for i, arg := range args {
+        if i > 0 {
+            callArgs += ", "
+        }
+        callArgs += arg._type + " " + arg._value
+    }
+
+    if retType != "" {
+        ret := nextVar()
+        prog += ret + " = call " + retType + " @" + name + "(" + callArgs + ")\n"
+        env.context.varStack.push(ret, retType)
+    } else {
+        prog += "call void @" + name + "(" + callArgs + ")\n"
+    }
+}
+
 // EXPR
 func (l *kochanowskiListener) EnterExpr(ctx *parser.ExprContext) {
 }
@@ -814,13 +980,14 @@ func (l *kochanowskiListener) EnterValue(ctx *parser.ValueContext) {
 	} else if ctx.DECIMAL() != nil {
 		env.context.varStack.push(fmt.Sprint(ctx.DECIMAL().GetText()), "double")
 	} else if ctx.ID() != nil {
-			if env.context.variables[ctx.ID().GetText()]._type == "ptr" {
-				env.context.varStack.push(env.context.variables[ctx.ID().GetText()]._value, "ptr")
-				return
-			}
+		if env.context.variables[ctx.ID().GetText()]._type == "ptr" {
+			env.context.varStack.push(env.context.variables[ctx.ID().GetText()]._value, "ptr")
+			return
+		}
 		varCount++
-		prog += "%" + fmt.Sprint(varCount) + " = load " + env.context.variables[ctx.ID().GetText()]._type + ", ptr " + env.context.variables[ctx.ID().GetText()]._value + ", " + typeAlignMap[env.context.variables[ctx.ID().GetText()]._type] + "\n"
-		env.context.varStack.push("%"+fmt.Sprint(varCount), env.context.variables[ctx.ID().GetText()]._type)
+		variable, _ := env.getVariable(ctx.ID().GetText())
+		prog += "%" + fmt.Sprint(varCount) + " = load " + variable._type + ", ptr " + variable._value + ", " + typeAlignMap[variable._type] + "\n"
+		env.context.varStack.push("%"+fmt.Sprint(varCount), variable._type)
 	}
 }
 

@@ -1,3 +1,39 @@
-Zdefiniuj zmienną całkowitą o nazwie ala o wartości 6.
-Przypisz ala 7.
-Wypisz ala.
+Zdefiniuj zmienną całkowitą o nazwie x o wartości 1.
+{
+	Zdefiniuj zmienną całkowitą o nazwie x o wartości 4.
+	Wypisz x.
+}
+Wypisz x.
+
+funkcja całkowitą dodaj (całkowitą x, całkowitą y) {
+	Zdefiniuj zmienną całkowitą o nazwie l o wartości x plus y.
+return l.
+}
+
+Zdefiniuj zmienną całkowitą o nazwie a o wartości 1.
+Zdefiniuj zmienną całkowitą o nazwie b o wartości 2.
+Wypisz dodaj(a razy 4,b).
+
+Jeśli 2 równe 2 to
+{
+	Wypisz 1.
+}
+w przeciwnym wypadku
+{
+	Wypisz 2.
+}
+
+Jeśli 2 równe 3 to
+{
+	Wypisz 1.
+}
+w przeciwnym wypadku
+{
+	Wypisz 2.
+}
+
+Przypisz x 1.
+Powtarzaj dopóki x mniejsze niż 10 {
+	Przypisz x x plus 1.
+	Wypisz x.
+}
